@@ -1,0 +1,176 @@
+[
+    {
+        "SPARQL": {
+            "group-by": {
+                "limit": 500
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "simple", 
+                        "variable": "?ad"
+                    }, 
+                    {
+                        "type": "simple", 
+                        "variable": "?ethnicity"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "constraint": "6135019502", 
+                        "isOptional": false, 
+                        "predicate": "phone", 
+                        "type": "owl:Thing"
+                    }, 
+                    {
+                        "constraint": "toronto, ontario", 
+                        "isOptional": false, 
+                        "predicate": "location", 
+                        "type": "Location"
+                    }, 
+                    {
+                        "isOptional": false, 
+                        "predicate": "ethnicity", 
+                        "type": "owl:Thing", 
+                        "variable": "?ethnicity"
+                    }, 
+                    {
+                        "isOptional": false, 
+                        "predicate": "title", 
+                        "type": "owl:Thing", 
+                        "variable": "?title"
+                    }, 
+                    {
+                        "constraint": "blonde", 
+                        "isOptional": false, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }, 
+                    {
+                        "constraint": "straw", 
+                        "isOptional": true, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }, 
+                    {
+                        "constraint": "blond", 
+                        "isOptional": true, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }, 
+                    {
+                        "constraint": "yellow", 
+                        "isOptional": true, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "constraint": "the millionaires mistress", 
+                        "operator": "=", 
+                        "variable": "?title"
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "field_count": 1, 
+        "id": "192-1", 
+        "orig_query": "PREFIX qpr: <http://istresearch.com/qpr>\nSELECT ?ad ?ethnicity\nWHERE\n{\t?ad a qpr:Ad ;\n\tqpr:phone '6135019502' ;\n\tqpr:location 'Toronto, Ontario' ;\n\tqpr:ethnicity ?ethnicity ;\n\tqpr:title ?title .\n\tFILTER CONTAINS(LCASE(?title), 'the millionaires mistress')\n}", 
+        "question": "What is the country of birth listed in the ad that contains the phone number 6135019502, in Toronto Ontario, with the title 'the millionaires mistress'?", 
+        "type": "Point Fact", 
+        "zone": [
+            1
+        ]
+    }, 
+    {
+        "SPARQL": {
+            "group-by": {
+                "limit": 500
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "simple", 
+                        "variable": "?ad"
+                    }, 
+                    {
+                        "type": "simple", 
+                        "variable": "?ethnicity"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "constraint": "1234567890", 
+                        "isOptional": false, 
+                        "predicate": "phone", 
+                        "type": "owl:Thing"
+                    }, 
+                    {
+                        "constraint": "toronto, ontario", 
+                        "isOptional": false, 
+                        "predicate": "location", 
+                        "type": "Location"
+                    }, 
+                    {
+                        "isOptional": false, 
+                        "predicate": "ethnicity", 
+                        "type": "owl:Thing", 
+                        "variable": "?ethnicity"
+                    }, 
+                    {
+                        "isOptional": false, 
+                        "predicate": "title", 
+                        "type": "owl:Thing", 
+                        "variable": "?title"
+                    }, 
+                    {
+                        "constraint": "blonde", 
+                        "isOptional": false, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }, 
+                    {
+                        "constraint": "straw", 
+                        "isOptional": true, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }, 
+                    {
+                        "constraint": "blond", 
+                        "isOptional": true, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }, 
+                    {
+                        "constraint": "yellow", 
+                        "isOptional": true, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "constraint": "the enchanting mistress", 
+                        "operator": "=", 
+                        "variable": "?title"
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "field_count": 1, 
+        "type": "Point Fact", 
+        "zone": [
+            1, 
+            2
+        ]
+    }
+]

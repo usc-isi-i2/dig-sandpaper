@@ -1,0 +1,58 @@
+{
+        "SPARQL": {
+            "group-by": {
+                "limit": 500
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "simple", 
+                        "variable": "?ad"
+                    }, 
+                    {
+                        "type": "simple", 
+                        "variable": "?ethnicity"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "constraint": "6135019502", 
+                        "isOptional": false, 
+                        "predicate": "phone"
+                    }, 
+                    {
+                        "constraint": "Toronto, Ontario", 
+                        "isOptional": false, 
+                        "predicate": "location"
+                    }, 
+                    {
+                        "isOptional": false, 
+                        "predicate": "ethnicity", 
+                        "variable": "?ethnicity"
+                    }, 
+                    {
+                        "isOptional": false, 
+                        "predicate": "title", 
+                        "variable": "?title"
+                    },
+                    {
+                        "isOptional": false,
+                        "predicate": "hairColor",
+                        "constraint": "blonde"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "constraint": "the millionaires mistress", 
+                        "operator": "=", 
+                        "variable": "?title"
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "type": "Point Fact"
+    }

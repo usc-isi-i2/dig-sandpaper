@@ -1,0 +1,81 @@
+{
+    "SPARQL": {
+        "group-by": {
+            "limit": 500
+        }, 
+        "select": {
+            "variables": [
+                {
+                    "type": "simple", 
+                    "variable": "?ad"
+                }, 
+                {
+                    "type": "simple", 
+                    "variable": "?ethnicity"
+                }
+            ]
+        }, 
+        "where": {
+            "clauses": [
+                {
+                    "constraint": "1234567890", 
+                    "isOptional": false, 
+                    "predicate": "phone", 
+                    "type": "owl:Thing"
+                }, 
+                {
+                    "constraint": "toronto, ontario", 
+                    "isOptional": false, 
+                    "predicate": "location", 
+                    "type": "Location"
+                }, 
+                {
+                    "isOptional": false, 
+                    "predicate": "ethnicity", 
+                    "type": "owl:Thing", 
+                    "variable": "?ethnicity"
+                }, 
+                {
+                    "isOptional": false, 
+                    "predicate": "title", 
+                    "type": "owl:Thing", 
+                    "variable": "?title"
+                }, 
+                {
+                    "constraint": "blonde", 
+                    "isOptional": false, 
+                    "predicate": "hairColor", 
+                    "type": "HairColor"
+                }, 
+                {
+                    "constraint": "straw", 
+                    "isOptional": true, 
+                    "predicate": "hairColor", 
+                    "type": "HairColor"
+                }, 
+                {
+                    "constraint": "blond",
+                    "isOptional": true, 
+                    "predicate": "hairColor", 
+                    "type": "HairColor"
+                }, 
+                {
+                    "constraint": "yellow", 
+                    "isOptional": true, 
+                    "predicate": "hairColor", 
+                    "type": "HairColor"
+                }
+            ], 
+            "filters": [
+                {
+                    "constraint": "the millionaires mistress", 
+                    "operator": "=", 
+                    "variable": "?title"
+                }
+            ], 
+            "type": "Ad", 
+            "variable": "?ad"
+        }
+    }, 
+    "type": "Point Fact"
+}

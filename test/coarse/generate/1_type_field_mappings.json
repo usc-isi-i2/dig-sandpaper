@@ -1,0 +1,8 @@
+{
+	"Location":["extractors.content_strict.data_extractors.city.result.value",
+		"extractors.content_relaxed.data_extractors.city.result.value"],
+	"Age":["extractors.content_strict.data_extractors.age.result.value",
+		"extractors.content_relaxed.data_extractors.age.result.value"],
+	"HairColor":["extractors.content_strict.text.result.value",
+	"extractors.content_relaxed.text.result.value"]
+}

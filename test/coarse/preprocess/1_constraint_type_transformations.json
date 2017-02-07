@@ -1,0 +1,4 @@
+{
+	"HairColor": "value.lower()",
+	"Location": "value.lower()"
+}

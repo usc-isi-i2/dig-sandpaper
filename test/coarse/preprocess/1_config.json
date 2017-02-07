@@ -1,0 +1,19 @@
+{
+    "components": [
+    {
+        "type": "ConstraintTypeMapper",
+        "name": "PredicateDictConstraintTypeMapper",
+        "predicate_range_mappings": "test/coarse/preprocess/1_predicate_range_mappings.json"
+    },
+    {
+        "type": "ConstraintConsistency",
+        "name": "ConstraintTypeTransformations",
+        "constraint_type_transformations": "test/coarse/preprocess/1_constraint_type_transformations.json"
+    },
+    {
+        "type": "ConstraintExpansion",
+        "name": "DictConstraintExpander",
+        "dict_constraint_mappings": "test/coarse/preprocess/1_dict_constraint_mappings.json"
+    }
+    ]
+}
