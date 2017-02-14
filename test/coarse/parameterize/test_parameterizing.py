@@ -29,6 +29,9 @@ class TestCoarseParameterizing(unittest.TestCase):
         self.assertEqual(results[0]["field_count"], 1)
         self.assertEqual(results[1]["field_count"], 1)
 
+        #print "parameterized result"
+        #print json.dumps(results, sort_keys=True, indent=4)
+
 
 if __name__ == '__main__':
     unittest.main()

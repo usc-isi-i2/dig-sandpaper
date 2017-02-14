@@ -21,7 +21,7 @@
                     "constraint": "1234567890", 
                     "isOptional": false, 
                     "predicate": "phone", 
-                    "type": "owl:Thing"
+                    "type": "Phone"
                 }, 
                 {
                     "constraint": "toronto, ontario", 
@@ -32,7 +32,7 @@
                 {
                     "isOptional": false, 
                     "predicate": "ethnicity", 
-                    "type": "owl:Thing", 
+                    "type": "Ethnicity", 
                     "variable": "?ethnicity"
                 }, 
                 {
@@ -54,7 +54,7 @@
                     "type": "HairColor"
                 }, 
                 {
-                    "constraint": "blond",
+                    "constraint": "blond", 
                     "isOptional": true, 
                     "predicate": "hairColor", 
                     "type": "HairColor"
@@ -68,8 +68,9 @@
             ], 
             "filters": [
                 {
-                    "constraint": "the millionaires mistress", 
+                    "constraint": "the enchanting mistress", 
                     "operator": "=", 
+                    "type": "owl:Thing", 
                     "variable": "?title"
                 }
             ], 

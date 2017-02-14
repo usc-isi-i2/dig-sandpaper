@@ -33,6 +33,8 @@ class TestCoarsePreprocessing(unittest.TestCase):
                          "blonde")
         self.assertEqual(result["SPARQL"]["where"]["clauses"][5]["constraint"],
                          "straw")
+        self.assertEqual(result["SPARQL"]["where"]["filters"][0]["type"],
+                         "owl:Thing")
 
 
 if __name__ == '__main__':

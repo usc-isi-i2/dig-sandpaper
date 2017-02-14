@@ -38,10 +38,16 @@ class PredicateDictConstraintTypeMapper(object):
         self.predicate_range_mappings = load_json_file(predicate_range_file)
 
     def preprocess(self, query):
+        clause_variable_to_type = {}
         for match in clause_jsonpath.find(query["SPARQL"]["where"]):
             clause = match.value
             clause["type"] = self.predicate_range_mappings.get(
                 clause["predicate"], "owl:Thing")
+            if "variable" in clause:
+                clause_variable_to_type[clause["variable"]] = clause["type"]
+
+        for f in query["SPARQL"]["where"]["filters"]:
+            f["type"] = clause_variable_to_type.get(f["variable"], "owl:Thing")
         return query
 
 

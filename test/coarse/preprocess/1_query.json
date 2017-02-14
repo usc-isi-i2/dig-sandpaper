@@ -18,7 +18,7 @@
             "where": {
                 "clauses": [
                     {
-                        "constraint": "6135019502", 
+                        "constraint": "1234567890", 
                         "isOptional": false, 
                         "predicate": "phone"
                     }, 
@@ -45,7 +45,7 @@
                 ], 
                 "filters": [
                     {
-                        "constraint": "the millionaires mistress", 
+                        "constraint": "the enchanting mistress", 
                         "operator": "=", 
                         "variable": "?title"
                     }

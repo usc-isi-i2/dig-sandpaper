@@ -1,0 +1,345 @@
+[
+    {
+        "SPARQL": {
+            "group-by": {
+                "limit": 500
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "simple", 
+                        "variable": "?ad"
+                    }, 
+                    {
+                        "type": "simple", 
+                        "variable": "?ethnicity"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "constraint": "1234567890", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.phone.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.data_extractors.local-phone.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "phone", 
+                        "type": "Phone"
+                    }, 
+                    {
+                        "constraint": "toronto, ontario", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.city.result.value", 
+                                "weight": 4
+                            }, 
+                            {
+                                "name": "extractors.content_strict.data_extractors.country.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "location", 
+                        "type": "Location"
+                    }, 
+                    {
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.ethnicity.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.data_extractors.nationality.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "ethnicity", 
+                        "type": "Ethnicity", 
+                        "variable": "?ethnicity"
+                    }, 
+                    {
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "title", 
+                        "type": "owl:Thing", 
+                        "variable": "?title"
+                    }, 
+                    {
+                        "constraint": "blonde", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.hair-color.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }, 
+                    {
+                        "constraint": "straw", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.hair-color.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "isOptional": true, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }, 
+                    {
+                        "constraint": "blond", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.hair-color.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "isOptional": true, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }, 
+                    {
+                        "constraint": "yellow", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.hair-color.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "isOptional": true, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "constraint": "the enchanting mistress", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "operator": "=", 
+                        "type": "owl:Thing", 
+                        "variable": "?title"
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "field_count": 1, 
+        "type": "Point Fact", 
+        "zone": [
+            1
+        ]
+    }, 
+    {
+        "SPARQL": {
+            "group-by": {
+                "limit": 500
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "simple", 
+                        "variable": "?ad"
+                    }, 
+                    {
+                        "type": "simple", 
+                        "variable": "?ethnicity"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "constraint": "1234567890", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.phone.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.phone.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.data_extractors.local-phone.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.local-phone.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "phone", 
+                        "type": "Phone"
+                    }, 
+                    {
+                        "constraint": "toronto, ontario", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.city.result.value", 
+                                "weight": 4
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.city.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.data_extractors.country.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.country.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "location", 
+                        "type": "Location"
+                    }, 
+                    {
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.ethnicity.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.ethnicity.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.data_extractors.nationality.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.nationality.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "ethnicity", 
+                        "type": "Ethnicity", 
+                        "variable": "?ethnicity"
+                    }, 
+                    {
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.text.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "title", 
+                        "type": "owl:Thing", 
+                        "variable": "?title"
+                    }, 
+                    {
+                        "constraint": "blonde", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.hair-color.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.text.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }, 
+                    {
+                        "constraint": "straw", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.hair-color.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.text.result.value"
+                            }
+                        ], 
+                        "isOptional": true, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }, 
+                    {
+                        "constraint": "blond", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.hair-color.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.text.result.value"
+                            }
+                        ], 
+                        "isOptional": true, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }, 
+                    {
+                        "constraint": "yellow", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.hair-color.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.text.result.value"
+                            }
+                        ], 
+                        "isOptional": true, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "constraint": "the enchanting mistress", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.text.result.value"
+                            }
+                        ], 
+                        "operator": "=", 
+                        "type": "owl:Thing", 
+                        "variable": "?title"
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "field_count": 1, 
+        "type": "Point Fact", 
+        "zone": [
+            1, 
+            2
+        ]
+    }
+]

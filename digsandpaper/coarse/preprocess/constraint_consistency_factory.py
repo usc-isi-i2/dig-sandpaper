@@ -54,7 +54,8 @@ class ConstraintTypeTransformations(object):
             if "constraint" not in clause.value:
                 continue
             compiled_transformation = self.constraint_type_transformations.get(
-                clause.value.get("type", "owl:Thing"))
+                clause.value.get("type", "owl:Thing"), 
+                self.constraint_type_transformations.get("owl:Thing"))
             data = {}
             data["value"] = clause.value["constraint"]
             clause.value["constraint"] = eval(
