@@ -1,7 +1,8 @@
 [
     {
         "ELASTICSEARCH": {
-            "index": "ads", 
+            "index": "dig-sandpaper-test",
+            "doc_type": "ads", 
             "search": {
                 "query": {
                     "bool": {
@@ -341,7 +342,8 @@
     }, 
     {
         "ELASTICSEARCH": {
-            "index": "ads", 
+            "index": "dig-sandpaper-test",
+            "doc_type": "ads",  
             "search": {
                 "query": {
                     "bool": {

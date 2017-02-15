@@ -4,7 +4,7 @@ import codecs
 import requests
 from digsandpaper.coarse.execute.executor import Executor
 import os
-
+import test.test_utils
 
 _location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -23,19 +23,14 @@ class TestCoarseExecuting(unittest.TestCase):
         queries = load_json_file("1_query.json")
         document = load_json_file("1_document.json")
 
-        r = requests.put('http://localhost:9200/dig-sandpaper-test', data="{}")
-
-
-        r = requests.put('http://localhost:9200/dig-sandpaper-test/ads/1',
-                         data=json.dumps(document))
+        test.test_utils.initialize_elasticsearch([document])
 
         executor = Executor(config)
 
         for query in queries:
             result = executor.execute(query)
 
-        r = requests.delete('http://localhost:9200/dig-sandpaper-test')
-
+        test.test_utils.reset_elasticsearch()
 
 
 if __name__ == '__main__':

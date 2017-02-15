@@ -1,14 +1,9 @@
 {
 	"components": [
     {
-        "type": "TypeFieldMapping",
-        "name": "TypeFieldMapping",
-        "type_field_mappings": "test/coarse/generate/1_type_field_mappings.json"
-    },
-    {
-        "type": "ZoneFieldMapping",
-        "name": "ZoneFieldMapping",
-        "zone_field_mappings": "test/coarse/generate/1_zone_field_mappings.json"
+        "type": "TypeDocTypeMapping",
+        "name": "TypeDocTypeMapping",
+        "type_doc_type_mappings": "test/coarse/generate/1_type_doc_type_mappings.json"
     },
     {
         "type": "TypeIndexMapping",

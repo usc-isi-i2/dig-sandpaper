@@ -3,14 +3,16 @@ import type_field_mapping_component
 import type_query_mapping_component
 import zone_field_mapping_component
 import query_compiler_component
+import type_doc_type_mapping_component
 import type_index_mapping_component
 
 component_order = {type_field_mapping_component.name: 1,
                    zone_field_mapping_component.name: 2,
                    field_weight_component.name: 3,
                    type_query_mapping_component.name: 4,
-                   type_index_mapping_component.name: 5,
-                   query_compiler_component.name: 6}
+                   type_doc_type_mapping_component.name: 5,
+                   type_index_mapping_component.name: 6,
+                   query_compiler_component.name: 7}
 
 
 def get_component(component_config):
@@ -23,6 +25,8 @@ def get_component(component_config):
         return type_query_mapping_component.get_component(component_config)
     elif component_type == zone_field_mapping_component.name:
         return zone_field_mapping_component.get_component(component_config)
+    elif component_type == type_doc_type_mapping_component.name:
+        return type_doc_type_mapping_component.get_component(component_config)
     elif component_type == type_index_mapping_component.name:
         return type_index_mapping_component.get_component(component_config)
     elif component_type == query_compiler_component.name:

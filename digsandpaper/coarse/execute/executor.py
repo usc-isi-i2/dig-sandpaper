@@ -14,4 +14,5 @@ class Executor(object):
 
     def execute(self, query):
         for component in self.components:
-            query = component.execute(query)
+            results = component.execute(query)
+        return results

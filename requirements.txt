@@ -3,3 +3,4 @@ elasticsearch-dsl>=5.0.0
 jsonpath-rw>=1.4.0
 jsonpath-rw-ext>=1.0.0
 requests
+Flask

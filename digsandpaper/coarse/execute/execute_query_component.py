@@ -31,8 +31,8 @@ class ExecuteElasticsearchQuery(object):
         return
 
     def execute(self, query):
-        s = Search(
-                   index=query["ELASTICSEARCH"]["index"]).from_dict(query["ELASTICSEARCH"]["search"])
+        s = Search(index=query["ELASTICSEARCH"]["index"],
+                   doc_type=query["ELASTICSEARCH"]["doc_type"]).from_dict(query["ELASTICSEARCH"]["search"])
         response = s.execute()
         return response
 
