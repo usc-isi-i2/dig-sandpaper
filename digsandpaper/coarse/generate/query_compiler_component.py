@@ -121,7 +121,7 @@ class ElasticsearchQueryCompiler(object):
                        should=shoulds,
                        filter=filters,
                        must_not=must_nots)
-        s = s.source(include=list(source_fields))
+        s = s.source(includes=list(source_fields))
         if "ELASTICSEARCH" not in query:
             query["ELASTICSEARCH"] = {}
         query["ELASTICSEARCH"]["search"] = self.clean_dismax(s.to_dict())
