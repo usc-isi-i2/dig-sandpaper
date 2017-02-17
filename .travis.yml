@@ -2,11 +2,18 @@ sudo: required
 language: python
 python:
 - '2.7'
-services:
-  - elasticsearch
+addons:
+  apt:
+    packages:
+      - oracle-java8-set-default
+before_install:
+  - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.1.deb && \
+  - sudo dpkg -i --force-confnew elasticsearch-5.1.1.deb && \
+  - sudo service elasticsearch start
 install: pip install -r requirements.txt
 before_script:
   - sleep 10
+  - curl -v http://localhost:9200/
 script: python -m unittest discover
 notifications:
   slack:
