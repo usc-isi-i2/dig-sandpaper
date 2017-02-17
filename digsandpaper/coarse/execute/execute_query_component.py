@@ -1,7 +1,5 @@
 import json
 import codecs
-from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Search, Q
 from elasticsearch_dsl.connections import connections
 
 __name__ = "ExecuteQueryComponent"
@@ -26,7 +24,6 @@ class ExecuteElasticsearchQuery(object):
         self.host = self.config["host"]
         self.port = self.config["port"]
         connections.create_connection(hosts=[self.host])
-        #self.client = Elasticsearch([{"host": self.host, "port": self.port}])
 
         return
 

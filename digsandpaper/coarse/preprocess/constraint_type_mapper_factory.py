@@ -48,6 +48,10 @@ class PredicateDictConstraintTypeMapper(object):
 
         for f in query["SPARQL"]["where"]["filters"]:
             f["type"] = clause_variable_to_type.get(f["variable"], "owl:Thing")
+
+        for s in query["SPARQL"]["select"]["variables"]:
+            s["type"] = clause_variable_to_type.get(s["variable"], "owl:Thing")
+
         return query
 
 

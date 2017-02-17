@@ -65,6 +65,9 @@ class ElasticsearchQueryCompiler(object):
         where = query["SPARQL"]["where"]
         where_clauses = where["clauses"]
         filter_clauses = where["filters"]
+        select_variables = query["SPARQL"]["select"]["variables"]
+
+        source_fields = set()
 
         musts = []
         shoulds = []
@@ -76,6 +79,8 @@ class ElasticsearchQueryCompiler(object):
                 # todo everything should have fields fields
                 continue
             fields = clause["fields"]
+
+            source_fields |= set([field["name"] for field in fields])
             if("constraint" in clause):
                 if len(fields) == 1:
                     es_clause = self.translate_clause(clause, fields[0])
@@ -102,15 +107,21 @@ class ElasticsearchQueryCompiler(object):
         for f in filter_clauses:
             if "fields" not in f:
                 continue
+            source_fields |= set([field["name"] for field in f["fields"]])
             for field in f["fields"]:
                 filters.append(self.translate_filter(f, field))
+
+        for s in select_variables:
+            if "fields" not in s:
+                continue
+            source_fields |= set([field["name"] for field in s["fields"]])
 
         s = Search()
         s.query = Bool(must=musts,
                        should=shoulds,
                        filter=filters,
                        must_not=must_nots)
-
+        s = s.source(include=list(source_fields))
         if "ELASTICSEARCH" not in query:
             query["ELASTICSEARCH"] = {}
         query["ELASTICSEARCH"]["search"] = self.clean_dismax(s.to_dict())
