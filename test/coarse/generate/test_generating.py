@@ -44,6 +44,12 @@ class TestCoarseGenerating(unittest.TestCase):
         generated_queries = [generator.generate(
             q) for q in parameterized_queries]
         self.assertEqual(len(generated_queries), 2)
+        self.assertIn("ELASTICSEARCH", generated_queries[0])
+        self.assertIn("search", generated_queries[0]["ELASTICSEARCH"])
+        self.assertIn("query", generated_queries[0]["ELASTICSEARCH"]["search"])
+        self.assertEqual(generated_queries[0]["ELASTICSEARCH"]["search"]["size"], 500)
+        self.assertEqual(generated_queries[0]["ELASTICSEARCH"]["search"]["from"], 0)
+        
         #print json.dumps(generated_queries, sort_keys=True, indent=4)
 
 

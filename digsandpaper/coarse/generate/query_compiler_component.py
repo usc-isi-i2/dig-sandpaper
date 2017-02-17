@@ -116,12 +116,22 @@ class ElasticsearchQueryCompiler(object):
                 continue
             source_fields |= set([field["name"] for field in s["fields"]])
 
+        q = Bool(must=musts,
+                 should=shoulds,
+                 filter=filters,
+                 must_not=must_nots)
         s = Search()
-        s.query = Bool(must=musts,
-                       should=shoulds,
-                       filter=filters,
-                       must_not=must_nots)
+        s.query = q
         s = s.source(includes=list(source_fields))
+        if "group-by" in query["SPARQL"]:
+            if "limit" in query["SPARQL"]["group-by"]:
+                s = s.extra(size=int(query["SPARQL"]["group-by"]["limit"]))
+
+            if "offset" in query["SPARQL"]["group-by"]:
+                s = s.extra(from_=int(query["SPARQL"]["group-by"]["offset"]))
+            else:
+                s = s.extra(from_=0)
+
         if "ELASTICSEARCH" not in query:
             query["ELASTICSEARCH"] = {}
         query["ELASTICSEARCH"]["search"] = self.clean_dismax(s.to_dict())
