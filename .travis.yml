@@ -5,16 +5,16 @@ python:
 addons:
   apt:
     packages:
-      - oracle-java8-set-default
+    - oracle-java8-set-default
 before_install:
-  - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.1.deb
-  - sudo dpkg -i --force-confnew elasticsearch-5.1.1.deb
-  - sudo service elasticsearch start
+- curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.1.deb
+- sudo dpkg -i --force-confnew elasticsearch-5.1.1.deb
+- sudo service elasticsearch start
 install: pip install -r requirements.txt
 before_script:
-  - sleep 10
-  - curl -v http://localhost:9200/
+- sleep 10
+- curl -v http://localhost:9200/
 script: python -m unittest discover
 notifications:
   slack:
-    secure: K3qNWhQ76BMr3wJj9XXRq+oDJztnbb7LFycKjKky9KCyd0QrWp17PMdopzmg1v325UkFsLuqX6z937D/2ZxvIgcVsVhYu3R2FvLjR4S7c5dsWIc2F4hsQPAvCmHLcy1q0G6xTAfnQLj1FMG2sFRcvFKXvO+1RIDaVZviVzEOD6wM7AOVTm+gGtRWo6SgKep2DlWN0V3+yYkbQkDvlAHFQ1z7P6sgX0idMIz/q0WJRvVenTY9SiAlAbB/mbBg7QVdsFkAdkvEkYAiOixYzPRmsVMfgkxn61vI/oVBSxGEXlQ1KbRywwOWpYG2iCNWxks1mId/Shqu/mOM+IrIv0XsIcXY8KmfnwB38HNOlDVTbZNwaXNo4c3O66KIeFnqitauBxVJFF6QgfuFQJpmxqJqy7HC0SRt2PhO1AOz7ukYZorBCnK4oEsBdWN10qWLb+fgO70kAJDIpHT3V+w/jT8gxNvCOTB9HMPIdZnsMUecSpKMfAeu9dUSCUzBDa9g35Zq+to3+5zCMtCmFxaW4yHioX6u8VIS4yd/5ajTC6eVE5EOi/JLi9R9LAL0Fco2BczKPqWx8397a0f5A6XH/YyxnMlLyXKJeTqB2t0XE0nqQHOAY8w8ZRyS46YS37XX76jzTvpukFhosgeOtCF4fB+vRmtueJeaEIckx2RrSZ9O1zc=
+    secure: aHNsTacns/t+SVGrX9PeMup4L20Zs/xfHvbQXAt25vNvEv411bH5oydEOTMCoJxQqFENdh2ttrUPbhmcvn4VTvw3EVCb7QXHn2j1RWAWtF000QmdISYiRfd++m1RVhXkI+KqVn5+/xp3O9uKi9jfApXjg8uyewPNnHK1L21XuWi0/ZthoRD7YxX2y/PBD9GmoWNbbtEzIipZt41bcRS+QtynRP8Az9UtbccTU1jCEPHwaM5+3POrhfLuZM1K/0lyYqx4JUmb8MZI4RRgTXtGon49zPjNnnIG1ShgmfmYBBzWaD40VPfq6SVbBpzVcAnEaeQXtwI4E9utuSxkNm3axQ8kXtLwaH1360+RUUmthL4mLVzPSRu22FL7sl4YmpgvuNfzY9VRaHNoBfAZ596y7YVVPTUMCH41vzzeFEqR0O90lCeVjWKHCX3VeXacNtydEwYoxKVbEJBeUjuBjzn/N3iwPJ4BkjxdO4LgAovrDnTb32gc7hUP9cR1P6HlUwd61NRYSnnv5qpvlmIZTh+cUGPX55DjJZVor9Em5kaOlwO3qweIFm7WEYhzD4ncPaY6hENbgSM3p0XBx8B6IKndqczphc3NhLHjvObYya6SMZw2lZelvi3kc6mlxjiLatj2YXPRUGDqg9hjPaBdbMFI7dE6WNJivmnIvJiaCCBvgX0=
