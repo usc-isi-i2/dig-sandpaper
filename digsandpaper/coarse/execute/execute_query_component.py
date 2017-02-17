@@ -1,5 +1,6 @@
 import json
 import codecs
+from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 
 __name__ = "ExecuteQueryComponent"
