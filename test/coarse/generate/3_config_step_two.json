@@ -1,0 +1,19 @@
+{
+    "components": [
+    {
+        "type": "TypeDocTypeMapping",
+        "name": "TypeDocTypeMapping",
+        "type_doc_type_mappings": "test/coarse/generate/1_type_doc_type_mappings.json"
+    },
+    {
+        "type": "TypeIndexMapping",
+        "name": "TypeIndexMapping",
+        "type_index_mappings": "test/coarse/generate/1_type_index_mappings.json"
+    },
+    {
+        "type": "QueryCompiler",
+        "name": "ElasticsearchQueryCompiler",
+        "elasticsearch_compiler_options": "test/coarse/generate/1_elasticsearch_compiler_options_step_two.json"
+    }
+    ]
+}

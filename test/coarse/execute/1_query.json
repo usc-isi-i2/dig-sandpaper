@@ -1,17 +1,29 @@
 [
     {
         "ELASTICSEARCH": {
-            "index": "dig-sandpaper-test",
             "doc_type": "ads", 
+            "index": "dig-sandpaper-test", 
             "search": {
+                "_source": {
+                    "includes": [
+                        "extractors.content_strict.data_extractors.hair-color.result.value", 
+                        "extractors.content_strict.data_extractors.local-phone.result.value", 
+                        "extractors.content_strict.data_extractors.city.result.value", 
+                        "extractors.content_strict.data_extractors.country.result.value", 
+                        "extractors.content_strict.data_extractors.ethnicity.result.value", 
+                        "extractors.content_strict.text.result.value", 
+                        "extractors.content_strict.data_extractors.phone.result.value", 
+                        "extractors.content_strict.data_extractors.nationality.result.value"
+                    ]
+                }, 
+                "from": 0, 
                 "query": {
                     "bool": {
                         "filter": [
                             {
                                 "match": {
                                     "extractors.content_strict.text.result.value": {
-                                        "query": "the enchanting mistress", 
-                                        "type": "phrase"
+                                        "query": "the enchanting mistress"
                                     }
                                 }
                             }
@@ -24,8 +36,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.phone.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "1234567890", 
-                                                    "type": "phrase"
+                                                    "query": "1234567890"
                                                 }
                                             }
                                         }, 
@@ -33,8 +44,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.local-phone.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "1234567890", 
-                                                    "type": "phrase"
+                                                    "query": "1234567890"
                                                 }
                                             }
                                         }
@@ -48,8 +58,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.city.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "toronto, ontario", 
-                                                    "type": "phrase"
+                                                    "query": "toronto, ontario"
                                                 }
                                             }
                                         }, 
@@ -57,8 +66,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.country.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "toronto, ontario", 
-                                                    "type": "phrase"
+                                                    "query": "toronto, ontario"
                                                 }
                                             }
                                         }
@@ -93,8 +101,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.hair-color.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "blonde", 
-                                                    "type": "phrase"
+                                                    "query": "blonde"
                                                 }
                                             }
                                         }, 
@@ -102,8 +109,7 @@
                                             "match": {
                                                 "extractors.content_strict.text.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "blonde", 
-                                                    "type": "phrase"
+                                                    "query": "blonde"
                                                 }
                                             }
                                         }
@@ -119,8 +125,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.hair-color.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "straw", 
-                                                    "type": "phrase"
+                                                    "query": "straw"
                                                 }
                                             }
                                         }, 
@@ -128,8 +133,7 @@
                                             "match": {
                                                 "extractors.content_strict.text.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "straw", 
-                                                    "type": "phrase"
+                                                    "query": "straw"
                                                 }
                                             }
                                         }
@@ -143,8 +147,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.hair-color.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "blond", 
-                                                    "type": "phrase"
+                                                    "query": "blond"
                                                 }
                                             }
                                         }, 
@@ -152,8 +155,7 @@
                                             "match": {
                                                 "extractors.content_strict.text.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "blond", 
-                                                    "type": "phrase"
+                                                    "query": "blond"
                                                 }
                                             }
                                         }
@@ -167,8 +169,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.hair-color.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "yellow", 
-                                                    "type": "phrase"
+                                                    "query": "yellow"
                                                 }
                                             }
                                         }, 
@@ -176,8 +177,7 @@
                                             "match": {
                                                 "extractors.content_strict.text.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "yellow", 
-                                                    "type": "phrase"
+                                                    "query": "yellow"
                                                 }
                                             }
                                         }
@@ -186,7 +186,8 @@
                             }
                         ]
                     }
-                }
+                }, 
+                "size": 500
             }
         }, 
         "SPARQL": {
@@ -225,7 +226,8 @@
                         "constraint": "toronto, ontario", 
                         "fields": [
                             {
-                                "name": "extractors.content_strict.data_extractors.city.result.value"
+                                "name": "extractors.content_strict.data_extractors.city.result.value", 
+                                "weight": 4
                             }, 
                             {
                                 "name": "extractors.content_strict.data_extractors.country.result.value"
@@ -342,26 +344,50 @@
     }, 
     {
         "ELASTICSEARCH": {
-            "index": "dig-sandpaper-test",
-            "doc_type": "ads",  
+            "doc_type": "ads", 
+            "index": "dig-sandpaper-test", 
             "search": {
+                "_source": {
+                    "includes": [
+                        "extractors.content_strict.data_extractors.local-phone.result.value", 
+                        "extractors.content_relaxed.data_extractors.country.result.value", 
+                        "extractors.content_relaxed.data_extractors.city.result.value", 
+                        "extractors.content_strict.data_extractors.country.result.value", 
+                        "extractors.content_relaxed.data_extractors.phone.result.value", 
+                        "extractors.content_strict.data_extractors.phone.result.value", 
+                        "extractors.content_relaxed.data_extractors.local-phone.result.value", 
+                        "extractors.content_relaxed.data_extractors.ethnicity.result.value", 
+                        "extractors.content_relaxed.data_extractors.nationality.result.value", 
+                        "extractors.content_strict.data_extractors.hair-color.result.value", 
+                        "extractors.content_strict.data_extractors.nationality.result.value", 
+                        "extractors.content_relaxed.text.result.value", 
+                        "extractors.content_strict.data_extractors.city.result.value", 
+                        "extractors.content_strict.data_extractors.ethnicity.result.value", 
+                        "extractors.content_strict.text.result.value"
+                    ]
+                }, 
+                "from": 0, 
                 "query": {
                     "bool": {
                         "filter": [
                             {
-                                "match": {
-                                    "extractors.content_strict.text.result.value": {
-                                        "query": "the enchanting mistress", 
-                                        "type": "phrase"
-                                    }
-                                }
-                            }, 
-                            {
-                                "match": {
-                                    "extractors.content_relaxed.text.result.value": {
-                                        "query": "the enchanting mistress", 
-                                        "type": "phrase"
-                                    }
+                                "dis_max": {
+                                    "queries": [
+                                        {
+                                            "match": {
+                                                "extractors.content_strict.text.result.value": {
+                                                    "query": "the enchanting mistress"
+                                                }
+                                            }
+                                        }, 
+                                        {
+                                            "match": {
+                                                "extractors.content_relaxed.text.result.value": {
+                                                    "query": "the enchanting mistress"
+                                                }
+                                            }
+                                        }
+                                    ]
                                 }
                             }
                         ], 
@@ -373,8 +399,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.phone.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "1234567890", 
-                                                    "type": "phrase"
+                                                    "query": "1234567890"
                                                 }
                                             }
                                         }, 
@@ -382,8 +407,7 @@
                                             "match": {
                                                 "extractors.content_relaxed.data_extractors.phone.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "1234567890", 
-                                                    "type": "phrase"
+                                                    "query": "1234567890"
                                                 }
                                             }
                                         }, 
@@ -391,8 +415,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.local-phone.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "1234567890", 
-                                                    "type": "phrase"
+                                                    "query": "1234567890"
                                                 }
                                             }
                                         }, 
@@ -400,8 +423,7 @@
                                             "match": {
                                                 "extractors.content_relaxed.data_extractors.local-phone.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "1234567890", 
-                                                    "type": "phrase"
+                                                    "query": "1234567890"
                                                 }
                                             }
                                         }
@@ -415,8 +437,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.city.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "toronto, ontario", 
-                                                    "type": "phrase"
+                                                    "query": "toronto, ontario"
                                                 }
                                             }
                                         }, 
@@ -424,8 +445,7 @@
                                             "match": {
                                                 "extractors.content_relaxed.data_extractors.city.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "toronto, ontario", 
-                                                    "type": "phrase"
+                                                    "query": "toronto, ontario"
                                                 }
                                             }
                                         }, 
@@ -433,8 +453,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.country.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "toronto, ontario", 
-                                                    "type": "phrase"
+                                                    "query": "toronto, ontario"
                                                 }
                                             }
                                         }, 
@@ -442,8 +461,7 @@
                                             "match": {
                                                 "extractors.content_relaxed.data_extractors.country.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "toronto, ontario", 
-                                                    "type": "phrase"
+                                                    "query": "toronto, ontario"
                                                 }
                                             }
                                         }
@@ -499,8 +517,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.hair-color.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "blonde", 
-                                                    "type": "phrase"
+                                                    "query": "blonde"
                                                 }
                                             }
                                         }, 
@@ -508,8 +525,7 @@
                                             "match": {
                                                 "extractors.content_strict.text.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "blonde", 
-                                                    "type": "phrase"
+                                                    "query": "blonde"
                                                 }
                                             }
                                         }, 
@@ -517,8 +533,7 @@
                                             "match": {
                                                 "extractors.content_relaxed.text.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "blonde", 
-                                                    "type": "phrase"
+                                                    "query": "blonde"
                                                 }
                                             }
                                         }
@@ -534,8 +549,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.hair-color.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "straw", 
-                                                    "type": "phrase"
+                                                    "query": "straw"
                                                 }
                                             }
                                         }, 
@@ -543,8 +557,7 @@
                                             "match": {
                                                 "extractors.content_strict.text.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "straw", 
-                                                    "type": "phrase"
+                                                    "query": "straw"
                                                 }
                                             }
                                         }, 
@@ -552,8 +565,7 @@
                                             "match": {
                                                 "extractors.content_relaxed.text.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "straw", 
-                                                    "type": "phrase"
+                                                    "query": "straw"
                                                 }
                                             }
                                         }
@@ -567,8 +579,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.hair-color.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "blond", 
-                                                    "type": "phrase"
+                                                    "query": "blond"
                                                 }
                                             }
                                         }, 
@@ -576,8 +587,7 @@
                                             "match": {
                                                 "extractors.content_strict.text.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "blond", 
-                                                    "type": "phrase"
+                                                    "query": "blond"
                                                 }
                                             }
                                         }, 
@@ -585,8 +595,7 @@
                                             "match": {
                                                 "extractors.content_relaxed.text.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "blond", 
-                                                    "type": "phrase"
+                                                    "query": "blond"
                                                 }
                                             }
                                         }
@@ -600,8 +609,7 @@
                                             "match": {
                                                 "extractors.content_strict.data_extractors.hair-color.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "yellow", 
-                                                    "type": "phrase"
+                                                    "query": "yellow"
                                                 }
                                             }
                                         }, 
@@ -609,8 +617,7 @@
                                             "match": {
                                                 "extractors.content_strict.text.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "yellow", 
-                                                    "type": "phrase"
+                                                    "query": "yellow"
                                                 }
                                             }
                                         }, 
@@ -618,8 +625,7 @@
                                             "match": {
                                                 "extractors.content_relaxed.text.result.value": {
                                                     "boost": 1.0, 
-                                                    "query": "yellow", 
-                                                    "type": "phrase"
+                                                    "query": "yellow"
                                                 }
                                             }
                                         }
@@ -628,7 +634,8 @@
                             }
                         ]
                     }
-                }
+                }, 
+                "size": 500
             }
         }, 
         "SPARQL": {
@@ -673,7 +680,8 @@
                         "constraint": "toronto, ontario", 
                         "fields": [
                             {
-                                "name": "extractors.content_strict.data_extractors.city.result.value"
+                                "name": "extractors.content_strict.data_extractors.city.result.value", 
+                                "weight": 4
                             }, 
                             {
                                 "name": "extractors.content_relaxed.data_extractors.city.result.value"

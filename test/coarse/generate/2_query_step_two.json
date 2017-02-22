@@ -1,0 +1,85 @@
+[
+    {
+        "SPARQL": {
+            "group-by": {
+                "limit": 500
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "owl:Thing", 
+                        "variable": "?ad"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "title", 
+                        "type": "owl:Thing", 
+                        "variable": "?title"
+                    }, 
+                    {
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "content", 
+                        "type": "owl:Thing", 
+                        "variable": "?content"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "clauses": [
+                            {
+                                "constraint": "the enchanting mistress", 
+                                "fields": [
+                                    {
+                                        "name": "extractors.content_strict.text.result.value"
+                                    }, 
+                                    {
+                                        "name": "extractors.content_relaxed.text.result.value"
+                                    }
+                                ], 
+                                "operator": "=", 
+                                "type": "owl:Thing", 
+                                "variable": "?title"
+                            }, 
+                            {
+                                "constraint": "is available this weekend", 
+                                "fields": [
+                                    {
+                                        "name": "extractors.content_strict.text.result.value"
+                                    }, 
+                                    {
+                                        "name": "extractors.content_relaxed.text.result.value"
+                                    }
+                                ], 
+                                "operator": "=", 
+                                "type": "owl:Thing", 
+                                "variable": "?content"
+                            }
+                        ], 
+                        "operator": "and"
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "field_count": 1, 
+        "type": "Point Fact", 
+        "zone": [
+            1
+        ]
+    }
+]

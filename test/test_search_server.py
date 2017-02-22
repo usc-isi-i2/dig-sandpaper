@@ -64,20 +64,32 @@ class SearchServerTestCase(unittest.TestCase):
         response = self.app.get('/')
         self.assertEquals(200, response.status_code)
 
-    def test_coarse(self):
-        config = load_engine_configuration(1)
+    def helper_test_coarse(self, i):
+        config = load_engine_configuration(i)
         engine = Engine(config, "localhost", 9200)
         query = load_sub_configuration("coarse", "preprocess",
-                                       1, "_query.json")
+                                       i, "_query.json")
         document = load_sub_configuration("coarse", "execute",
-                                          1, "_document.json")
+                                          i, "_document.json")
         test_utils.initialize_elasticsearch([document])
         search_server.set_engine(engine)
         response = self.app.post('/search/coarse', data=json.dumps(query))
         self.assertEquals(200, response.status_code)
         results = json.loads(response.data)
-        self.assertEquals(len(results), 2)
         test_utils.reset_elasticsearch()
+        return results
+        self.assertEquals(len(results), 2)
+
+    def test_coarse(self):
+        results_1 = self.helper_test_coarse(1)
+        self.assertEquals(len(results_1), 2)
+        self.assertEquals(len(results_1[0]["hits"]["hits"]), 1)
+        results_2 = self.helper_test_coarse(2)
+        self.assertEquals(len(results_2), 1)
+        self.assertEquals(len(results_2[0]["hits"]["hits"]), 1)
+        results_3 = self.helper_test_coarse(3)
+        self.assertEquals(len(results_3), 1)
+        self.assertEquals(len(results_3[0]["hits"]["hits"]), 1)
 
 
 if __name__ == '__main__':

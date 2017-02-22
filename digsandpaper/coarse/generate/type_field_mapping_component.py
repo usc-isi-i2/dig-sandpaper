@@ -23,6 +23,17 @@ class TypeFieldMapping(object):
         file = self.config["type_field_mappings"]
         self.type_field_mapping = load_json_file(file)
 
+    def add_types_to_filters(self, f):
+        if "type" in f:
+            t = f["type"]
+            if t in self.type_field_mapping:
+                f["fields"] = []
+                for field in self.type_field_mapping[t]:
+                    f["fields"].append({"name": field})
+        if "clauses" in f:
+            for clause in f["clauses"]:
+                self.add_types_to_filters(clause)
+
     def generate(self, query):
         where = query["SPARQL"]["where"]
         where_clauses = where["clauses"]
@@ -38,13 +49,7 @@ class TypeFieldMapping(object):
                     clause["fields"].append({"name": field})
 
         for f in filters:
-            if "type" not in f:
-                continue
-            t = f["type"]
-            if t in self.type_field_mapping:
-                f["fields"] = []
-                for field in self.type_field_mapping[t]:
-                    f["fields"].append({"name": field})
+            self.add_types_to_filters(f)
 
         return query
 

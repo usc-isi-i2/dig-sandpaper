@@ -1,0 +1,224 @@
+[
+    {
+        "ELASTICSEARCH": {
+            "doc_type": "ads", 
+            "index": "dig-sandpaper-test", 
+            "search": {
+                "_source": {
+                    "includes": [
+                        "extractors.content_strict.text.result.value", 
+                        "extractors.content_relaxed.text.result.value"
+                    ]
+                }, 
+                "from": 0, 
+                "query": {
+                    "bool": {
+                        "filter": [
+                            {
+                                "bool": {
+                                    "filter": [
+                                        {
+                                            "dis_max": {
+                                                "queries": [
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.text.result.value": {
+                                                                "query": "the enchanting mistress"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_relaxed.text.result.value": {
+                                                                "query": "the enchanting mistress"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }, 
+                                        {
+                                            "dis_max": {
+                                                "queries": [
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.text.result.value": {
+                                                                "query": "is available this weekend"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_relaxed.text.result.value": {
+                                                                "query": "is available this weekend"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ], 
+                        "must": [
+                            {
+                                "match": {
+                                    "extractors.content_strict.text.result.value": {
+                                        "boost": 1.0, 
+                                        "query": "1234567890"
+                                    }
+                                }
+                            }, 
+                            {
+                                "match": {
+                                    "extractors.content_strict.text.result.value": {
+                                        "boost": 1.0, 
+                                        "query": "Toronto, Ontario"
+                                    }
+                                }
+                            }, 
+                            {
+                                "exists": {
+                                    "field": "extractors.content_strict.text.result.value"
+                                }
+                            }, 
+                            {
+                                "exists": {
+                                    "field": "extractors.content_strict.text.result.value"
+                                }
+                            }, 
+                            {
+                                "match": {
+                                    "extractors.content_strict.text.result.value": {
+                                        "boost": 1.0, 
+                                        "query": "blonde"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }, 
+                "size": 500
+            }
+        }, 
+        "SPARQL": {
+            "group-by": {
+                "limit": 500
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "owl:Thing", 
+                        "variable": "?ad"
+                    }, 
+                    {
+                        "type": "owl:Thing", 
+                        "variable": "?ethnicity"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "constraint": "1234567890", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "phone", 
+                        "type": "owl:Thing"
+                    }, 
+                    {
+                        "constraint": "Toronto, Ontario", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "location", 
+                        "type": "owl:Thing"
+                    }, 
+                    {
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "ethnicity", 
+                        "type": "owl:Thing", 
+                        "variable": "?ethnicity"
+                    }, 
+                    {
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "title", 
+                        "type": "owl:Thing", 
+                        "variable": "?title"
+                    }, 
+                    {
+                        "constraint": "blonde", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "hairColor", 
+                        "type": "owl:Thing"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "clauses": [
+                            {
+                                "constraint": "the enchanting mistress", 
+                                "fields": [
+                                    {
+                                        "name": "extractors.content_strict.text.result.value"
+                                    }, 
+                                    {
+                                        "name": "extractors.content_relaxed.text.result.value"
+                                    }
+                                ], 
+                                "operator": "=", 
+                                "type": "owl:Thing", 
+                                "variable": "?title"
+                            }, 
+                            {
+                                "constraint": "is available this weekend", 
+                                "fields": [
+                                    {
+                                        "name": "extractors.content_strict.text.result.value"
+                                    }, 
+                                    {
+                                        "name": "extractors.content_relaxed.text.result.value"
+                                    }
+                                ], 
+                                "operator": "=", 
+                                "type": "owl:Thing", 
+                                "variable": "?content"
+                            }
+                        ], 
+                        "operator": "and"
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "field_count": 1, 
+        "type": "Point Fact", 
+        "zone": [
+            1
+        ]
+    }
+]

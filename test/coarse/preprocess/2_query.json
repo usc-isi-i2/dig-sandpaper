@@ -1,0 +1,46 @@
+{
+        "SPARQL": {
+            "group-by": {
+                "limit": 500
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "simple", 
+                        "variable": "?ad"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [   
+                     {
+                      "variable": "?title", 
+                      "predicate": "title", 
+                      "isOptional": false
+                     }, 
+                     {
+                      "variable": "?content", 
+                      "predicate": "content", 
+                      "isOptional": false
+                     }
+                ], 
+                "filters": [
+                    {
+                        "operator": "and",
+                    "clauses":[{
+                        "constraint": "the enchanting mistress", 
+                        "operator": "=", 
+                        "variable": "?title"
+                    },{
+                        "constraint": "is available this weekend", 
+                        "operator": "=", 
+                        "variable": "?content"
+                    }]
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "type": "Point Fact"
+    }

@@ -1,0 +1,65 @@
+{
+        "SPARQL": {
+            "group-by": {
+                "limit": 500
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "simple", 
+                        "variable": "?ad"
+                    }, 
+                    {
+                        "type": "simple", 
+                        "variable": "?ethnicity"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "constraint": "1234567890", 
+                        "isOptional": false, 
+                        "predicate": "phone"
+                    }, 
+                    {
+                        "constraint": "Toronto, Ontario", 
+                        "isOptional": false, 
+                        "predicate": "location"
+                    }, 
+                    {
+                        "isOptional": false, 
+                        "predicate": "ethnicity", 
+                        "variable": "?ethnicity"
+                    }, 
+                    {
+                        "isOptional": false, 
+                        "predicate": "title", 
+                        "variable": "?title"
+                    },
+                    {
+                        "isOptional": false,
+                        "predicate": "hairColor",
+                        "constraint": "blonde"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "operator": "and",
+                    "clauses":[{
+                        "constraint": "the enchanting mistress", 
+                        "operator": "=", 
+                        "variable": "?title"
+                    },{
+                        "constraint": "is available this weekend", 
+                        "operator": "=", 
+                        "variable": "?content"
+                    }]
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "type": "Point Fact"
+    }

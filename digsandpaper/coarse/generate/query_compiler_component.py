@@ -2,7 +2,7 @@ import json
 import codecs
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search, Q
-from elasticsearch_dsl.query import MultiMatch, Match, DisMax, Bool, Exists
+from elasticsearch_dsl.query import MultiMatch, Match, DisMax, Bool, Exists, ConstantScore
 
 __name__ = "QueryCompiler"
 name = __name__
@@ -61,6 +61,39 @@ class ElasticsearchQueryCompiler(object):
                 self.clean_dismax(e)
         return query
 
+    # have to return source_fields because set union operation produces a new set
+    def generate_filter(self, f, filters, source_fields):
+        if "operator" not in f:
+            return source_fields
+
+        compound_filter = f["operator"] == "and" or f["operator"] == "or"
+        if "fields" not in f and not compound_filter:
+            return source_fields
+        if compound_filter:
+            clauses = f["clauses"]
+            sub_filters = []
+            for clause in clauses:
+                source_fields = self.generate_filter(clause,
+                                                     sub_filters,
+                                                     source_fields)
+            if f["operator"] == "and":
+                q = Bool(filter=sub_filters)
+            elif f["operator"] == "or":
+                q = Bool(should=[ConstantScore(filter=sf)
+                                 for sf in sub_filters])
+            filters.append(q)
+        else:
+            source_fields |= set([field["name"] for field in f["fields"]])
+            if len(f["fields"]) == 1:
+                filters.append(self.translate_filter(f, field))
+            else:
+                sub_filters = []
+                for field in f["fields"]:
+                    sub_filters.append(self.translate_filter(f, field))
+                q = DisMax(queries=sub_filters)
+                filters.append(q)
+        return source_fields
+
     def generate(self, query):
         where = query["SPARQL"]["where"]
         where_clauses = where["clauses"]
@@ -105,11 +138,7 @@ class ElasticsearchQueryCompiler(object):
                 musts.append(es_clause)
 
         for f in filter_clauses:
-            if "fields" not in f:
-                continue
-            source_fields |= set([field["name"] for field in f["fields"]])
-            for field in f["fields"]:
-                filters.append(self.translate_filter(f, field))
+            source_fields = self.generate_filter(f, filters, source_fields)
 
         for s in select_variables:
             if "fields" not in s:

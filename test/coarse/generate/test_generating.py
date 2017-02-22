@@ -52,6 +52,47 @@ class TestCoarseGenerating(unittest.TestCase):
         
         #print json.dumps(generated_queries, sort_keys=True, indent=4)
 
+    def test_basic_coarse_generating_compound_filter(self):
+        config = load_json_file("2_config.json")
+        parameterized_queries = load_json_file("2_query.json")
+        generator = Generator(config)
+
+        generated_queries = [generator.generate(
+            q) for q in parameterized_queries]
+        self.assertEqual(len(generated_queries), 1)
+        #print "coarse 2\n"
+        #print json.dumps(generated_queries, sort_keys=True, indent=4)
+
+    def test_basic_coarse_generating_elasticsearch_compiler_compound_filter(self):
+        config = load_json_file("2_config_step_two.json")
+        parameterized_queries = load_json_file("2_query_step_two.json")
+        generator = Generator(config)
+
+        generated_queries = [generator.generate(
+            q) for q in parameterized_queries]
+        self.assertEqual(len(generated_queries), 1)
+        #print json.dumps(generated_queries, sort_keys=True, indent=4)
+
+    def test_basic_coarse_generating_no_type_mapping(self):
+        config = load_json_file("3_config.json")
+        parameterized_queries = load_json_file("3_query.json")
+        generator = Generator(config)
+
+        generated_queries = [generator.generate(
+            q) for q in parameterized_queries]
+        self.assertEqual(len(generated_queries), 1)
+        #print "coarse 2\n"
+        #print json.dumps(generated_queries, sort_keys=True, indent=4)
+
+    def test_basic_coarse_generating_elasticsearch_compiler_no_type_mapping(self):
+        config = load_json_file("3_config_step_two.json")
+        parameterized_queries = load_json_file("3_query_step_two.json")
+        generator = Generator(config)
+
+        generated_queries = [generator.generate(
+            q) for q in parameterized_queries]
+        self.assertEqual(len(generated_queries), 1)
+        #print json.dumps(generated_queries, sort_keys=True, indent=4)
 
 if __name__ == '__main__':
     unittest.main()

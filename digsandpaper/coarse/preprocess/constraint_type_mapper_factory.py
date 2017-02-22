@@ -37,6 +37,18 @@ class PredicateDictConstraintTypeMapper(object):
         predicate_range_file = self.config["predicate_range_mappings"]
         self.predicate_range_mappings = load_json_file(predicate_range_file)
 
+    def preprocess_filter(self, f, clause_variable_to_type):
+        if "clauses" in f:
+            if isinstance(f["clauses"], list):
+                for c in f["clauses"]:
+                    self.preprocess_filter(c,
+                                           clause_variable_to_type)
+            elif isinstance(f["clauses"], dict):
+                self.preprocess_filter(f["clauses"])
+        else:
+            f["type"] = clause_variable_to_type.get(f["variable"],
+                                                    "owl:Thing")
+
     def preprocess(self, query):
         clause_variable_to_type = {}
         for match in clause_jsonpath.find(query["SPARQL"]["where"]):
@@ -47,7 +59,7 @@ class PredicateDictConstraintTypeMapper(object):
                 clause_variable_to_type[clause["variable"]] = clause["type"]
 
         for f in query["SPARQL"]["where"]["filters"]:
-            f["type"] = clause_variable_to_type.get(f["variable"], "owl:Thing")
+            self.preprocess_filter(f, clause_variable_to_type)
 
         for s in query["SPARQL"]["select"]["variables"]:
             s["type"] = clause_variable_to_type.get(s["variable"], "owl:Thing")
