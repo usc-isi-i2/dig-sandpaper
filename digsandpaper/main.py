@@ -14,11 +14,11 @@ def load_json_file(file_name):
 
 if __name__ == "__main__":
 
-    parser = OptionParser()
+    parser = OptionParser(conflict_handler="resolve")
     parser.add_option("-h", "--host", action="store",
                       type="string", dest="host", default="localhost")
     parser.add_option("-p", "--port", action="store",
-                      type="int", dest="port", default=9200)
+                      type="int", dest="port", default=9876)
     parser.add_option("-c", "--config", action="store",
                       type="string", dest="config")
     parser.add_option("-q", "--query", action="store",
@@ -34,10 +34,10 @@ if __name__ == "__main__":
     port = c_options.port
 
     config = load_json_file(config_file)
-    engine = Engine(config, host, port)
+    engine = Engine(config)
     if server:
         search_server.set_engine(engine)
-        search_server.app.run()
+        search_server.app.run(host, port)
     else:
         query = load_json_file(query_file)
         result = engine.execute(query)

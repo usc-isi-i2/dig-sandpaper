@@ -66,7 +66,7 @@ class SearchServerTestCase(unittest.TestCase):
 
     def helper_test_coarse(self, i):
         config = load_engine_configuration(i)
-        engine = Engine(config, "localhost", 9200)
+        engine = Engine(config)
         query = load_sub_configuration("coarse", "preprocess",
                                        i, "_query.json")
         document = load_sub_configuration("coarse", "execute",

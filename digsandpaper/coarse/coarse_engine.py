@@ -6,7 +6,7 @@ from preprocess.preprocessor import Preprocessor
 
 class CoarseEngine(object):
 
-    def __init__(self, config, host, port):
+    def __init__(self, config):
         self.config = config
         self._initialize()
 
@@ -23,7 +23,8 @@ class CoarseEngine(object):
         parameterized_queries = self.parameterizer.\
             parameterize(preprocessed_query)
         # generate
-        generated_queries =[self.generator.generate(q) for q in parameterized_queries]
+        generated_queries = [self.generator.generate(q)
+                             for q in parameterized_queries]
         # execute
         results = [self.executor.execute(q) for q in generated_queries]
 
