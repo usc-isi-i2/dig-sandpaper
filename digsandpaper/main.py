@@ -12,8 +12,7 @@ def load_json_file(file_name):
     return rules
 
 
-if __name__ == "__main__":
-
+def main(args):
     parser = OptionParser(conflict_handler="resolve")
     parser.add_option("-h", "--host", action="store",
                       type="string", dest="host", default="localhost")
@@ -41,4 +40,9 @@ if __name__ == "__main__":
     else:
         query = load_json_file(query_file)
         result = engine.execute(query)
-    print result
+        print result
+
+
+if __name__ == "__main__":
+    import sys
+    main(sys.argv[1:])
