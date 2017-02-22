@@ -24,7 +24,8 @@ class ExecuteElasticsearchQuery(object):
     def _configure(self):
         self.host = self.config["host"]
         self.port = self.config["port"]
-        connections.create_connection(hosts=[self.host])
+        endpoint = "{}:{}".format(self.host, self.port)
+        connections.create_connection(hosts=[endpoint])
 
         return
 
