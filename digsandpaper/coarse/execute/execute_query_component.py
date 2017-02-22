@@ -29,8 +29,9 @@ class ExecuteElasticsearchQuery(object):
         return
 
     def execute(self, query):
-        s = Search(index=query["ELASTICSEARCH"]["index"],
-                   doc_type=query["ELASTICSEARCH"]["doc_type"]).from_dict(query["ELASTICSEARCH"]["search"])
+        s = Search().from_dict(query["ELASTICSEARCH"]["search"])\
+                    .index(query["ELASTICSEARCH"]["index"])\
+                    .doc_type(query["ELASTICSEARCH"]["doc_type"])
         response = s.execute()
         return response
 
