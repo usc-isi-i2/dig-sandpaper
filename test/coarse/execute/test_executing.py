@@ -22,7 +22,8 @@ class TestCoarseExecuting(unittest.TestCase):
         queries = load_json_file("1_query.json")
         document = load_json_file("1_document.json")
 
-        test.test_utils.initialize_elasticsearch([document])
+        test.test_utils.initialize_elasticsearch([document],
+                                                 config["components"][0])
 
         executor = Executor(config)
 
@@ -30,14 +31,15 @@ class TestCoarseExecuting(unittest.TestCase):
             result = executor.execute(query)
             self.assertEquals(len(result.hits), 1)
 
-        test.test_utils.reset_elasticsearch()
+        test.test_utils.reset_elasticsearch(config["components"][0])
 
     def test_basic_coarse_executing_compound_filters(self):
         config = load_json_file("2_config.json")
         queries = load_json_file("2_query.json")
         document = load_json_file("2_document.json")
 
-        test.test_utils.initialize_elasticsearch([document])
+        test.test_utils.initialize_elasticsearch([document],
+                                                 config["components"][0])
 
         executor = Executor(config)
 
@@ -45,14 +47,15 @@ class TestCoarseExecuting(unittest.TestCase):
             result = executor.execute(query)
             self.assertEquals(len(result.hits), 1)
 
-        test.test_utils.reset_elasticsearch()
+        test.test_utils.reset_elasticsearch(config["components"][0])
 
-    def test_basic_coarse_executing_compound_filters(self):
+    def test_basic_coarse_executing_compound_filters_no_type_mapping(self):
         config = load_json_file("3_config.json")
         queries = load_json_file("3_query.json")
         document = load_json_file("3_document.json")
 
-        test.test_utils.initialize_elasticsearch([document])
+        test.test_utils.initialize_elasticsearch([document],
+                                                 config["components"][0])
 
         executor = Executor(config)
 
@@ -60,7 +63,7 @@ class TestCoarseExecuting(unittest.TestCase):
             result = executor.execute(query)
             self.assertEquals(len(result.hits), 1)
 
-        test.test_utils.reset_elasticsearch()
+        test.test_utils.reset_elasticsearch(config["components"][0])
 
 
 if __name__ == '__main__':

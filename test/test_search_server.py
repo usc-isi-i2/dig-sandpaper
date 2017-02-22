@@ -71,22 +71,27 @@ class SearchServerTestCase(unittest.TestCase):
                                        i, "_query.json")
         document = load_sub_configuration("coarse", "execute",
                                           i, "_document.json")
-        test_utils.initialize_elasticsearch([document])
+        es_config = config["coarse"]["execute"]["components"][0]
+        test_utils.initialize_elasticsearch([document], es_config)
         search_server.set_engine(engine)
         response = self.app.post('/search/coarse', data=json.dumps(query))
         self.assertEquals(200, response.status_code)
         results = json.loads(response.data)
-        test_utils.reset_elasticsearch()
+        test_utils.reset_elasticsearch(es_config)
         return results
         self.assertEquals(len(results), 2)
 
-    def test_coarse(self):
+    def test_coarse_1(self):
         results_1 = self.helper_test_coarse(1)
         self.assertEquals(len(results_1), 2)
         self.assertEquals(len(results_1[0]["hits"]["hits"]), 1)
+
+    def test_coarse_2(self):
         results_2 = self.helper_test_coarse(2)
         self.assertEquals(len(results_2), 1)
         self.assertEquals(len(results_2[0]["hits"]["hits"]), 1)
+
+    def test_coarse_3(self):
         results_3 = self.helper_test_coarse(3)
         self.assertEquals(len(results_3), 1)
         self.assertEquals(len(results_3[0]["hits"]["hits"]), 1)

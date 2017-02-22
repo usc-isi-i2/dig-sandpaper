@@ -22,10 +22,13 @@ class ExecuteElasticsearchQuery(object):
         self._configure()
 
     def _configure(self):
-        self.host = self.config["host"]
-        self.port = self.config["port"]
-        endpoint = "{}:{}".format(self.host, self.port)
-        connections.create_connection(hosts=[endpoint])
+        if "endpoints" in self.config:
+            self.endpoints = self.config["endpoints"]
+        else:
+            self.host = self.config["host"]
+            self.port = self.config["port"]
+            self.endpoints = ["{}:{}".format(self.host, self.port)]
+        connections.create_connection(hosts=self.endpoints)
 
         return
 
