@@ -1,0 +1,9 @@
+{
+	"components": [
+    {
+        "type": "ConstraintTypeMapper",
+        "name": "PredicateDictConstraintTypeMapper",
+        "predicate_range_mappings": "test/coarse/preprocess/4_predicate_range_mappings.json"
+    }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+        "SPARQL": {
+            "group-by": {
+                "limit": 5
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "simple", 
+                        "variable": "?ad"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [   
+                     {
+                      "variable": "?postingDate", 
+                      "predicate": "postingDate", 
+                      "isOptional": false
+                     }
+                ], 
+                "filters": [
+                    {
+                        "operator": "and",
+                    "clauses":[{
+                        "constraint": "2015-03-31", 
+                        "operator": "<=", 
+                        "variable": "?postingDate"
+                    },{
+                        "constraint": "2015-02-28", 
+                        "operator": ">", 
+                        "variable": "?postingDate"
+                    }]
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "type": "Point Fact"
+    }

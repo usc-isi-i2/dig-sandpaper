@@ -65,6 +65,22 @@ class TestCoarseExecuting(unittest.TestCase):
 
         test.test_utils.reset_elasticsearch(config["components"][0])
 
+    def test_basic_coarse_executing_date_filters(self):
+        config = load_json_file("4_config.json")
+        queries = load_json_file("4_query.json")
+        document = load_json_file("4_document.json")
+
+        test.test_utils.initialize_elasticsearch([document],
+                                                 config["components"][0])
+
+        executor = Executor(config)
+
+        for query in queries:
+            result = executor.execute(query)
+            self.assertEquals(len(result.hits), 1)
+
+        test.test_utils.reset_elasticsearch(config["components"][0])
+
 
 if __name__ == '__main__':
     unittest.main()

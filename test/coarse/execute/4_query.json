@@ -1,0 +1,115 @@
+[
+    {
+        "ELASTICSEARCH": {
+            "doc_type": "ads", 
+            "index": "dig-sandpaper-test", 
+            "search": {
+                "_source": {
+                    "includes": [
+                        "extractors.content_strict.text.result.value", 
+                        "fields.posting-date.strict.name"
+                    ]
+                }, 
+                "from": 0, 
+                "query": {
+                    "bool": {
+                        "filter": [
+                            {
+                                "bool": {
+                                    "filter": [
+                                        {
+                                            "range": {
+                                                "fields.posting-date.strict.name": {
+                                                    "lte": "2015-03-31"
+                                                }
+                                            }
+                                        }, 
+                                        {
+                                            "range": {
+                                                "fields.posting-date.strict.name": {
+                                                    "gt": "2015-02-28"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ], 
+                        "must": [
+                            {
+                                "exists": {
+                                    "field": "extractors.content_strict.text.result.value"
+                                }
+                            }
+                        ]
+                    }
+                }, 
+                "size": 5
+            }
+        }, 
+        "SPARQL": {
+            "group-by": {
+                "limit": 5
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "owl:Thing", 
+                        "variable": "?ad"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.text.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "postingDate", 
+                        "type": "owl:Thing", 
+                        "variable": "?postingDate"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "clauses": [
+                            {
+                                "constraint": "2015-03-31", 
+                                "fields": [
+                                    {
+                                        "name": "fields.posting-date.strict.name"
+                                    }
+                                ], 
+                                "operator": "<=", 
+                                "type": "PostingDate", 
+                                "variable": "?postingDate"
+                            }, 
+                            {
+                                "constraint": "2015-02-28", 
+                                "fields": [
+                                    {
+                                        "name": "fields.posting-date.strict.name"
+                                    }
+                                ], 
+                                "operator": ">", 
+                                "type": "PostingDate", 
+                                "variable": "?postingDate"
+                            }
+                        ], 
+                        "operator": "and"
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "field_count": 1, 
+        "type": "Point Fact", 
+        "zone": [
+            1
+        ]
+    }
+]

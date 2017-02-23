@@ -29,9 +29,6 @@ class TestCoarseParameterizing(unittest.TestCase):
         self.assertEqual(results[0]["field_count"], 1)
         self.assertEqual(results[1]["field_count"], 1)
 
-        #print "parameterized result"
-        #print json.dumps(results, sort_keys=True, indent=4)
-
     def test_basic_coarse_preprocessing_with_compound_filter(self):
         config = load_json_file("2_config.json")
         query = load_json_file("2_query.json")
@@ -43,7 +40,6 @@ class TestCoarseParameterizing(unittest.TestCase):
                          "owl:Thing")
         self.assertEqual(f["clauses"][1]["type"],
                          "owl:Thing")
-        #print json.dumps(result, sort_keys=True, indent=4)
 
     def test_basic_coarse_preprocessing_with_no_type_mapping(self):
         config = load_json_file("3_config.json")
@@ -51,7 +47,13 @@ class TestCoarseParameterizing(unittest.TestCase):
         parameterizer = Parameterizer(config)
 
         result = parameterizer.parameterize(query)
-        #print json.dumps(result, sort_keys=True, indent=4)
+
+    def test_basic_coarse_preprocessing_with_date_filter(self):
+        config = load_json_file("4_config.json")
+        query = load_json_file("4_query.json")
+        parameterizer = Parameterizer(config)
+
+        result = parameterizer.parameterize(query)
 
 
 if __name__ == '__main__':

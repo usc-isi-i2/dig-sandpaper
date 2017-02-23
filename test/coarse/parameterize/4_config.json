@@ -1,0 +1,18 @@
+{
+	"components": [
+		{
+		    "type": "ZoneHierarchy",
+		    "name": "MultipleZoneHierarchy",
+		    "zone_count": 1
+		},
+		{
+		    "type": "ClauseCombination",
+		    "name": "NoClauseCombination"
+		},
+		{
+		    "type": "FieldCombination",
+		    "name": "AtLeastOneFieldCombination"
+		}
+
+	]
+}

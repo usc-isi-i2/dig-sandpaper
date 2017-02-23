@@ -8,7 +8,8 @@
         "extractors.content_strict.data_extractors.ethnicity.result.value",
         "extractors.content_strict.data_extractors.nationality.result.value",
 		"extractors.content_strict.data_extractors.age.result.value",
-		"extractors.content_strict.text.result.value"
+		"extractors.content_strict.text.result.value",
+                "fields.posting-date.strict.name"
 	],
 	"2": [
 		"extractors.content_relaxed.data_extractors.city.result.value",
@@ -19,6 +20,7 @@
         "extractors.content_relaxed.data_extractors.ethnicity.result.value",
         "extractors.content_relaxed.data_extractors.nationality.result.value",
 		"extractors.content_relaxed.data_extractors.age.result.value",
-		"extractors.content_relaxed.text.result.value"
+		"extractors.content_relaxed.text.result.value",
+                "fields.posting-date.relaxed.name"
 	]
 }

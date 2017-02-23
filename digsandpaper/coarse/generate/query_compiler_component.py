@@ -2,7 +2,7 @@ import json
 import codecs
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search, Q
-from elasticsearch_dsl.query import MultiMatch, Match, DisMax, Bool, Exists, ConstantScore
+from elasticsearch_dsl.query import MultiMatch, Match, DisMax, Bool, Exists, ConstantScore, Range
 
 __name__ = "QueryCompiler"
 name = __name__
@@ -27,12 +27,21 @@ class ElasticsearchQueryCompiler(object):
         self.elasticsearch_compiler_options = load_json_file(file)
 
     def translate_filter(self, f, field):
-        match_params = {}
-        match_field_params = {}
-        match_field_params["query"] = f["constraint"]
-        #match_field_params["type"] = f.get("query_type", "phrase")
-        match_params[field["name"]] = match_field_params
-        return Match(**match_params)
+        range_operators = {"<": "lt", "<=": "lte", ">": "gt", ">=": "gte"}
+        op = f["operator"]
+        if op in range_operators:
+            range_params = {}
+            range_field_params = {}
+            range_field_params[range_operators[op]] = f["constraint"]
+            range_params[field["name"]] = range_field_params
+            return Range(**range_params)
+        else:
+            match_params = {}
+            match_field_params = {}
+            match_field_params["query"] = f["constraint"]
+            #match_field_params["type"] = f.get("query_type", "phrase")
+            match_params[field["name"]] = match_field_params
+            return Match(**match_params)
 
     def translate_clause(self, clause, field):
         if("constraint" in clause):

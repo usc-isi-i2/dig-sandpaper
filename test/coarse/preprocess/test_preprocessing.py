@@ -54,7 +54,19 @@ class TestCoarsePreprocessing(unittest.TestCase):
         preprocessor = Preprocessor(config)
 
         result = preprocessor.preprocess(query)
-        # print json.dumps(result, sort_keys=True, indent=4)
+        f = result["SPARQL"]["where"]["filters"][0]
+        self.assertEqual(f["clauses"][0]["type"],
+                         "owl:Thing")
+
+    def test_basic_coarse_preprocessing_with_date_filter(self):
+        config = load_json_file("4_config.json")
+        query = load_json_file("4_query.json")
+        preprocessor = Preprocessor(config)
+
+        result = preprocessor.preprocess(query)
+        f = result["SPARQL"]["where"]["filters"][0]
+        self.assertEqual(f["clauses"][0]["type"],
+                         "PostingDate")
 
 
 if __name__ == '__main__':

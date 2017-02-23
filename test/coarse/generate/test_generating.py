@@ -49,8 +49,6 @@ class TestCoarseGenerating(unittest.TestCase):
         self.assertIn("query", generated_queries[0]["ELASTICSEARCH"]["search"])
         self.assertEqual(generated_queries[0]["ELASTICSEARCH"]["search"]["size"], 500)
         self.assertEqual(generated_queries[0]["ELASTICSEARCH"]["search"]["from"], 0)
-        
-        #print json.dumps(generated_queries, sort_keys=True, indent=4)
 
     def test_basic_coarse_generating_compound_filter(self):
         config = load_json_file("2_config.json")
@@ -60,8 +58,6 @@ class TestCoarseGenerating(unittest.TestCase):
         generated_queries = [generator.generate(
             q) for q in parameterized_queries]
         self.assertEqual(len(generated_queries), 1)
-        #print "coarse 2\n"
-        #print json.dumps(generated_queries, sort_keys=True, indent=4)
 
     def test_basic_coarse_generating_elasticsearch_compiler_compound_filter(self):
         config = load_json_file("2_config_step_two.json")
@@ -71,7 +67,6 @@ class TestCoarseGenerating(unittest.TestCase):
         generated_queries = [generator.generate(
             q) for q in parameterized_queries]
         self.assertEqual(len(generated_queries), 1)
-        #print json.dumps(generated_queries, sort_keys=True, indent=4)
 
     def test_basic_coarse_generating_no_type_mapping(self):
         config = load_json_file("3_config.json")
@@ -81,8 +76,6 @@ class TestCoarseGenerating(unittest.TestCase):
         generated_queries = [generator.generate(
             q) for q in parameterized_queries]
         self.assertEqual(len(generated_queries), 1)
-        #print "coarse 2\n"
-        #print json.dumps(generated_queries, sort_keys=True, indent=4)
 
     def test_basic_coarse_generating_elasticsearch_compiler_no_type_mapping(self):
         config = load_json_file("3_config_step_two.json")
@@ -92,7 +85,25 @@ class TestCoarseGenerating(unittest.TestCase):
         generated_queries = [generator.generate(
             q) for q in parameterized_queries]
         self.assertEqual(len(generated_queries), 1)
-        #print json.dumps(generated_queries, sort_keys=True, indent=4)
+
+    def test_basic_coarse_generating_date_filters(self):
+        config = load_json_file("4_config.json")
+        parameterized_queries = load_json_file("4_query.json")
+        generator = Generator(config)
+
+        generated_queries = [generator.generate(
+            q) for q in parameterized_queries]
+        self.assertEqual(len(generated_queries), 1)
+
+    def test_basic_coarse_generating_elasticsearch_compiler_date_filters(self):
+        config = load_json_file("4_config_step_two.json")
+        parameterized_queries = load_json_file("4_query_step_two.json")
+        generator = Generator(config)
+
+        generated_queries = [generator.generate(
+            q) for q in parameterized_queries]
+        self.assertEqual(len(generated_queries), 1)
+
 
 if __name__ == '__main__':
     unittest.main()
