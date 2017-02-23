@@ -32,6 +32,9 @@ def main(args):
     host = c_options.host
     port = c_options.port
 
+    if not config_file:
+        parser.error('Config file not specified.  Use -c or --config')
+
     config = load_json_file(config_file)
     engine = Engine(config)
     if server:
