@@ -29,6 +29,14 @@ class ZoneFieldMapping(object):
                 return True
         return False
 
+    def generate_filter(self, f, zones):
+        if "fields" in f:
+            f["fields"] = [field for field in f["fields"]
+                           if self.in_zones(zones, field["name"])]
+        elif "clauses" in f:
+            for clause in f["clauses"]:
+                self.generate_filter(clause, zones)
+
     def generate(self, query):
         where = query["SPARQL"]["where"]
         where_clauses = where["clauses"]
@@ -41,9 +49,7 @@ class ZoneFieldMapping(object):
                                     if self.in_zones(zones, field["name"])]
 
         for f in filters:
-            if "fields" in f:
-                f["fields"] = [field for field in f["fields"]
-                               if self.in_zones(zones, field["name"])]
+            self.generate_filter(f, zones)
 
         return query
 
