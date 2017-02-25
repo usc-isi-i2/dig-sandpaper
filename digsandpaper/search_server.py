@@ -20,8 +20,8 @@ def search():
 def coarse():
     query = json.loads(request.data)
     (qs, rs) = engine.execute_coarse(query)
-    rs_as_dicts = [r.to_dict() for r in rs]
-    return json.dumps(rs_as_dicts)
+    qs_with_rs = [{"query": q, "result": r.to_dict()} for q, r in zip(qs, rs)]
+    return json.dumps(qs_with_rs)
 
 
 @app.route("/search/fine", methods=['POST'])

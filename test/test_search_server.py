@@ -84,22 +84,22 @@ class SearchServerTestCase(unittest.TestCase):
     def test_coarse_1(self):
         results_1 = self.helper_test_coarse(1)
         self.assertEquals(len(results_1), 2)
-        self.assertEquals(len(results_1[0]["hits"]["hits"]), 1)
+        self.assertEquals(len(results_1[0]["result"]["hits"]["hits"]), 1)
 
     def test_coarse_2(self):
         results_2 = self.helper_test_coarse(2)
         self.assertEquals(len(results_2), 1)
-        self.assertEquals(len(results_2[0]["hits"]["hits"]), 1)
+        self.assertEquals(len(results_2[0]["result"]["hits"]["hits"]), 1)
 
     def test_coarse_3(self):
         results_3 = self.helper_test_coarse(3)
         self.assertEquals(len(results_3), 1)
-        self.assertEquals(len(results_3[0]["hits"]["hits"]), 1)
+        self.assertEquals(len(results_3[0]["result"]["hits"]["hits"]), 1)
 
     def test_coarse_4(self):
         results_4 = self.helper_test_coarse(4)
         self.assertEquals(len(results_4), 1)
-        self.assertEquals(len(results_4[0]["hits"]["hits"]), 1)
+        self.assertEquals(len(results_4[0]["result"]["hits"]["hits"]), 1)
 
 
 if __name__ == '__main__':
