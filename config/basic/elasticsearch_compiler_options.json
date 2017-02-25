@@ -1,2 +1,3 @@
 {
+	"default_source_fields": ["doc_id", "tld", "url", "fields.*"]
 }

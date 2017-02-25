@@ -85,6 +85,9 @@ class TestCoarseGenerating(unittest.TestCase):
         generated_queries = [generator.generate(
             q) for q in parameterized_queries]
         self.assertEqual(len(generated_queries), 1)
+        gq = generated_queries[0]
+        self.assertIn("url",
+                      gq["ELASTICSEARCH"]["search"]["_source"]["includes"])
 
     def test_basic_coarse_generating_date_filters(self):
         config = load_json_file("4_config.json")

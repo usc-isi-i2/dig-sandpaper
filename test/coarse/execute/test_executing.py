@@ -62,6 +62,10 @@ class TestCoarseExecuting(unittest.TestCase):
         for query in queries:
             result = executor.execute(query)
             self.assertEquals(len(result.hits), 1)
+            self.assertIn("fields", result.hits[0])
+            self.assertIn("posting-date", result.hits[0]["fields"])
+            self.assertEquals("2015-03-01T14:02:00",
+                              result.hits[0]["fields"]["posting-date"]["strict"]["name"])
 
         test.test_utils.reset_elasticsearch(config["components"][0])
 

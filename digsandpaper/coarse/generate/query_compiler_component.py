@@ -160,6 +160,12 @@ class ElasticsearchQueryCompiler(object):
                  must_not=must_nots)
         s = Search()
         s.query = q
+        if "default_source_fields" in self.elasticsearch_compiler_options:
+            default_source_fields = self.elasticsearch_compiler_options["default_source_fields"]
+            if isinstance(default_source_fields, basestring):
+                default_source_fields = [default_source_fields]
+            source_fields |= set(default_source_fields)
+
         s = s.source(includes=list(source_fields))
         if "group-by" in query["SPARQL"]:
             if "limit" in query["SPARQL"]["group-by"]:
