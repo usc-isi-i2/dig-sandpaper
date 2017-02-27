@@ -1,1 +1,21 @@
-{}
+{
+"age": "Age",
+"city": "City",
+"country": "Country",
+"description": "Description",
+"email": "Email",
+"ethnicity": "Ethnicity",
+"eye-color": "EyeColor",
+"hair-color": "HairColor",
+"height": "Height",
+"location": "Location",
+"name": "Name",
+"phone": "Phone",
+"posting-date": "PostingDate",
+"price": "Price",
+"state": "State",
+"title": "Title",
+"weight": "Weight",
+"tld": "TopLevelDomain",
+"url": "URL"
+}
