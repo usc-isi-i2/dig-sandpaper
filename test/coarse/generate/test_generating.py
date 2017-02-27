@@ -49,6 +49,7 @@ class TestCoarseGenerating(unittest.TestCase):
         self.assertIn("query", generated_queries[0]["ELASTICSEARCH"]["search"])
         self.assertEqual(generated_queries[0]["ELASTICSEARCH"]["search"]["size"], 500)
         self.assertEqual(generated_queries[0]["ELASTICSEARCH"]["search"]["from"], 0)
+        self.assertIn("highlight", generated_queries[0]["ELASTICSEARCH"]["search"])
 
     def test_basic_coarse_generating_compound_filter(self):
         config = load_json_file("2_config.json")

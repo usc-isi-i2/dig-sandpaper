@@ -176,6 +176,11 @@ class ElasticsearchQueryCompiler(object):
             else:
                 s = s.extra(from_=0)
 
+        if "highlight" in self.elasticsearch_compiler_options:
+            highlight = self.elasticsearch_compiler_options["highlight"]
+            for key in highlight["fields"]:
+                s = s.highlight(key, **highlight["fields"][key])
+
         if "ELASTICSEARCH" not in query:
             query["ELASTICSEARCH"] = {}
         query["ELASTICSEARCH"]["search"] = self.clean_dismax(s.to_dict())
