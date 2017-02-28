@@ -7,7 +7,17 @@
           "type": "ConstraintTypeMapper",
           "name": "PredicateDictConstraintTypeMapper",
           "predicate_range_mappings": "config/basic/predicate_range_mappings.json"
-       }
+        },
+        {
+          "type": "ConstraintConsistency",
+          "name": "ConstraintTypeTransformations",
+          "constraint_type_transformations": "config/basic/constraint_type_transformations.json"
+        },
+        {
+          "type": "ConstraintExpansion",
+          "name": "DictConstraintExpander",
+          "dict_constraint_mappings": "config/basic/dict_constraint_mappings.json"
+        }
       ]
     },
     "parameterize": {

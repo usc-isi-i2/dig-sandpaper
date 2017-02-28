@@ -2,5 +2,6 @@
 	"hairColor": "HairColor",
 	"location": "Location",
 	"phone": "Phone",
-	"ethnicity": "Ethnicity"
+	"ethnicity": "Ethnicity",
+	"title": "Title"
 }

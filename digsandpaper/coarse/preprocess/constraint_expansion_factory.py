@@ -33,27 +33,18 @@ class DictConstraintExpander(object):
         file = self.config["dict_constraint_mappings"]
         self.dict_constraint_mappings = load_json_file(file)
 
-    def preprocess(self, query):
-        where = query["SPARQL"]["where"]
-        where_clauses = where["clauses"]
-        filters = where["filters"]
-        new_where_clauses = list()
-        new_filters = list()
-
-        for clause in where_clauses:
-            if "constraint" not in clause:
-                continue
-            expanded_values = self.dict_constraint_mappings.get(
-                clause["type"], {}).get(clause["constraint"], [])
-            for expanded_value in expanded_values:
-                new_clause = copy.copy(clause)
-                new_clause["constraint"] = expanded_value
-                new_clause["isOptional"] = True
-                new_where_clauses.append(new_clause)
-
-        for f in filters:
+    def preprocess_filter(self, f):
+        if "clauses" in f:
+            if isinstance(f["clauses"], list):
+                f["clauses"] = [self.preprocess_filter(c) for c in f["clauses"]]
+                return f
+            elif isinstance(f["clauses"], dict):
+                f["clauses"] = self.preprocess_filter(f["clauses"])
+                return f
+        else:
             if "constraint" not in f or "type" not in f:
-                continue
+                return f
+            new_filters = []
             expanded_values = self.dict_constraint_mappings.get(
                 f["type"], {}).get(f["constraint"], [])
             for expanded_value in expanded_values:
@@ -61,9 +52,36 @@ class DictConstraintExpander(object):
                 new_filter["constraint"] = expanded_value
                 new_filter["isOptional"] = True
                 new_filters.append(new_filter)
+            if len(new_filters) > 0:
+                new_filters.append(f)
+                return {"operator": "or", "clauses": new_filters}
+            else:
+                return f
 
-        where_clauses.extend(new_where_clauses)
-        filters.extend(new_filters)
+    def preprocess(self, query):
+        where = query["SPARQL"]["where"]
+
+
+        if "clauses" in where:
+            where_clauses = where["clauses"]
+            
+            new_where_clauses = list()
+            
+            for clause in where_clauses:
+                if "constraint" not in clause:
+                    continue
+                expanded_values = self.dict_constraint_mappings.get(
+                    clause["type"], {}).get(clause["constraint"], [])
+                for expanded_value in expanded_values:
+                    new_clause = copy.copy(clause)
+                    new_clause["constraint"] = expanded_value
+                    new_clause["isOptional"] = True
+                    new_where_clauses.append(new_clause)
+            where_clauses.extend(new_where_clauses)
+        
+        if "filters" in where:
+            filters = where["filters"]
+            where["filters"] = [self.preprocess_filter(f) for f in filters]
 
         return query
 

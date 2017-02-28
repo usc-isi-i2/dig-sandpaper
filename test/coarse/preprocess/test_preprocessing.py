@@ -2,6 +2,7 @@ import unittest
 import json
 import codecs
 from digsandpaper.coarse.preprocess.preprocessor import Preprocessor
+from digsandpaper.coarse.preprocess.constraint_expansion_factory import DictConstraintExpander
 import os
 
 
@@ -34,7 +35,9 @@ class TestCoarsePreprocessing(unittest.TestCase):
         self.assertEqual(result["SPARQL"]["where"]["clauses"][5]["constraint"],
                          "straw")
         self.assertEqual(result["SPARQL"]["where"]["filters"][0]["type"],
-                         "owl:Thing")
+                         "Title")
+        self.assertNotIn("the", result["SPARQL"]["where"]["filters"][0]["constraint"].split(" ") )
+        self.assertIn("mistress", result["SPARQL"]["where"]["filters"][0]["constraint"].split(" ") )
 
     def test_basic_coarse_preprocessing_with_compound_filter(self):
         config = load_json_file("2_config.json")
@@ -44,7 +47,7 @@ class TestCoarsePreprocessing(unittest.TestCase):
         result = preprocessor.preprocess(query)
         f = result["SPARQL"]["where"]["filters"][0]
         self.assertEqual(f["clauses"][0]["type"],
-                         "owl:Thing")
+                         "Title")
         self.assertEqual(f["clauses"][1]["type"],
                          "owl:Thing")
 
@@ -67,6 +70,22 @@ class TestCoarsePreprocessing(unittest.TestCase):
         f = result["SPARQL"]["where"]["filters"][0]
         self.assertEqual(f["clauses"][0]["type"],
                          "PostingDate")
+
+    def test_nested_filter_constraint_expansion(self):
+        config = json.loads('''{
+            "type": "ConstraintExpansion",
+            "name": "DictConstraintExpander",
+            "dict_constraint_mappings": "test/coarse/preprocess/1_dict_constraint_mappings.json"
+        }''')
+        expander = DictConstraintExpander(config)
+        query = {"SPARQL": {"where": {"clauses": [],
+                                      "filters":[
+                                                 {"operator": "or", "clauses": [
+                                                                                {"operator":"=", "constraint":"blonde", "variable":"?hair-color", "type": "HairColor"},
+                                                                                {"operator":"=", "constraint":"brown", "variable":"?hair-color", "type": "HairColor"}]}]}}}
+        result = expander.preprocess(query)
+        f = result["SPARQL"]["where"]["filters"][0]
+        self.assertEqual(f["clauses"][0]["operator"], "or")
 
 
 if __name__ == '__main__':
