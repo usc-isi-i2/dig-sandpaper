@@ -176,10 +176,14 @@ class ElasticsearchQueryCompiler(object):
             else:
                 s = s.extra(from_=0)
 
+        highlight_fields = dict((source_field, {}) for source_field in list(source_fields))
+
         if "highlight" in self.elasticsearch_compiler_options:
             highlight = self.elasticsearch_compiler_options["highlight"]
             for key in highlight["fields"]:
-                s = s.highlight(key, **highlight["fields"][key])
+                highlight_fields[key] = highlight["fields"][key]
+        for key in highlight_fields:
+            s = s.highlight(key, **highlight_fields[key])
 
         if "ELASTICSEARCH" not in query:
             query["ELASTICSEARCH"] = {}
