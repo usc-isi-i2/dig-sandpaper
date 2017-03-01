@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 setup(
     name='digsandpaper',
-    version='0.1.4-r004',
+    version='0.1.4-r005',
     description='digsandpaper',
     author='Jason Slepicka',
     author_email='jasonslepicka@gmail.com',
@@ -16,6 +16,7 @@ setup(
                       'elasticsearch-dsl>=2.0.0,<3.0.0',
                       'requests',
                       'Flask',
+                      'flask-cors',
                       'jsonpath-rw>=1.4.0',
                       'jsonpath-rw-ext>=1.0.0']
 )
