@@ -23,6 +23,33 @@ class FieldWeightMapping(object):
         file = self.config["field_weight_mappings"]
         self.field_weight_mapping = load_json_file(file)
 
+    def find_weight(self, field_path, nested_field_weight_mapping):
+        if not isinstance(field_path, list) or len(field_path) == 0:
+            return None
+        if field_path[0] in nested_field_weight_mapping:
+            next = nested_field_weight_mapping[field_path[0]]
+            if isinstance(next, dict):
+                return self.find_weight(field_path[1:], next)
+            return next
+        elif "*" in nested_field_weight_mapping:
+            next = nested_field_weight_mapping["*"]
+            if isinstance(next, dict):
+                return self.find_weight(field_path[1:], next)
+            return next
+        else:
+            return None
+
+    def find_weight_for_filter(self, f):
+        if "fields" not in f:
+            if "clauses" in f:
+                for clause in f["clauses"]:
+                    self.find_weight_for_filter(clause)
+        else:
+            for field in f["fields"]:
+                weight = self.find_weight(field["name"].split("."), self.field_weight_mapping)
+                if weight:
+                    field["weight"] = weight
+
     def generate(self, query):
         where = query["SPARQL"]["where"]
         where_clauses = where["clauses"]
@@ -32,15 +59,12 @@ class FieldWeightMapping(object):
             if "fields" not in clause:
                 continue
             for field in clause["fields"]:
-                if field["name"] in self.field_weight_mapping:
-                    field["weight"] = self.field_weight_mapping[field["name"]]
+                weight = self.find_weight(field["name"].split("."), self.field_weight_mapping)
+                if weight:
+                    field["weight"] = weight
 
         for f in filters:
-            if "fields" not in f:
-                continue
-            for field in f["fields"]:
-                if field["name"] in self.field_weight_mapping:
-                    field["weight"] = self.field_weight_mapping[field["name"]]
+            self.find_weight_for_filter(f)
 
         return query
 

@@ -1,2 +1,34 @@
 {
+	"extractors": {
+		"content_strict": {
+			"data_extractors": {
+				"city": {
+				    "result": {
+				    	"value": 4
+				    }
+				}
+			},
+			"text": {
+			    "*":0.1
+			 }
+		},
+		"content_relaxed": {
+			"*": 0.5,
+			"text": {
+			    "*":0.1
+			}
+		}
+    },
+    "fields": {
+    	"*": {
+    		"relaxed":{
+    		    "*": 0.5
+    	    },
+    		"strict": {
+    			"*": 3
+    		},
+    		"*": 1
+    	}
+    }
+
 }

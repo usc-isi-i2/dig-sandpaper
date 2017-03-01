@@ -50,7 +50,7 @@ class ElasticsearchQueryCompiler(object):
             match_field_params = {}
             match_field_params["query"] = clause["constraint"]
             #match_field_params["type"] = query_type
-            match_field_params["boost"] = clause.get("weight", 1.0)
+            match_field_params["boost"] = field.get("weight", 1.0)
             match_params[field["name"]] = match_field_params
             return Match(**match_params)
         else:
