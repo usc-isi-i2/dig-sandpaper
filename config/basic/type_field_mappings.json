@@ -1,42 +1,206 @@
 {
-	"owl:Thing":["extractors.content_strict.text.result.value",
-		"extractors.content_relaxed.text.result.value"],
-	"Age": ["fields.age.strict.name","fields.age.relaxed.name",
-        "fields.age.strict.search","fields.age.relaxed.search"],
-	"City": ["fields.city.strict.name","fields.city.relaxed.name",
-        "fields.city.strict.search","fields.city.relaxed.search"],
-	"Country": ["fields.country.strict.name","fields.country.relaxed.name",
-        "fields.country.strict.search","fields.country.relaxed.search"],
-"Description": ["fields.description.strict.name","fields.description.relaxed.name",
-        "fields.description.strict.search","fields.description.relaxed.search"],
- "Email": ["fields.email.strict.name","fields.email.relaxed.name",
-        "fields.email.strict.search","fields.email.relaxed.search"],
-"Ethnicity": ["fields.ethnicity.strict.name","fields.ethnicity.relaxed.name",
-        "fields.ethnicity.strict.search","fields.ethnicity.relaxed.search"],
-"EyeColor": ["fields.eye-color.strict.name","fields.eye-color.relaxed.name",
-        "fields.eye-color.strict.search","fields.eye-color.relaxed.search"],
-"HairColor": ["fields.hair-color.strict.name","fields.hair-color.relaxed.name",
-        "fields.hair-color.strict.search","fields.hair-color.relaxed.search"],
-"Height": ["fields.height.strict.name","fields.height.relaxed.name",
-        "fields.height.strict.search","fields.height.relaxed.search"],
-"Height": ["fields.location.strict.name","fields.location.relaxed.name",
-        "fields.location.strict.search","fields.location.relaxed.search"],
-"Name": ["fields.name.strict.name","fields.name.relaxed.name",
-        "fields.name.strict.search","fields.name.relaxed.search"],
-"Phone": ["fields.phone.strict.name","fields.phone.relaxed.name",
-        "fields.phone.strict.search","fields.phone.relaxed.search"],
-"PostingDate": ["fields.posting-date.strict.name","fields.posting-date.relaxed.name",
-        "fields.posting-date.strict.search","fields.posting-date.relaxed.search"],
-"Price": ["fields.price.strict.name","fields.price.relaxed.name",
-        "fields.price.strict.search","fields.price.relaxed.search"],
-"State": ["fields.state.strict.name","fields.state.relaxed.name",
-        "fields.state.strict.search","fields.state.relaxed.search"],
-"Title": ["fields.title.strict.name","fields.title.relaxed.name",
-        "fields.title.strict.search","fields.title.relaxed.search"],
-"Weight": ["fields.weight.strict.name","fields.weight.relaxed.name",
-        "fields.weight.strict.search","fields.weight.relaxed.search"],
-"TopLevelDomain": ["fields.tld.strict.name","fields.tld.relaxed.name",
-        "fields.tld.strict.search","fields.tld.relaxed.search"],
-"URL": ["fields.url.strict.name","fields.url.relaxed.name",
-        "fields.url.strict.search","fields.url.relaxed.search"]
+  "owl:Thing": [
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "Address":[
+    "fields.address.strict.name",
+    "fields.address.relaxed.name",
+    "fields.address.strict.search",
+    "fields.address.relaxed.search",
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "Age": [
+    "fields.age.strict.name",
+    "fields.age.relaxed.name",
+    "fields.age.strict.search",
+    "fields.age.relaxed.search"
+  ],
+  "City": [
+    "fields.city.strict.name",
+    "fields.city.relaxed.name",
+    "fields.city.strict.search",
+    "fields.city.relaxed.search",
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "Country": [
+    "fields.country.strict.name",
+    "fields.country.relaxed.name",
+    "fields.country.strict.search",
+    "fields.country.relaxed.search",
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "Description": [
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "Email": [
+    "fields.email.strict.name",
+    "fields.email.relaxed.name",
+    "fields.email.strict.search",
+    "fields.email.relaxed.search"
+  ],
+  "Ethnicity": [
+    "fields.ethnicity.strict.name",
+    "fields.ethnicity.relaxed.name",
+    "fields.ethnicity.strict.search",
+    "fields.ethnicity.relaxed.search",
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "EyeColor": [
+    "fields.eye_color.strict.name",
+    "fields.eye_color.relaxed.name",
+    "fields.eye_color.strict.search",
+    "fields.eye_color.relaxed.search",
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "Gender":[
+    "fields.gender.strict.name",
+    "fields.gender.relaxed.name",
+    "fields.gender.strict.search",
+    "fields.gender.relaxed.search",
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "HairColor": [
+    "fields.hair_color.strict.name",
+    "fields.hair_color.relaxed.name",
+    "fields.hair_color.strict.search",
+    "fields.hair_color.relaxed.search",
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "Height": [
+    "fields.height.strict.name",
+    "fields.height.relaxed.name",
+    "fields.height.strict.search",
+    "fields.height.relaxed.search"
+  ],
+  "Location": [
+    "fields.location.strict.name",
+    "fields.location.relaxed.name",
+    "fields.location.strict.search",
+    "fields.location.relaxed.search",
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "Name": [
+    "fields.name.strict.name",
+    "fields.name.relaxed.name",
+    "fields.name.strict.search",
+    "fields.name.relaxed.search",
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "Phone": [
+    "fields.phone.strict.name",
+    "fields.phone.relaxed.name",
+    "fields.phone.strict.search",
+    "fields.phone.relaxed.search"
+  ],
+  "PostingDate": [
+    "fields.posting_date.strict.name",
+    "fields.posting_date.relaxed.name",
+    "fields.posting_date.strict.search",
+    "fields.posting_date.relaxed.search"
+  ],
+  "Price": [
+    "fields.price.strict.name",
+    "fields.price.relaxed.name",
+    "fields.price.strict.search",
+    "fields.price.relaxed.search"
+  ],
+  "ReviewID":[
+    "fields.review_id.strict.name",
+    "fields.review_id.relaxed.name",
+    "fields.review_id.strict.search",
+    "fields.review_id.relaxed.search",
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "Service":[
+    "fields.service.strict.name",
+    "fields.service.relaxed.name",
+    "fields.service.strict.search",
+    "fields.service.relaxed.search",
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "SocialMediaId":[
+    "fields.social_media_id.strict.name",
+    "fields.social_media_id.relaxed.name",
+    "fields.social_media_id.strict.search",
+    "fields.social_media_id.relaxed.search",
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "State": [
+    "fields.state.strict.name",
+    "fields.state.relaxed.name",
+    "fields.state.strict.search",
+    "fields.state.relaxed.search",
+    "fields.description.strict.name",
+    "fields.description.relaxed.name",
+    "fields.description.strict.search",
+    "fields.description.relaxed.search"
+  ],
+  "Title": [
+    "fields.title.strict.name",
+    "fields.title.relaxed.name",
+    "fields.title.strict.search",
+    "fields.title.relaxed.search"
+  ],
+  "Weight": [
+    "fields.weight.strict.name",
+    "fields.weight.relaxed.name",
+    "fields.weight.strict.search",
+    "fields.weight.relaxed.search"
+  ],
+  "TopLevelDomain": [
+    "fields.tld.strict.name",
+    "fields.tld.relaxed.name",
+    "fields.tld.strict.search",
+    "fields.tld.relaxed.search",
+    "tld"
+  ],
+  "URL": [
+    "fields.url.strict.name",
+    "fields.url.relaxed.name",
+    "fields.url.strict.search",
+    "fields.url.relaxed.search",
+    "tld"
+  ]
 }
