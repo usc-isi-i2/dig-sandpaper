@@ -26,6 +26,8 @@
     "fields.email.relaxed.name",
     "fields.email.strict.search",
     "fields.email.relaxed.search",
+    "fields.email.strict.key",
+    "fields.email.relaxed.key",
     "fields.ethnicity.strict.name",
     "fields.ethnicity.relaxed.name",
     "fields.ethnicity.strict.search",
@@ -58,10 +60,8 @@
     "fields.phone.relaxed.name",
     "fields.phone.strict.search",
     "fields.phone.relaxed.search",
-    "fields.posting_date.strict.name",
-    "fields.posting_date.relaxed.name",
-    "fields.posting_date.strict.search",
-    "fields.posting_date.relaxed.search",
+    "fields.posting_date.strict.key",
+    "fields.posting_date.relaxed.key",
     "fields.price.strict.name",
     "fields.price.relaxed.name",
     "fields.price.strict.search",
@@ -98,6 +98,9 @@
     "fields.url.relaxed.name",
     "fields.url.strict.search",
     "fields.url.relaxed.search",
-    "tld"
+    "tld",
+    "tld.raw",
+    "url",
+    "url.raw"
   ]
 }
