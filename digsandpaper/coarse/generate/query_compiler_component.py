@@ -158,6 +158,18 @@ class ElasticsearchQueryCompiler(object):
                  should=shoulds,
                  filter=filters,
                  must_not=must_nots)
+        if "boost_musts" in self.elasticsearch_compiler_options:
+            q1 = Bool(must=musts,
+                      should=shoulds,
+                      filter=filters,
+                      must_not=must_nots)
+            q2 = Bool(must=musts + shoulds,
+                      filter=filters,
+                      must_not=must_nots,
+                      boost=self.elasticsearch_compiler_options["boost_musts"])
+            weighted_must = Bool(should=[q1, q2])
+            q = weighted_must
+
         s = Search()
         s.query = q
         if "default_source_fields" in self.elasticsearch_compiler_options:
@@ -188,6 +200,7 @@ class ElasticsearchQueryCompiler(object):
         if "ELASTICSEARCH" not in query:
             query["ELASTICSEARCH"] = {}
         query["ELASTICSEARCH"]["search"] = self.clean_dismax(s.to_dict())
+
         return query
 
 
