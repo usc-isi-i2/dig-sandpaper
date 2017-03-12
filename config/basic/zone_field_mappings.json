@@ -70,6 +70,8 @@
     "fields.review_id.relaxed.name",
     "fields.review_id.strict.search",
     "fields.review_id.relaxed.search",
+    "fields.risk.strict.name",
+    "fields.risk.strict.search",
     "fields.service.strict.name",
     "fields.service.relaxed.name",
     "fields.service.strict.search",

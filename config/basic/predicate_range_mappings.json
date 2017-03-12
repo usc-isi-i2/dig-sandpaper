@@ -16,6 +16,7 @@
   "posting_date": "PostingDate",
   "price": "Price",
   "review_id": "ReviewId",
+  "risk": "Risk",
   "service": "Service", 
   "social_media_id": "SocialMediaId",
   "state": "State",
