@@ -4,7 +4,10 @@
   },
   "fields": {
     "description": {
-      "*": 1
+      "*": 1,
+      "relaxed": {
+        "*": 0.1
+      }
     },
     "phone":  { 
       "relaxed": {
