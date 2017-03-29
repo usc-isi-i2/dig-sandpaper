@@ -1,7 +1,5 @@
 {
   "1": [
-    "extractors.content_strict.text.result.value",
-    "extractors.content_relaxed.text.result.value",
     "fields.address.strict.name",
     "fields.address.relaxed.name",
     "fields.address.strict.search",

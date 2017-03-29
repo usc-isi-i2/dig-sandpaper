@@ -116,6 +116,8 @@ class ElasticsearchQueryCompiler(object):
         filters = []
         must_nots = []
 
+        shoulds_by_predicate = {}
+
         for clause in where_clauses:
             if "fields" not in clause:
                 # todo everything should have fields fields
@@ -142,9 +144,18 @@ class ElasticsearchQueryCompiler(object):
                                                                  field))
                     es_clause = Bool(should=sub_queries)
             if clause.get("isOptional", False):
-                shoulds.append(es_clause)
+                predicate = clause.get("predicate")
+                if not predicate in shoulds_by_predicate:
+                    shoulds_by_predicate[predicate] = list()
+                shoulds_by_predicate.get(predicate).append(es_clause)
             else:
                 musts.append(es_clause)
+
+        for key, value in shoulds_by_predicate.iteritems():
+            if len(value) > 1:
+                shoulds.append(DisMax(queries=value))
+            else:
+                shoulds.append(value[0])
 
         for f in filter_clauses:
             source_fields = self.generate_filter(f, filters, source_fields)
