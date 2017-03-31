@@ -1,5 +1,6 @@
 import json
 import codecs
+import random
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search, Q
 from elasticsearch_dsl.query import MultiMatch, Match, DisMax, Bool, Exists, ConstantScore, Range
@@ -34,12 +35,18 @@ class ElasticsearchQueryCompiler(object):
             range_field_params = {}
             range_field_params[range_operators[op]] = f["constraint"]
             range_params[field["name"]] = range_field_params
+            range_field_params["_name"] = "{}:{}:{}".format(f.get("_id"),
+                                                            field.get("name"),
+                                                            f.get("constraint"))
             return Range(**range_params)
         else:
             match_params = {}
             match_field_params = {}
             match_field_params["query"] = f["constraint"]
             #match_field_params["type"] = f.get("query_type", "phrase")
+            match_field_params["_name"] = "{}:{}:{}".format(f.get("_id"),
+                                                            field.get("name"),
+                                                            f.get("constraint"))
             match_params[field["name"]] = match_field_params
             return Match(**match_params)
 
@@ -51,7 +58,11 @@ class ElasticsearchQueryCompiler(object):
             match_field_params["query"] = clause["constraint"]
             #match_field_params["type"] = query_type
             match_field_params["boost"] = field.get("weight", 1.0)
+            match_field_params["_name"] = "{}:{}:{}".format(clause.get("_id"),
+                                                            field.get("name"),
+                                                            clause.get("constraint"))
             match_params[field["name"]] = match_field_params
+            
             return Match(**match_params)
         else:
             return Exists(field=field["name"])

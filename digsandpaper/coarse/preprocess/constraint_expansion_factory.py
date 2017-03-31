@@ -1,6 +1,7 @@
 import json
 import codecs
 import copy
+import uuid
 from jsonpath_rw_ext import parse
 
 __name__ = "ConstraintExpansion"
@@ -51,6 +52,7 @@ class DictConstraintExpander(object):
                 new_filter = copy.copy(f)
                 new_filter["constraint"] = expanded_value
                 new_filter["isOptional"] = True
+                new_filter["_id"] = uuid.uuid4().hex
                 new_filters.append(new_filter)
             if len(new_filters) > 0:
                 new_filters.append(f)
@@ -76,6 +78,7 @@ class DictConstraintExpander(object):
                     new_clause = copy.copy(clause)
                     new_clause["constraint"] = expanded_value
                     new_clause["isOptional"] = True
+                    new_clause["_id"] = uuid.uuid4().hex
                     new_where_clauses.append(new_clause)
             where_clauses.extend(new_where_clauses)
         

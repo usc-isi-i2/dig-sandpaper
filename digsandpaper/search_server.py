@@ -14,7 +14,10 @@ def hello():
 
 @app.route("/search", methods=['POST'])
 def search():
-    return "Hello World!"
+    query = json.loads(request.data)
+    (qs, rs) = engine.execute_coarse(query)
+    answers = engine.execute_fine(qs, rs)
+    return json.dumps(answers)
 
 
 @app.route("/search/coarse", methods=['POST'])
