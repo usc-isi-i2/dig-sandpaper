@@ -1,0 +1,35 @@
+{
+	"Location":["extractors.content_strict.data_extractors.city.result.value",
+		"extractors.content_relaxed.data_extractors.city.result.value",
+		"extractors.content_strict.data_extractors.country.result.value",
+	"extractors.content_relaxed.data_extractors.country.result.value"],
+	"Age":["extractors.content_strict.data_extractors.age.result.value",
+		"extractors.content_relaxed.data_extractors.age.result.value"],
+	"HairColor":[
+        "extractors.content_strict.data_extractors.hair-color.result.value",
+        "extractors.content_strict.text.result.value",
+	"extractors.content_relaxed.text.result.value"],
+	"Ethnicity":[
+		"extractors.content_strict.data_extractors.ethnicity.result.value",
+        "extractors.content_relaxed.data_extractors.ethnicity.result.value",
+        "extractors.content_strict.data_extractors.nationality.result.value",
+        "extractors.content_relaxed.data_extractors.nationality.result.value"
+	],
+	"Phone":[
+		"extractors.content_strict.data_extractors.phone.result.value",
+		"extractors.content_relaxed.data_extractors.phone.result.value",
+		"extractors.content_strict.data_extractors.local-phone.result.value",
+		"extractors.content_relaxed.data_extractors.local-phone.result.value",
+		"centroid_phone"
+	],
+	"owl:Thing":["extractors.content_strict.text.result.value",
+		"extractors.content_relaxed.text.result.value"],
+	"PostingDate":[
+		"fields.posting-date.strict.name",
+		"fields.posting-date.relaxed.name"
+	],
+	"Ad": ["doc_id", "CDRIDs.uri"],
+	"Cluster": ["cluster-id"],
+	"Name": ["extractors.content_strict.data_extractors.name.result.value"]
+
+}

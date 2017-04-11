@@ -1,0 +1,5 @@
+{
+	"root_type": "Ad",
+	"root_predicates": ["name"],
+	"inverse_predicates":{"Cluster": ["ad"]}
+}

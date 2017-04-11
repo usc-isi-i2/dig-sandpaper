@@ -26,10 +26,15 @@ class TypeDocTypeMapping(object):
     def generate(self, query):
         where = query["SPARQL"]["where"]
         t = where["type"]
+
         if t in self.type_doc_type_mappings:
             if "ELASTICSEARCH" not in query:
                 query["ELASTICSEARCH"] = {}
-            query["ELASTICSEARCH"]["doc_type"] = self.type_doc_type_mappings[t]
+            if isinstance(query["ELASTICSEARCH"], dict):
+                query["ELASTICSEARCH"]["doc_type"] = self.type_doc_type_mappings[t]
+            elif isinstance(query["ELASTICSEARCH"], list):
+                for es in query["ELASTICSEARCH"]:
+                    es["doc_type"] = self.type_doc_type_mappings[es["type"]]
         return query
 
 

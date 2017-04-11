@@ -114,86 +114,14 @@ class ElasticsearchQueryCompiler(object):
                 filters.append(q)
         return source_fields
 
-    def generate(self, query):
-        where = query["SPARQL"]["where"]
-        where_clauses = where["clauses"]
-        filter_clauses = where["filters"]
+    def generate_query_boilerplate(self, query, s, source_fields):
+
         select_variables = query["SPARQL"]["select"]["variables"]
-
-        source_fields = set()
-
-        musts = []
-        shoulds = []
-        filters = []
-        must_nots = []
-
-        shoulds_by_predicate = {}
-
-        for clause in where_clauses:
-            if "fields" not in clause:
-                # todo everything should have fields fields
+        for sv in select_variables:
+            if "fields" not in sv:
                 continue
-            fields = clause["fields"]
+            source_fields |= set([field["name"] for field in sv["fields"]])
 
-            source_fields |= set([field["name"] for field in fields])
-            if("constraint" in clause):
-                if len(fields) == 1:
-                    es_clause = self.translate_clause(clause, fields[0])
-                else:
-                    sub_queries = []
-                    for field in clause["fields"]:
-                        sub_queries.append(self.translate_clause(clause,
-                                                                 field))
-                    es_clause = DisMax(queries=sub_queries)
-            else:
-                if len(fields) == 1:
-                    es_clause = self.translate_clause(clause, fields[0])
-                else:
-                    sub_queries = []
-                    for field in clause["fields"]:
-                        sub_queries.append(self.translate_clause(clause,
-                                                                 field))
-                    es_clause = Bool(should=sub_queries)
-            if clause.get("isOptional", False):
-                predicate = clause.get("predicate")
-                if not predicate in shoulds_by_predicate:
-                    shoulds_by_predicate[predicate] = list()
-                shoulds_by_predicate.get(predicate).append(es_clause)
-            else:
-                musts.append(es_clause)
-
-        for key, value in shoulds_by_predicate.iteritems():
-            if len(value) > 1:
-                shoulds.append(DisMax(queries=value))
-            else:
-                shoulds.append(value[0])
-
-        for f in filter_clauses:
-            source_fields = self.generate_filter(f, filters, source_fields)
-
-        for s in select_variables:
-            if "fields" not in s:
-                continue
-            source_fields |= set([field["name"] for field in s["fields"]])
-
-        q = Bool(must=musts,
-                 should=shoulds,
-                 filter=filters,
-                 must_not=must_nots)
-        if "boost_musts" in self.elasticsearch_compiler_options:
-            q1 = Bool(must=musts,
-                      should=shoulds,
-                      filter=filters,
-                      must_not=must_nots)
-            q2 = Bool(must=musts + shoulds,
-                      filter=filters,
-                      must_not=must_nots,
-                      boost=self.elasticsearch_compiler_options["boost_musts"])
-            weighted_must = Bool(should=[q1, q2])
-            q = weighted_must
-
-        s = Search()
-        s.query = q
         if "default_source_fields" in self.elasticsearch_compiler_options:
             default_source_fields = self.elasticsearch_compiler_options["default_source_fields"]
             if isinstance(default_source_fields, basestring):
@@ -219,11 +147,121 @@ class ElasticsearchQueryCompiler(object):
         for key in highlight_fields:
             s = s.highlight(key, **highlight_fields[key])
 
-        if "ELASTICSEARCH" not in query:
-            query["ELASTICSEARCH"] = {}
-        query["ELASTICSEARCH"]["search"] = self.clean_dismax(s.to_dict())
+        return s
 
+
+    def generate(self, query):
+        where = query["SPARQL"]["where"]
+        generated = self.generate_where(query, where, True)
+        query["ELASTICSEARCH"] = generated
         return query
+
+    def translate_clause_helper(self, clause, fields, use_dist_max):
+        if len(fields) == 1:
+            es_clause = self.translate_clause(clause, fields[0])
+        else:
+            sub_queries = []
+            for field in clause["fields"]:
+                sub_queries.append(self.translate_clause(clause,
+                                                         field))
+            if use_dist_max:
+                es_clause = DisMax(queries=sub_queries)
+            else:
+                es_clause = Bool(should=sub_queries)
+
+        return es_clause
+
+    def generate_where(self, query, where, is_root=False):
+
+        where_clauses = where["clauses"]
+        source_fields = set()
+
+        musts = []
+        shoulds = []
+        filters = []
+        must_nots = []
+
+        sub_queries = []
+        shoulds_by_predicate = {}
+
+        for clause in where_clauses:
+            if "fields" not in clause:
+                # todo everything should have fields fields
+                continue
+            fields = clause["fields"]
+
+            source_fields |= set([field["name"] for field in fields])
+            if("constraint" in clause):
+                es_clause = self.translate_clause_helper(clause, fields, True)
+            elif "clauses" in clause:
+                sub_query = self.generate_where(query, clause, False)
+                # if sub_query contains variable of parent query
+                #  create clause that filters on variable of parent query
+                sub_query_clause = {}
+                sub_query_clause["constraint"] = "__placeholder__"
+                sub_query_clause["isOptional"] = False
+                sub_query_clause["fields"] = where["fields"]
+                source_fields |= set([field["name"] for field in where["fields"]])
+                sub_query_clause["_id"] = clause["_id"]
+                es_clause = self.translate_clause_helper(sub_query_clause, where["fields"], True)
+                
+                sub_query["clause_fields"] = where["fields"]
+                sub_query["clause_id"] = clause["_id"]
+                sub_queries.append(sub_query)
+                # else 
+                #   create clause that's constrained on variable of clause
+                #clause["constraint"] = "__placeholder__"
+                #es_clause = self.translate_clause_helper(clause, fields, True)
+                #sub_query["clause_name"] = es_clause["_name"]
+            else:
+                es_clause = self.translate_clause_helper(clause, fields, False)
+            if clause.get("isOptional", False):
+                predicate = clause.get("predicate")
+                if not predicate in shoulds_by_predicate:
+                    shoulds_by_predicate[predicate] = list()
+                shoulds_by_predicate.get(predicate).append(es_clause)
+            else:
+                musts.append(es_clause)
+
+        for key, value in shoulds_by_predicate.iteritems():
+            if len(value) > 1:
+                shoulds.append(DisMax(queries=value))
+            else:
+                shoulds.append(value[0])
+
+
+        if "filters" in where: 
+            filter_clauses = where["filters"]
+            for f in filter_clauses:
+                source_fields = self.generate_filter(f, filters, source_fields)
+
+        q = Bool(must=musts,
+                 should=shoulds,
+                 filter=filters,
+                 must_not=must_nots)
+        if "boost_musts" in self.elasticsearch_compiler_options:
+            q1 = Bool(must=musts,
+                      should=shoulds,
+                      filter=filters,
+                      must_not=must_nots)
+            q2 = Bool(must=musts + shoulds,
+                      filter=filters,
+                      must_not=must_nots,
+                      boost=self.elasticsearch_compiler_options["boost_musts"])
+            weighted_must = Bool(should=[q1, q2])
+            q = weighted_must
+
+        s = Search()
+        s.query = q
+        if is_root:
+            s = self.generate_query_boilerplate(query, s, source_fields)
+        es_result = {}
+        es_result["search"] = self.clean_dismax(s.to_dict())
+        es_result["type"] = where["type"]
+        if len(sub_queries) > 0:
+            sub_queries.append(es_result)
+            return sub_queries
+        return es_result
 
 
 def get_component(component_config):

@@ -34,23 +34,36 @@ class TypeFieldMapping(object):
             for clause in f["clauses"]:
                 self.add_types_to_filters(clause)
 
-    def generate(self, query):
-        where = query["SPARQL"]["where"]
+    def generate_where(self, where):
         where_clauses = where["clauses"]
-        filters = where["filters"]
+        
+        if "type" in where:
+            t = where["type"]
+            if t in self.type_field_mapping:
+                where["fields"] = []
+                for field in self.type_field_mapping[t]:
+                        where["fields"].append({"name": field})
 
         for clause in where_clauses:
             if "type" not in clause:
                 continue
             t = clause["type"]
             if t in self.type_field_mapping:
-                clause["fields"] = []
-                for field in self.type_field_mapping[t]:
-                    clause["fields"].append({"name": field})
+                if "clauses" in clause:
+                    self.generate_where(clause)
+                else:
+                    clause["fields"] = []
+                    for field in self.type_field_mapping[t]:
+                        clause["fields"].append({"name": field})
 
-        for f in filters:
-            self.add_types_to_filters(f)
+        if "filters" in where:
+            filters = where["filters"]
+            for f in filters:
+                self.add_types_to_filters(f)
 
+    def generate(self, query):
+        where = query["SPARQL"]["where"]
+        self.generate_where(where)        
         return query
 
 

@@ -29,7 +29,11 @@ class TypeIndexMapping(object):
         if t in self.type_index_mappings:
             if "ELASTICSEARCH" not in query:
                 query["ELASTICSEARCH"] = {}
-            query["ELASTICSEARCH"]["index"] = self.type_index_mappings[t]
+            if isinstance(query["ELASTICSEARCH"], dict):
+                query["ELASTICSEARCH"]["index"] = self.type_index_mappings[t]
+            elif isinstance(query["ELASTICSEARCH"], list):
+                for es in query["ELASTICSEARCH"]:
+                    es["index"] = self.type_index_mappings[es["type"]]
         return query
 
 

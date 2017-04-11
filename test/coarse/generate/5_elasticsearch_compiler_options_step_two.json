@@ -1,0 +1,9 @@
+{
+    "default_source_fields": ["doc_id", "tld", "url", "fields.*"],
+	"highlight": {
+		"fields": {
+			"extractors.content_strict.text.result.value": {},
+		    "extractors.content_relaxed.text.result.value": {}
+		}
+	}
+}

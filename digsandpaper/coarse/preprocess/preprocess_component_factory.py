@@ -2,13 +2,15 @@ import constraint_consistency_factory
 import constraint_expansion_factory
 import constraint_type_mapper_factory
 import clause_id_factory
+import sparql_reordering_factory
 from constraint_type_mapper_factory import TopConstraintTypeMapper
 from clause_id_factory import UUIDClauseIdMapper
 
 component_order = {constraint_type_mapper_factory.name: 1,
-                   clause_id_factory.name: 2,
-                   constraint_consistency_factory.name: 3,
-                   constraint_expansion_factory.name: 4}
+                   sparql_reordering_factory.name: 2,
+                   clause_id_factory.name: 3,
+                   constraint_consistency_factory.name: 4,
+                   constraint_expansion_factory.name: 5}
 
 
 def get_component(component_config):
@@ -21,6 +23,8 @@ def get_component(component_config):
         return constraint_consistency_factory.get_component(component_config)
     elif component_type == constraint_expansion_factory.name:
         return constraint_expansion_factory.get_component(component_config)
+    elif component_type == sparql_reordering_factory.name:
+        return sparql_reordering_factory.get_component(component_config)
     else:
         raise ValueError(
             "Unsupported component type: {}".format(component_type))

@@ -87,6 +87,16 @@ class TestCoarsePreprocessing(unittest.TestCase):
         f = result["SPARQL"]["where"]["filters"][0]
         self.assertEqual(f["clauses"][0]["operator"], "or")
 
+    def test_sparql_unnesting(self):
+        config = load_json_file("5_config.json")
+        query = load_json_file("5_query.json")
+        preprocessor = Preprocessor(config)
+
+        result = preprocessor.preprocess(query)
+        w = result["SPARQL"]["where"]
+        self.assertEqual(w["type"], "Ad")
+        self.assertEqual(w["clauses"][0]["type"], "Cluster")
+
 
 if __name__ == '__main__':
     unittest.main()

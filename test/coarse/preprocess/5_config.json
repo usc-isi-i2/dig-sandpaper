@@ -1,0 +1,14 @@
+{
+    "components": [
+    {
+        "type": "ConstraintTypeMapper",
+        "name": "PredicateDictConstraintTypeMapper",
+        "predicate_range_mappings": "test/coarse/preprocess/5_predicate_range_mappings.json"
+    },
+    {
+        "type": "SparqlReordering",
+        "name": "SparqlRootUnnesting",
+        "root_info": "test/coarse/preprocess/5_sparql_root_unnesting.json"
+    }
+    ]
+}

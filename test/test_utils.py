@@ -14,10 +14,8 @@ def load_json_file(file_name):
     return rules
 
 
-def initialize_elasticsearch(documents,
-                             es_config={'host': 'localhost',
+def initialize_elasticsearch_with_config(es_config={'host': 'localhost',
                                         'port': 9200}):
-
     if "endpoints" in es_config:
         endpoints = es_config["endpoints"]
     else:
@@ -26,12 +24,27 @@ def initialize_elasticsearch(documents,
         endpoints = ["http://{}:{}".format(host, port)]
     requests.put('{}/dig-sandpaper-test'.format(endpoints[0]), data="{}")
     time.sleep(5)
+    return endpoints
 
+def initialize_elasticsearch_doc_types(documents_by_type, 
+                                       es_config):
+    endpoints = initialize_elasticsearch_with_config(es_config)
+    for (t, docs) in documents_by_type.iteritems():
+      initialize_elasticsearch_docs(endpoints, docs, t)
+
+def initialize_elasticsearch_docs(endpoints, documents, t="ads"):
     for i, document in enumerate(documents):
-        url = '{}/dig-sandpaper-test/ads/{}'.format(endpoints[0], i)
+        url = '{}/dig-sandpaper-test/{}/{}'.format(endpoints[0], t, i)
         requests.put(url,
                      data=json.dumps(document))
         time.sleep(5)
+
+def initialize_elasticsearch(documents,
+                             es_config):
+
+    endpoints = initialize_elasticsearch_with_config(es_config)
+    initialize_elasticsearch_docs(endpoints, documents)
+
 
 
 def reset_elasticsearch(es_config={'host': 'localhost', 'port': 9200}):

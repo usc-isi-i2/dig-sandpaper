@@ -50,22 +50,30 @@ class FieldWeightMapping(object):
                 if weight:
                     field["weight"] = weight
 
-    def generate(self, query):
-        where = query["SPARQL"]["where"]
+    def generate_where(self, where):
         where_clauses = where["clauses"]
-        filters = where["filters"]
+        
 
         for clause in where_clauses:
             if "fields" not in clause:
                 continue
-            for field in clause["fields"]:
-                weight = self.find_weight(field["name"].split("."), self.field_weight_mapping)
-                if weight:
-                    field["weight"] = weight
+            if "clauses" in clause:
+                self.generate_where(clause)
+            else:
+                for field in clause["fields"]:
+                    weight = self.find_weight(field["name"].split("."), self.field_weight_mapping)
+                    if weight:
+                        field["weight"] = weight
+        if "filters" in where:
+            filters = where["filters"]
+            for f in filters:
+                self.find_weight_for_filter(f)
 
-        for f in filters:
-            self.find_weight_for_filter(f)
+        return where
 
+    def generate(self, query):
+        where = query["SPARQL"]["where"]
+        self.generate_where(where)
         return query
 
 

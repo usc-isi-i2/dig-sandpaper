@@ -1,0 +1,101 @@
+[
+    {
+        "SPARQL": {
+            "group-by": {
+                "limit": 5
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "Ad", 
+                        "variable": "?ad"
+                    }, 
+                    {
+                        "type": "Name", 
+                        "variable": "?name"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "_id": "ccccc27e67ed41a0aa086335c9673698", 
+                        "clauses": [
+                            {
+                                "_id": "dad1b6d1b81a402998ffc61fdda53e8b", 
+                                "constraint": "4792354008", 
+                                "fields": [
+                                    {
+                                        "name": "extractors.content_strict.data_extractors.phone.result.value"
+                                    }, 
+                                    {
+                                        "name": "extractors.content_relaxed.data_extractors.phone.result.value", 
+                                        "weight": 0.5
+                                    }, 
+                                    {
+                                        "name": "extractors.content_strict.data_extractors.local-phone.result.value"
+                                    }, 
+                                    {
+                                        "name": "extractors.content_relaxed.data_extractors.local-phone.result.value", 
+                                        "weight": 0.5
+                                    }, 
+                                    {
+                                        "name": "centroid_phone"
+                                    }
+                                ], 
+                                "isOptional": false, 
+                                "predicate": "phone", 
+                                "type": "Phone"
+                            }, 
+                            {
+                                "_id": "ddf2827e67ed41a0aa086335c9673698", 
+                                "fields": [
+                                    {
+                                        "name": "doc_id"
+                                    }, 
+                                    {
+                                        "name": "CDRIDs.uri"
+                                    }
+                                ], 
+                                "isOptional": false, 
+                                "predicate": "ad", 
+                                "type": "Ad", 
+                                "variable": "?ad"
+                            }
+                        ], 
+                        "fields": [
+                            {
+                                "name": "cluster-id"
+                            }
+                        ], 
+                        "type": "Cluster", 
+                        "variable": "?cluster"
+                    }, 
+                    {
+                        "_id": "9b84d596476441ba8f8fa230633f9fab", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.name.result.value"
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "name", 
+                        "type": "Name", 
+                        "variable": "?name"
+                    }
+                ], 
+                "fields": [
+                    {
+                        "name": "doc_id"
+                    }, 
+                    {
+                        "name": "CDRIDs.uri"
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "type": "Point Fact"
+    }
+]

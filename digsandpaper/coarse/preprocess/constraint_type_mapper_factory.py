@@ -58,8 +58,9 @@ class PredicateDictConstraintTypeMapper(object):
             if "variable" in clause:
                 clause_variable_to_type[clause["variable"]] = clause["type"]
 
-        for f in query["SPARQL"]["where"]["filters"]:
-            self.preprocess_filter(f, clause_variable_to_type)
+        if "filters" in query["SPARQL"]["where"]:
+            for f in query["SPARQL"]["where"]["filters"]:
+                self.preprocess_filter(f, clause_variable_to_type)
 
         for s in query["SPARQL"]["select"]["variables"]:
             s["type"] = clause_variable_to_type.get(s["variable"], "owl:Thing")

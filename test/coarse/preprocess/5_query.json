@@ -1,0 +1,41 @@
+{
+        "SPARQL": {
+            "group-by": {
+                "limit": 5
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "simple", 
+                        "variable": "?ad"
+                    },
+                    {
+                        "type": "simple", 
+                        "variable": "?name"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [   
+                     {
+                      "variable": "?name", 
+                      "predicate": "name", 
+                      "isOptional": false
+                     },
+                     {
+                      "constraint": "4792354008",
+                      "predicate": "phone", 
+                      "isOptional": false
+                     },
+                     {
+                      "variable": "?ad", 
+                      "predicate": "ad", 
+                      "isOptional": false
+                     }
+                ], 
+                "type": "Cluster", 
+                "variable": "?cluster"
+            }
+        }, 
+        "type": "Point Fact"
+    }
