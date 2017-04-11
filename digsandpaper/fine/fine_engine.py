@@ -37,18 +37,27 @@ class FineEngine(object):
         return doc.get(field_element, None)
 
     def execute(self, expanded_queries, coarse_results):
+        all_answers = []
         for (query, results) in zip(expanded_queries, coarse_results):
+            answer_context = {}
+            answers = []
+            answer_variables = []
+            answer_context["answers"] = answers
+            answer_context["variables"] = answer_variables
             if query.get("type") == "Point Fact":
                 sparql = query.get("SPARQL")
                 select = sparql.get("select")
                 variables = select.get("variables")
                 where = sparql.get("where")
                 clauses = where.get("clauses")
-
+                for v in variables:
+                    answer_variables.append(v["variable"])
+                answer_variables.append("_score")
+                
                 result = results.to_dict()
                 for hit in result["hits"]["hits"]:
 
-                    answers = {}
+                    answer = []
                     for v in variables:
                         potential_matched_clauses = []
                         if where["variable"] == v["variable"]:
@@ -71,8 +80,11 @@ class FineEngine(object):
                                         best_field = name
                                         best_weight = weight
                                         best_value = value
-                            if best_value:
-                               answers[v["variable"]] = best_value
-                    if len(answers) == len(variables):
-                        return answers
-        return {}
+                        if best_value:
+                           answer.append(best_value)
+                        else:
+                            answer.append("")
+                    answer.append(hit["_score"])  
+                    answers.append(answer)
+            all_answers.append(answer_context)
+        return all_answers
