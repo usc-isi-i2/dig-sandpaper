@@ -15,29 +15,44 @@ class SearchServerTestCase(unittest.TestCase):
         response = self.app.get('/')
         self.assertEquals(200, response.status_code)
 
-    def helper_setup(self, i):
+    def helper_setup(self, i, docs_by_type):
         config = test_utils.load_engine_configuration(i)
         engine = Engine(config)
+        es_config = config["coarse"]["execute"]["components"][0]
+        test_utils.initialize_elasticsearch_doc_types(docs_by_type, es_config)
+        search_server.set_engine(engine)
+        return es_config
+
+    def helper_test(self, i, docs_by_type):
         query = test_utils.load_sub_configuration("coarse", "preprocess",
                                        i, "_query.json")
-        document = test_utils.load_sub_configuration("coarse", "execute",
-                                          i, "_document.json")
-        es_config = config["coarse"]["execute"]["components"][0]
-        test_utils.initialize_elasticsearch([document], es_config)
-        search_server.set_engine(engine)
-        return (query, es_config)
-
-    def helper_test(self, i):
-        (query, es_config) = self.helper_setup(i)
+        es_config = self.helper_setup(i, docs_by_type)
         response = self.app.post('/search', data=json.dumps(query))
         self.assertEquals(200, response.status_code)
         results = json.loads(response.data)
+        print response.data
         test_utils.reset_elasticsearch(es_config)
         return results
 
     def test_search_1(self):
-        results_1 = self.helper_test(1)
+        document = test_utils.load_sub_configuration("coarse", "execute",
+                                          1, "_document.json")
+        results_1 = self.helper_test(1, {"ads": [document]})
+        self.assertEquals(2, len(results_1))
+        self.assertEquals(1, len(results_1[0]["answers"]))
+        self.assertEquals(1, len(results_1[1]["answers"]))
+        self.assertEquals("caucasian", results_1[0]["answers"][0][1])
 
+    def test_search_5(self):
+        ad_document = test_utils.load_sub_configuration("coarse", "execute",
+                                          5, "_document_ad.json")
+        cluster_document = test_utils.load_sub_configuration("coarse", "execute",
+                                          5, "_document_cluster.json")
+        results_5 = self.helper_test(5, {"ads": [ad_document],
+                                         "clusters": [cluster_document]})
+        self.assertEquals(1, len(results_5))
+        self.assertEquals(1, len(results_5[0]["answers"]))
+        self.assertEquals("jane", results_5[0]["answers"][0][1])
 
 if __name__ == '__main__':
     unittest.main()
