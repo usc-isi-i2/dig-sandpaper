@@ -1,4 +1,5 @@
 {
+        "type": "MODE", 
         "SPARQL": {
             "group-by": {
                 "limit": 5
@@ -6,12 +7,12 @@
             "select": {
                 "variables": [
                     {
-                        "type": "Ad", 
-                        "variable": "?ad"
-                    }, 
-                    {
                         "type": "Name", 
                         "variable": "?name"
+                    },
+                    {
+                        "type": "Ad", 
+                        "variable": "?ad"
                     }
                 ]
             }, 
@@ -54,6 +55,5 @@
                 "type": "Ad", 
                 "variable": "?ad"
             }
-        }, 
-        "type": "Point Fact"
+        }
     }

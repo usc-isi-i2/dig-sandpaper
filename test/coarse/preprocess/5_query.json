@@ -1,4 +1,5 @@
 {
+        "type": "MODE", 
         "SPARQL": {
             "group-by": {
                 "limit": 5
@@ -7,11 +8,11 @@
                 "variables": [
                     {
                         "type": "simple", 
-                        "variable": "?ad"
+                        "variable": "?name"
                     },
                     {
                         "type": "simple", 
-                        "variable": "?name"
+                        "variable": "?ad"
                     }
                 ]
             }, 
@@ -36,6 +37,5 @@
                 "type": "Cluster", 
                 "variable": "?cluster"
             }
-        }, 
-        "type": "Point Fact"
+        }
     }

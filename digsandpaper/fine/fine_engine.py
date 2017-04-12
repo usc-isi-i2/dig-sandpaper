@@ -9,6 +9,14 @@ class FineEngine(object):
     def _initialize(self):
         self.name = ""
 
+    def is_number(s):
+        try:
+            float(s) 
+        except ValueError:
+            return False
+
+        return True
+
     def find_value(self, doc, field_elements):
         while len(field_elements) > 1:
             field_element = field_elements.pop(0)
@@ -44,47 +52,101 @@ class FineEngine(object):
             answer_variables = []
             answer_context["answers"] = answers
             answer_context["variables"] = answer_variables
-            if query.get("type") == "Point Fact":
-                sparql = query.get("SPARQL")
-                select = sparql.get("select")
-                variables = select.get("variables")
-                where = sparql.get("where")
-                clauses = where.get("clauses")
+            sparql = query.get("SPARQL")
+            select = sparql.get("select")
+            variables = select.get("variables")
+            where = sparql.get("where")
+            clauses = where.get("clauses")
+            for v in variables:
+                answer_variables.append(v["variable"])
+            answer_variables.append("_score")
+
+            result = results.to_dict()
+            for hit in result["hits"]["hits"]:
+
+                answer = []
                 for v in variables:
-                    answer_variables.append(v["variable"])
-                answer_variables.append("_score")
-                
-                result = results.to_dict()
-                for hit in result["hits"]["hits"]:
+                    potential_matched_clauses = []
+                    if where["variable"] == v["variable"]:
+                        potential_matched_clauses.append({"fields":[{"name":"doc_id","weight":1.0}]})
+                    for c in clauses:
+                        if c.get("variable") == v["variable"]:
+                            potential_matched_clauses.append(c)
 
-                    answer = []
-                    for v in variables:
-                        potential_matched_clauses = []
-                        if where["variable"] == v["variable"]:
-                            potential_matched_clauses.append({"fields":[{"name":"doc_id","weight":1.0}]})
-                        for c in clauses:
-                            if c.get("variable") == v["variable"]:
-                                potential_matched_clauses.append(c)
+                    best_field = ""
+                    best_weight = 0.0
+                    best_value = None
+                    for c in potential_matched_clauses:
+                        for field in c.get("fields", []):
+                            name = field["name"]
+                            weight = field.get("weight", 1.0)
+                            field_elements = name.split(".")
+                            value = self.find_value(hit["_source"], field_elements)
+                            if value:
+                                if weight > best_weight:
+                                    best_field = name
+                                    best_weight = weight
+                                    best_value = value
+                    if best_value:
+                       answer.append(best_value)
+                    else:
+                        answer.append("")
+                answer.append(hit["_score"])  
+                answers.append(answer)
 
-                        best_field = ""
-                        best_weight = 0.0
-                        best_value = None
-                        for c in potential_matched_clauses:
-                            for field in c.get("fields", []):
-                                name = field["name"]
-                                weight = field.get("weight", 1.0)
-                                field_elements = name.split(".")
-                                value = self.find_value(hit["_source"], field_elements)
-                                if value:
-                                    if weight > best_weight:
-                                        best_field = name
-                                        best_weight = weight
-                                        best_value = value
-                        if best_value:
-                           answer.append(best_value)
-                        else:
-                            answer.append("")
-                    answer.append(hit["_score"])  
-                    answers.append(answer)
+            # assume we're aggregating on the first field
+            
+            t = query["type"].lower()
+
+            if t == "point fact":
+                t = t
+            elif t == "mode":
+                value_count = {}
+                for answer in answers:
+                    value = answer[0]
+                    value_count[value] = value_count.get(value, 0) + 1
+                mode_value = None
+                mode_count = None
+                for (k,v) in value_count.iteritems():
+                    if not mode_count:
+                        mode_value = k
+                        mode_count = v
+                    elif v > mode_count:
+                        mode_value = k
+                        mode_count = v
+                answer_context["agg"] = mode_value
+            elif t == "avg":
+                count = 0
+                total = 0 
+                for answer in answers:
+                    value = answer[0]
+                    if value and is_number(value):
+                        count = count + 1
+                        total = total + float(value)
+                if count > 0:
+                    answer_context["agg"] = total / count
+            elif t == "min":
+                minimum = None 
+                for answer in answers:
+                    value = answer[0]
+                    if value and is_number(value):
+                        if not minimum:
+                            minimum = float(value)
+                        elif float(value) < minimum:
+                            minimum = float(value)
+                if minimum:
+                    answer_context["agg"] = minimum
+            elif t == "max":
+                maximum = None 
+                for answer in answers:
+                    value = answer[0]
+                    if value and is_number(value):
+                        if not maximum:
+                            maximum = float(value)
+                        elif float(value) > maximum:
+                            maximum = float(value)
+                if maximum:
+                    answer_context["agg"] = maximum
+
             all_answers.append(answer_context)
         return all_answers

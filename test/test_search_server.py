@@ -30,7 +30,6 @@ class SearchServerTestCase(unittest.TestCase):
         response = self.app.post('/search', data=json.dumps(query))
         self.assertEquals(200, response.status_code)
         results = json.loads(response.data)
-        print response.data
         test_utils.reset_elasticsearch(es_config)
         return results
 
@@ -52,7 +51,8 @@ class SearchServerTestCase(unittest.TestCase):
                                          "clusters": [cluster_document]})
         self.assertEquals(1, len(results_5))
         self.assertEquals(1, len(results_5[0]["answers"]))
-        self.assertEquals("jane", results_5[0]["answers"][0][1])
+        self.assertEquals("jane", results_5[0]["answers"][0][0])
+        self.assertEquals("jane", results_5[0]["agg"])
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,5 +1,6 @@
 [
     {
+        "type": "MODE", 
         "ELASTICSEARCH": [
             {
                 "clause_fields": [
@@ -166,12 +167,12 @@
             "select": {
                 "variables": [
                     {
-                        "type": "Ad", 
-                        "variable": "?ad"
-                    }, 
-                    {
                         "type": "Name", 
                         "variable": "?name"
+                    },
+                    {
+                        "type": "Ad", 
+                        "variable": "?ad"
                     }
                 ]
             }, 
@@ -254,7 +255,6 @@
                 "type": "Ad", 
                 "variable": "?ad"
             }
-        }, 
-        "type": "Point Fact"
+        }
     }
 ]

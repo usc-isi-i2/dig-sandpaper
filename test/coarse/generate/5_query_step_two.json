@@ -1,5 +1,6 @@
 [
     {
+        "type": "MODE", 
         "SPARQL": {
             "group-by": {
                 "limit": 5
@@ -95,7 +96,6 @@
                 "type": "Ad", 
                 "variable": "?ad"
             }
-        }, 
-        "type": "Point Fact"
+        }
     }
 ]
