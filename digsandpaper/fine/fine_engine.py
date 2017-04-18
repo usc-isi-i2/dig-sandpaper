@@ -41,7 +41,10 @@ class FineEngine(object):
                     doc[field_element] = {}
                 doc = doc[field_element]
         field_element = field_elements[0]
-
+        if isinstance(doc, list):
+            if len(doc)> 0:
+                doc = doc[0]
+            return None
         return doc.get(field_element, None)
 
     def execute(self, expanded_queries, coarse_results):
@@ -62,26 +65,38 @@ class FineEngine(object):
             answer_variables.append("_score")
 
             result = results.to_dict()
+
             for hit in result["hits"]["hits"]:
 
+                matches = [match.split(":") for match in  hit.get("matched_queries", list())]
                 answer = []
                 for v in variables:
+
                     potential_matched_clauses = []
                     if where["variable"] == v["variable"]:
                         potential_matched_clauses.append({"fields":[{"name":"doc_id","weight":1.0}]})
                     for c in clauses:
                         if c.get("variable") == v["variable"]:
                             potential_matched_clauses.append(c)
-
                     best_field = ""
                     best_weight = 0.0
                     best_value = None
                     for c in potential_matched_clauses:
+                        clause_id = c.get("clause_id", "")
+                        matches_for_clause = [match for match in matches if match[0] == clause_id]
+                        
+
                         for field in c.get("fields", []):
                             name = field["name"]
                             weight = field.get("weight", 1.0)
-                            field_elements = name.split(".")
-                            value = self.find_value(hit["_source"], field_elements)
+                            value = None
+                            if len(matches_for_clause) > 0:
+                                for match in matches_for_clause:
+                                    if match[1] == name:
+                                         value = match[2]
+                            else:
+                                field_elements = name.split(".")
+                                value = self.find_value(hit["_source"], field_elements)
                             if value:
                                 if weight > best_weight:
                                     best_field = name
