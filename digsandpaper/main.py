@@ -28,7 +28,7 @@ def main(args):
 
     query_file = c_options.query
     config_file = c_options.config
-    server = c_options.config
+    server = c_options.server
     host = c_options.host
     port = c_options.port
 
