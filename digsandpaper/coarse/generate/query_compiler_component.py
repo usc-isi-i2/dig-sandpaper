@@ -86,7 +86,10 @@ class ElasticsearchQueryCompiler(object):
         if "operator" not in f:
             return source_fields
 
-        compound_filter = f["operator"] == "and" or f["operator"] == "or"
+        operator = f["operator"]
+        if isinstance(operator, list) and len(operator) == 1:
+            operator = operator[0]
+        compound_filter = operator == "and" or operator == "or"
         if "fields" not in f and not compound_filter:
             return source_fields
         if compound_filter:
@@ -96,9 +99,9 @@ class ElasticsearchQueryCompiler(object):
                 source_fields = self.generate_filter(clause,
                                                      sub_filters,
                                                      source_fields)
-            if f["operator"] == "and":
+            if operator == "and":
                 q = Bool(filter=sub_filters)
-            elif f["operator"] == "or":
+            elif operator == "or":
                 q = Bool(should=[ConstantScore(filter=sf)
                                  for sf in sub_filters])
             filters.append(q)
