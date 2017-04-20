@@ -14,6 +14,10 @@
         "type": "ConstraintExpansion",
         "name": "DictConstraintExpander",
         "dict_constraint_mappings": "test/coarse/preprocess/1_dict_constraint_mappings.json"
+    },
+    {
+        "type": "ConstraintRelaxation",
+        "name": "IsOptionalConstraintRelaxer"
     }
     ]
 }
