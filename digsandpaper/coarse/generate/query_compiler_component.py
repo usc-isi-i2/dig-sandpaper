@@ -240,16 +240,21 @@ class ElasticsearchQueryCompiler(object):
                  filter=filters,
                  must_not=must_nots)
         if "boost_musts" in self.elasticsearch_compiler_options:
-            q1 = Bool(must=musts,
-                      should=shoulds,
-                      filter=filters,
-                      must_not=must_nots)
-            q2 = Bool(must=musts + shoulds,
-                      filter=filters,
-                      must_not=must_nots,
-                      boost=self.elasticsearch_compiler_options["boost_musts"])
-            weighted_must = Bool(should=[q1, q2])
-            q = weighted_must
+            boost = 10.0
+            weighted_by_musts = []
+            minimum_should_match = len(shoulds)
+            if minimum_should_match > 0:
+                for x in range(0, len(shoulds)):
+                    weighted_q = Bool(must=musts,
+                          should=shoulds,
+                          filter=filters,
+                          must_not=must_nots,
+                          boost=boost,
+                          minimum_should_match=minimum_should_match - x)
+                    weighted_by_musts.append(weighted_q)
+                    boost = boost / 2
+                weighted_must = Bool(should=weighted_by_musts, disable_coord=True)
+                q = weighted_must
 
         s = Search()
         s.query = q
