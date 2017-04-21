@@ -3,7 +3,7 @@ import codecs
 import random
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search, Q
-from elasticsearch_dsl.query import MultiMatch, Match, DisMax, Bool, Exists, ConstantScore, Range
+from elasticsearch_dsl.query import MultiMatch, Match, MatchPhrase, DisMax, Bool, Exists, ConstantScore, Range
 
 __name__ = "QueryCompiler"
 name = __name__
@@ -43,17 +43,21 @@ class ElasticsearchQueryCompiler(object):
             match_params = {}
             match_field_params = {}
             match_field_params["query"] = f["constraint"]
-            #match_field_params["type"] = f.get("query_type", "phrase")
             match_field_params["_name"] = "{}:{}:{}".format(f.get("_id"),
                                                             field.get("name"),
                                                             f.get("constraint"))
             match_params[field["name"]] = match_field_params
-            return Match(**match_params)
+            query_type = f.get("query_type", "match")
+            if query_type == "match_phrase":
+                match_field_params["slop"] = 25
+                return MatchPhrase(**match_params)
+            else: 
+                return Match(**match_params)
 
     def translate_clause(self, clause, field):
         if("constraint" in clause):
             match_params = {}
-            query_type = clause.get("query_type", "phrase")
+            query_type = clause.get("query_type", "match")
             match_field_params = {}
             match_field_params["query"] = clause["constraint"]
             #match_field_params["type"] = query_type
@@ -62,8 +66,11 @@ class ElasticsearchQueryCompiler(object):
                                                             field.get("name"),
                                                             clause.get("constraint"))
             match_params[field["name"]] = match_field_params
-            
-            return Match(**match_params)
+            if query_type == "match_phrase":
+                match_field_params["slop"] = 25
+                return MatchPhrase(**match_params)
+            else:
+                return Match(**match_params)
         else:
             return Exists(field=field["name"])
 

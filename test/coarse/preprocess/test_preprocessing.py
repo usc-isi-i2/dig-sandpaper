@@ -30,6 +30,8 @@ class TestCoarsePreprocessing(unittest.TestCase):
                          True)
         self.assertEqual(result["SPARQL"]["where"]["clauses"][1]["type"],
                          "Location")
+        self.assertEqual(result["SPARQL"]["where"]["clauses"][3]["type"],
+                         "Title")
         self.assertEqual(result["SPARQL"]["where"]["clauses"][4]["type"],
                          "HairColor")
         self.assertEqual(result["SPARQL"]["where"]["clauses"][4]["constraint"],

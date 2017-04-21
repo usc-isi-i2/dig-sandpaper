@@ -6,73 +6,54 @@
             "search": {
                 "_source": {
                     "includes": [
-                        "extractors.content_strict.data_extractors.hair-color.result.value", 
                         "extractors.content_strict.data_extractors.local-phone.result.value", 
-                        "extractors.content_strict.data_extractors.city.result.value", 
                         "extractors.content_strict.data_extractors.country.result.value", 
+                        "url", 
+                        "extractors.content_strict.data_extractors.title.result.value", 
+                        "extractors.content_strict.data_extractors.phone.result.value", 
+                        "fields.*", 
+                        "extractors.content_strict.data_extractors.hair-color.result.value", 
+                        "extractors.content_strict.data_extractors.nationality.result.value", 
+                        "extractors.content_strict.data_extractors.city.result.value", 
                         "extractors.content_strict.data_extractors.ethnicity.result.value", 
                         "extractors.content_strict.text.result.value", 
-                        "extractors.content_strict.data_extractors.phone.result.value", 
-                        "extractors.content_strict.data_extractors.nationality.result.value"
+                        "doc_id", 
+                        "tld"
                     ]
                 }, 
                 "from": 0, 
+                "highlight": {
+                    "fields": {
+                        "doc_id": {}, 
+                        "extractors.content_relaxed.text.result.value": {}, 
+                        "extractors.content_strict.data_extractors.city.result.value": {}, 
+                        "extractors.content_strict.data_extractors.country.result.value": {}, 
+                        "extractors.content_strict.data_extractors.ethnicity.result.value": {}, 
+                        "extractors.content_strict.data_extractors.hair-color.result.value": {}, 
+                        "extractors.content_strict.data_extractors.local-phone.result.value": {}, 
+                        "extractors.content_strict.data_extractors.nationality.result.value": {}, 
+                        "extractors.content_strict.data_extractors.phone.result.value": {}, 
+                        "extractors.content_strict.data_extractors.title.result.value": {}, 
+                        "extractors.content_strict.text.result.value": {}, 
+                        "fields.*": {}, 
+                        "tld": {}, 
+                        "url": {}
+                    }
+                }, 
                 "query": {
                     "bool": {
                         "filter": [
                             {
-                                "match": {
-                                    "extractors.content_strict.text.result.value": {
-                                        "query": "the enchanting mistress"
+                                "match_phrase": {
+                                    "extractors.content_strict.data_extractors.title.result.value": {
+                                        "_name": "dade13da76014b13b2212dc47ce5dd45:extractors.content_strict.data_extractors.title.result.value:enchanting mistress", 
+                                        "query": "enchanting mistress", 
+                                        "slop": 25
                                     }
                                 }
                             }
                         ], 
                         "must": [
-                            {
-                                "dis_max": {
-                                    "queries": [
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.phone.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "1234567890"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.local-phone.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "1234567890"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }, 
-                            {
-                                "dis_max": {
-                                    "queries": [
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.city.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "toronto, ontario"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.country.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "toronto, ontario"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }, 
                             {
                                 "bool": {
                                     "should": [
@@ -91,29 +72,7 @@
                             }, 
                             {
                                 "exists": {
-                                    "field": "extractors.content_strict.text.result.value"
-                                }
-                            }, 
-                            {
-                                "dis_max": {
-                                    "queries": [
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.hair-color.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "blonde"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.text.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "blonde"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "field": "extractors.content_strict.data_extractors.title.result.value"
                                 }
                             }
                         ], 
@@ -122,18 +81,122 @@
                                 "dis_max": {
                                     "queries": [
                                         {
+                                            "dis_max": {
+                                                "queries": [
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.data_extractors.hair-color.result.value": {
+                                                                "_name": "977d75e31a2f4bb881b16f08973bd4a0:extractors.content_strict.data_extractors.hair-color.result.value:blonde", 
+                                                                "boost": 1.0, 
+                                                                "query": "blonde"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.text.result.value": {
+                                                                "_name": "977d75e31a2f4bb881b16f08973bd4a0:extractors.content_strict.text.result.value:blonde", 
+                                                                "boost": 0.1, 
+                                                                "query": "blonde"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }, 
+                                        {
+                                            "dis_max": {
+                                                "queries": [
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.data_extractors.hair-color.result.value": {
+                                                                "_name": "b1f71a49386d4ffd82b9c2bb9875a123:extractors.content_strict.data_extractors.hair-color.result.value:straw", 
+                                                                "boost": 1.0, 
+                                                                "query": "straw"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.text.result.value": {
+                                                                "_name": "b1f71a49386d4ffd82b9c2bb9875a123:extractors.content_strict.text.result.value:straw", 
+                                                                "boost": 0.1, 
+                                                                "query": "straw"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }, 
+                                        {
+                                            "dis_max": {
+                                                "queries": [
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.data_extractors.hair-color.result.value": {
+                                                                "_name": "4c710088a2aa4558a2e95b1222163ae1:extractors.content_strict.data_extractors.hair-color.result.value:blond", 
+                                                                "boost": 1.0, 
+                                                                "query": "blond"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.text.result.value": {
+                                                                "_name": "4c710088a2aa4558a2e95b1222163ae1:extractors.content_strict.text.result.value:blond", 
+                                                                "boost": 0.1, 
+                                                                "query": "blond"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }, 
+                                        {
+                                            "dis_max": {
+                                                "queries": [
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.data_extractors.hair-color.result.value": {
+                                                                "_name": "2611b431b19b4fc99ffccf8f9eda91f5:extractors.content_strict.data_extractors.hair-color.result.value:yellow", 
+                                                                "boost": 1.0, 
+                                                                "query": "yellow"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.text.result.value": {
+                                                                "_name": "2611b431b19b4fc99ffccf8f9eda91f5:extractors.content_strict.text.result.value:yellow", 
+                                                                "boost": 0.1, 
+                                                                "query": "yellow"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }, 
+                            {
+                                "dis_max": {
+                                    "queries": [
+                                        {
                                             "match": {
-                                                "extractors.content_strict.data_extractors.hair-color.result.value": {
+                                                "extractors.content_strict.data_extractors.phone.result.value": {
+                                                    "_name": "8095858734504635993430e6eee227b3:extractors.content_strict.data_extractors.phone.result.value:1234567890", 
                                                     "boost": 1.0, 
-                                                    "query": "straw"
+                                                    "query": "1234567890"
                                                 }
                                             }
                                         }, 
                                         {
                                             "match": {
-                                                "extractors.content_strict.text.result.value": {
+                                                "extractors.content_strict.data_extractors.local-phone.result.value": {
+                                                    "_name": "8095858734504635993430e6eee227b3:extractors.content_strict.data_extractors.local-phone.result.value:1234567890", 
                                                     "boost": 1.0, 
-                                                    "query": "straw"
+                                                    "query": "1234567890"
                                                 }
                                             }
                                         }
@@ -145,39 +208,19 @@
                                     "queries": [
                                         {
                                             "match": {
-                                                "extractors.content_strict.data_extractors.hair-color.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "blond"
+                                                "extractors.content_strict.data_extractors.city.result.value": {
+                                                    "_name": "76a07918afc047e98bf8e774df26ddf5:extractors.content_strict.data_extractors.city.result.value:toronto, ontario", 
+                                                    "boost": 4, 
+                                                    "query": "toronto, ontario"
                                                 }
                                             }
                                         }, 
                                         {
                                             "match": {
-                                                "extractors.content_strict.text.result.value": {
+                                                "extractors.content_strict.data_extractors.country.result.value": {
+                                                    "_name": "76a07918afc047e98bf8e774df26ddf5:extractors.content_strict.data_extractors.country.result.value:toronto, ontario", 
                                                     "boost": 1.0, 
-                                                    "query": "blond"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }, 
-                            {
-                                "dis_max": {
-                                    "queries": [
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.hair-color.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "yellow"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.text.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "yellow"
+                                                    "query": "toronto, ontario"
                                                 }
                                             }
                                         }
@@ -188,7 +231,8 @@
                     }
                 }, 
                 "size": 500
-            }
+            }, 
+            "type": "Ad"
         }, 
         "SPARQL": {
             "group-by": {
@@ -197,11 +241,11 @@
             "select": {
                 "variables": [
                     {
-                        "type": "simple", 
+                        "type": "owl:Thing", 
                         "variable": "?ad"
                     }, 
                     {
-                        "type": "simple", 
+                        "type": "Ethnicity", 
                         "variable": "?ethnicity"
                     }
                 ]
@@ -209,6 +253,7 @@
             "where": {
                 "clauses": [
                     {
+                        "_id": "8095858734504635993430e6eee227b3", 
                         "constraint": "1234567890", 
                         "fields": [
                             {
@@ -218,11 +263,12 @@
                                 "name": "extractors.content_strict.data_extractors.local-phone.result.value"
                             }
                         ], 
-                        "isOptional": false, 
+                        "isOptional": true, 
                         "predicate": "phone", 
                         "type": "Phone"
                     }, 
                     {
+                        "_id": "76a07918afc047e98bf8e774df26ddf5", 
                         "constraint": "toronto, ontario", 
                         "fields": [
                             {
@@ -233,11 +279,12 @@
                                 "name": "extractors.content_strict.data_extractors.country.result.value"
                             }
                         ], 
-                        "isOptional": false, 
+                        "isOptional": true, 
                         "predicate": "location", 
                         "type": "Location"
                     }, 
                     {
+                        "_id": "9ac78613ad6f4c119958b27eee639e3e", 
                         "fields": [
                             {
                                 "name": "extractors.content_strict.data_extractors.ethnicity.result.value"
@@ -252,38 +299,44 @@
                         "variable": "?ethnicity"
                     }, 
                     {
+                        "_id": "b59833c74ff9465f9b264365d1a1441f", 
                         "fields": [
                             {
-                                "name": "extractors.content_strict.text.result.value"
+                                "name": "extractors.content_strict.data_extractors.title.result.value"
                             }
                         ], 
                         "isOptional": false, 
                         "predicate": "title", 
-                        "type": "owl:Thing", 
+                        "query_type": "match_phrase", 
+                        "type": "Title", 
                         "variable": "?title"
                     }, 
                     {
+                        "_id": "977d75e31a2f4bb881b16f08973bd4a0", 
                         "constraint": "blonde", 
                         "fields": [
                             {
                                 "name": "extractors.content_strict.data_extractors.hair-color.result.value"
                             }, 
                             {
-                                "name": "extractors.content_strict.text.result.value"
+                                "name": "extractors.content_strict.text.result.value", 
+                                "weight": 0.1
                             }
                         ], 
-                        "isOptional": false, 
+                        "isOptional": true, 
                         "predicate": "hairColor", 
                         "type": "HairColor"
                     }, 
                     {
+                        "_id": "b1f71a49386d4ffd82b9c2bb9875a123", 
                         "constraint": "straw", 
                         "fields": [
                             {
                                 "name": "extractors.content_strict.data_extractors.hair-color.result.value"
                             }, 
                             {
-                                "name": "extractors.content_strict.text.result.value"
+                                "name": "extractors.content_strict.text.result.value", 
+                                "weight": 0.1
                             }
                         ], 
                         "isOptional": true, 
@@ -291,13 +344,15 @@
                         "type": "HairColor"
                     }, 
                     {
+                        "_id": "4c710088a2aa4558a2e95b1222163ae1", 
                         "constraint": "blond", 
                         "fields": [
                             {
                                 "name": "extractors.content_strict.data_extractors.hair-color.result.value"
                             }, 
                             {
-                                "name": "extractors.content_strict.text.result.value"
+                                "name": "extractors.content_strict.text.result.value", 
+                                "weight": 0.1
                             }
                         ], 
                         "isOptional": true, 
@@ -305,13 +360,15 @@
                         "type": "HairColor"
                     }, 
                     {
+                        "_id": "2611b431b19b4fc99ffccf8f9eda91f5", 
                         "constraint": "yellow", 
                         "fields": [
                             {
                                 "name": "extractors.content_strict.data_extractors.hair-color.result.value"
                             }, 
                             {
-                                "name": "extractors.content_strict.text.result.value"
+                                "name": "extractors.content_strict.text.result.value", 
+                                "weight": 0.1
                             }
                         ], 
                         "isOptional": true, 
@@ -321,14 +378,17 @@
                 ], 
                 "filters": [
                     {
-                        "constraint": "the enchanting mistress", 
+                        "_id": "dade13da76014b13b2212dc47ce5dd45", 
+                        "constraint": "enchanting mistress", 
                         "fields": [
                             {
-                                "name": "extractors.content_strict.text.result.value"
+                                "name": "extractors.content_strict.data_extractors.title.result.value"
                             }
                         ], 
+                        "isOptional": true, 
                         "operator": "=", 
-                        "type": "owl:Thing", 
+                        "query_type": "match_phrase", 
+                        "type": "Title", 
                         "variable": "?title"
                     }
                 ], 
@@ -354,19 +414,50 @@
                         "extractors.content_relaxed.data_extractors.city.result.value", 
                         "extractors.content_strict.data_extractors.country.result.value", 
                         "extractors.content_relaxed.data_extractors.phone.result.value", 
+                        "url", 
                         "extractors.content_strict.data_extractors.phone.result.value", 
                         "extractors.content_relaxed.data_extractors.local-phone.result.value", 
+                        "extractors.content_relaxed.data_extractors.title.result.value", 
                         "extractors.content_relaxed.data_extractors.ethnicity.result.value", 
                         "extractors.content_relaxed.data_extractors.nationality.result.value", 
-                        "extractors.content_strict.data_extractors.hair-color.result.value", 
+                        "fields.*", 
+                        "extractors.content_strict.text.result.value", 
                         "extractors.content_strict.data_extractors.nationality.result.value", 
                         "extractors.content_relaxed.text.result.value", 
+                        "extractors.content_strict.data_extractors.hair-color.result.value", 
                         "extractors.content_strict.data_extractors.city.result.value", 
                         "extractors.content_strict.data_extractors.ethnicity.result.value", 
-                        "extractors.content_strict.text.result.value"
+                        "extractors.content_strict.data_extractors.title.result.value", 
+                        "doc_id", 
+                        "tld"
                     ]
                 }, 
                 "from": 0, 
+                "highlight": {
+                    "fields": {
+                        "doc_id": {}, 
+                        "extractors.content_relaxed.data_extractors.city.result.value": {}, 
+                        "extractors.content_relaxed.data_extractors.country.result.value": {}, 
+                        "extractors.content_relaxed.data_extractors.ethnicity.result.value": {}, 
+                        "extractors.content_relaxed.data_extractors.local-phone.result.value": {}, 
+                        "extractors.content_relaxed.data_extractors.nationality.result.value": {}, 
+                        "extractors.content_relaxed.data_extractors.phone.result.value": {}, 
+                        "extractors.content_relaxed.data_extractors.title.result.value": {}, 
+                        "extractors.content_relaxed.text.result.value": {}, 
+                        "extractors.content_strict.data_extractors.city.result.value": {}, 
+                        "extractors.content_strict.data_extractors.country.result.value": {}, 
+                        "extractors.content_strict.data_extractors.ethnicity.result.value": {}, 
+                        "extractors.content_strict.data_extractors.hair-color.result.value": {}, 
+                        "extractors.content_strict.data_extractors.local-phone.result.value": {}, 
+                        "extractors.content_strict.data_extractors.nationality.result.value": {}, 
+                        "extractors.content_strict.data_extractors.phone.result.value": {}, 
+                        "extractors.content_strict.data_extractors.title.result.value": {}, 
+                        "extractors.content_strict.text.result.value": {}, 
+                        "fields.*": {}, 
+                        "tld": {}, 
+                        "url": {}
+                    }
+                }, 
                 "query": {
                     "bool": {
                         "filter": [
@@ -374,16 +465,20 @@
                                 "dis_max": {
                                     "queries": [
                                         {
-                                            "match": {
-                                                "extractors.content_strict.text.result.value": {
-                                                    "query": "the enchanting mistress"
+                                            "match_phrase": {
+                                                "extractors.content_strict.data_extractors.title.result.value": {
+                                                    "_name": "dade13da76014b13b2212dc47ce5dd45:extractors.content_strict.data_extractors.title.result.value:enchanting mistress", 
+                                                    "query": "enchanting mistress", 
+                                                    "slop": 25
                                                 }
                                             }
                                         }, 
                                         {
-                                            "match": {
-                                                "extractors.content_relaxed.text.result.value": {
-                                                    "query": "the enchanting mistress"
+                                            "match_phrase": {
+                                                "extractors.content_relaxed.data_extractors.title.result.value": {
+                                                    "_name": "dade13da76014b13b2212dc47ce5dd45:extractors.content_relaxed.data_extractors.title.result.value:enchanting mistress", 
+                                                    "query": "enchanting mistress", 
+                                                    "slop": 25
                                                 }
                                             }
                                         }
@@ -392,82 +487,6 @@
                             }
                         ], 
                         "must": [
-                            {
-                                "dis_max": {
-                                    "queries": [
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.phone.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "1234567890"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_relaxed.data_extractors.phone.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "1234567890"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.local-phone.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "1234567890"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_relaxed.data_extractors.local-phone.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "1234567890"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }, 
-                            {
-                                "dis_max": {
-                                    "queries": [
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.city.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "toronto, ontario"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_relaxed.data_extractors.city.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "toronto, ontario"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.country.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "toronto, ontario"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_relaxed.data_extractors.country.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "toronto, ontario"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }, 
                             {
                                 "bool": {
                                     "should": [
@@ -499,42 +518,12 @@
                                     "should": [
                                         {
                                             "exists": {
-                                                "field": "extractors.content_strict.text.result.value"
+                                                "field": "extractors.content_strict.data_extractors.title.result.value"
                                             }
                                         }, 
                                         {
                                             "exists": {
-                                                "field": "extractors.content_relaxed.text.result.value"
-                                            }
-                                        }
-                                    ]
-                                }
-                            }, 
-                            {
-                                "dis_max": {
-                                    "queries": [
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.hair-color.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "blonde"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.text.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "blonde"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_relaxed.text.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "blonde"
-                                                }
+                                                "field": "extractors.content_relaxed.data_extractors.title.result.value"
                                             }
                                         }
                                     ]
@@ -546,26 +535,176 @@
                                 "dis_max": {
                                     "queries": [
                                         {
+                                            "dis_max": {
+                                                "queries": [
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.data_extractors.hair-color.result.value": {
+                                                                "_name": "977d75e31a2f4bb881b16f08973bd4a0:extractors.content_strict.data_extractors.hair-color.result.value:blonde", 
+                                                                "boost": 1.0, 
+                                                                "query": "blonde"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.text.result.value": {
+                                                                "_name": "977d75e31a2f4bb881b16f08973bd4a0:extractors.content_strict.text.result.value:blonde", 
+                                                                "boost": 0.1, 
+                                                                "query": "blonde"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_relaxed.text.result.value": {
+                                                                "_name": "977d75e31a2f4bb881b16f08973bd4a0:extractors.content_relaxed.text.result.value:blonde", 
+                                                                "boost": 0.1, 
+                                                                "query": "blonde"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }, 
+                                        {
+                                            "dis_max": {
+                                                "queries": [
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.data_extractors.hair-color.result.value": {
+                                                                "_name": "b1f71a49386d4ffd82b9c2bb9875a123:extractors.content_strict.data_extractors.hair-color.result.value:straw", 
+                                                                "boost": 1.0, 
+                                                                "query": "straw"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.text.result.value": {
+                                                                "_name": "b1f71a49386d4ffd82b9c2bb9875a123:extractors.content_strict.text.result.value:straw", 
+                                                                "boost": 0.1, 
+                                                                "query": "straw"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_relaxed.text.result.value": {
+                                                                "_name": "b1f71a49386d4ffd82b9c2bb9875a123:extractors.content_relaxed.text.result.value:straw", 
+                                                                "boost": 0.1, 
+                                                                "query": "straw"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }, 
+                                        {
+                                            "dis_max": {
+                                                "queries": [
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.data_extractors.hair-color.result.value": {
+                                                                "_name": "4c710088a2aa4558a2e95b1222163ae1:extractors.content_strict.data_extractors.hair-color.result.value:blond", 
+                                                                "boost": 1.0, 
+                                                                "query": "blond"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.text.result.value": {
+                                                                "_name": "4c710088a2aa4558a2e95b1222163ae1:extractors.content_strict.text.result.value:blond", 
+                                                                "boost": 0.1, 
+                                                                "query": "blond"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_relaxed.text.result.value": {
+                                                                "_name": "4c710088a2aa4558a2e95b1222163ae1:extractors.content_relaxed.text.result.value:blond", 
+                                                                "boost": 0.1, 
+                                                                "query": "blond"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }, 
+                                        {
+                                            "dis_max": {
+                                                "queries": [
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.data_extractors.hair-color.result.value": {
+                                                                "_name": "2611b431b19b4fc99ffccf8f9eda91f5:extractors.content_strict.data_extractors.hair-color.result.value:yellow", 
+                                                                "boost": 1.0, 
+                                                                "query": "yellow"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_strict.text.result.value": {
+                                                                "_name": "2611b431b19b4fc99ffccf8f9eda91f5:extractors.content_strict.text.result.value:yellow", 
+                                                                "boost": 0.1, 
+                                                                "query": "yellow"
+                                                            }
+                                                        }
+                                                    }, 
+                                                    {
+                                                        "match": {
+                                                            "extractors.content_relaxed.text.result.value": {
+                                                                "_name": "2611b431b19b4fc99ffccf8f9eda91f5:extractors.content_relaxed.text.result.value:yellow", 
+                                                                "boost": 0.1, 
+                                                                "query": "yellow"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }, 
+                            {
+                                "dis_max": {
+                                    "queries": [
+                                        {
                                             "match": {
-                                                "extractors.content_strict.data_extractors.hair-color.result.value": {
+                                                "extractors.content_strict.data_extractors.phone.result.value": {
+                                                    "_name": "8095858734504635993430e6eee227b3:extractors.content_strict.data_extractors.phone.result.value:1234567890", 
                                                     "boost": 1.0, 
-                                                    "query": "straw"
+                                                    "query": "1234567890"
                                                 }
                                             }
                                         }, 
                                         {
                                             "match": {
-                                                "extractors.content_strict.text.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "straw"
+                                                "extractors.content_relaxed.data_extractors.phone.result.value": {
+                                                    "_name": "8095858734504635993430e6eee227b3:extractors.content_relaxed.data_extractors.phone.result.value:1234567890", 
+                                                    "boost": 0.5, 
+                                                    "query": "1234567890"
                                                 }
                                             }
                                         }, 
                                         {
                                             "match": {
-                                                "extractors.content_relaxed.text.result.value": {
+                                                "extractors.content_strict.data_extractors.local-phone.result.value": {
+                                                    "_name": "8095858734504635993430e6eee227b3:extractors.content_strict.data_extractors.local-phone.result.value:1234567890", 
                                                     "boost": 1.0, 
-                                                    "query": "straw"
+                                                    "query": "1234567890"
+                                                }
+                                            }
+                                        }, 
+                                        {
+                                            "match": {
+                                                "extractors.content_relaxed.data_extractors.local-phone.result.value": {
+                                                    "_name": "8095858734504635993430e6eee227b3:extractors.content_relaxed.data_extractors.local-phone.result.value:1234567890", 
+                                                    "boost": 0.5, 
+                                                    "query": "1234567890"
                                                 }
                                             }
                                         }
@@ -577,55 +716,37 @@
                                     "queries": [
                                         {
                                             "match": {
-                                                "extractors.content_strict.data_extractors.hair-color.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "blond"
+                                                "extractors.content_strict.data_extractors.city.result.value": {
+                                                    "_name": "76a07918afc047e98bf8e774df26ddf5:extractors.content_strict.data_extractors.city.result.value:toronto, ontario", 
+                                                    "boost": 4, 
+                                                    "query": "toronto, ontario"
                                                 }
                                             }
                                         }, 
                                         {
                                             "match": {
-                                                "extractors.content_strict.text.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "blond"
+                                                "extractors.content_relaxed.data_extractors.city.result.value": {
+                                                    "_name": "76a07918afc047e98bf8e774df26ddf5:extractors.content_relaxed.data_extractors.city.result.value:toronto, ontario", 
+                                                    "boost": 0.5, 
+                                                    "query": "toronto, ontario"
                                                 }
                                             }
                                         }, 
                                         {
                                             "match": {
-                                                "extractors.content_relaxed.text.result.value": {
+                                                "extractors.content_strict.data_extractors.country.result.value": {
+                                                    "_name": "76a07918afc047e98bf8e774df26ddf5:extractors.content_strict.data_extractors.country.result.value:toronto, ontario", 
                                                     "boost": 1.0, 
-                                                    "query": "blond"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }, 
-                            {
-                                "dis_max": {
-                                    "queries": [
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.hair-color.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "yellow"
+                                                    "query": "toronto, ontario"
                                                 }
                                             }
                                         }, 
                                         {
                                             "match": {
-                                                "extractors.content_strict.text.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "yellow"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_relaxed.text.result.value": {
-                                                    "boost": 1.0, 
-                                                    "query": "yellow"
+                                                "extractors.content_relaxed.data_extractors.country.result.value": {
+                                                    "_name": "76a07918afc047e98bf8e774df26ddf5:extractors.content_relaxed.data_extractors.country.result.value:toronto, ontario", 
+                                                    "boost": 0.5, 
+                                                    "query": "toronto, ontario"
                                                 }
                                             }
                                         }
@@ -636,7 +757,8 @@
                     }
                 }, 
                 "size": 500
-            }
+            }, 
+            "type": "Ad"
         }, 
         "SPARQL": {
             "group-by": {
@@ -645,11 +767,11 @@
             "select": {
                 "variables": [
                     {
-                        "type": "simple", 
+                        "type": "owl:Thing", 
                         "variable": "?ad"
                     }, 
                     {
-                        "type": "simple", 
+                        "type": "Ethnicity", 
                         "variable": "?ethnicity"
                     }
                 ]
@@ -657,26 +779,30 @@
             "where": {
                 "clauses": [
                     {
+                        "_id": "8095858734504635993430e6eee227b3", 
                         "constraint": "1234567890", 
                         "fields": [
                             {
                                 "name": "extractors.content_strict.data_extractors.phone.result.value"
                             }, 
                             {
-                                "name": "extractors.content_relaxed.data_extractors.phone.result.value"
+                                "name": "extractors.content_relaxed.data_extractors.phone.result.value", 
+                                "weight": 0.5
                             }, 
                             {
                                 "name": "extractors.content_strict.data_extractors.local-phone.result.value"
                             }, 
                             {
-                                "name": "extractors.content_relaxed.data_extractors.local-phone.result.value"
+                                "name": "extractors.content_relaxed.data_extractors.local-phone.result.value", 
+                                "weight": 0.5
                             }
                         ], 
-                        "isOptional": false, 
+                        "isOptional": true, 
                         "predicate": "phone", 
                         "type": "Phone"
                     }, 
                     {
+                        "_id": "76a07918afc047e98bf8e774df26ddf5", 
                         "constraint": "toronto, ontario", 
                         "fields": [
                             {
@@ -684,32 +810,37 @@
                                 "weight": 4
                             }, 
                             {
-                                "name": "extractors.content_relaxed.data_extractors.city.result.value"
+                                "name": "extractors.content_relaxed.data_extractors.city.result.value", 
+                                "weight": 0.5
                             }, 
                             {
                                 "name": "extractors.content_strict.data_extractors.country.result.value"
                             }, 
                             {
-                                "name": "extractors.content_relaxed.data_extractors.country.result.value"
+                                "name": "extractors.content_relaxed.data_extractors.country.result.value", 
+                                "weight": 0.5
                             }
                         ], 
-                        "isOptional": false, 
+                        "isOptional": true, 
                         "predicate": "location", 
                         "type": "Location"
                     }, 
                     {
+                        "_id": "9ac78613ad6f4c119958b27eee639e3e", 
                         "fields": [
                             {
                                 "name": "extractors.content_strict.data_extractors.ethnicity.result.value"
                             }, 
                             {
-                                "name": "extractors.content_relaxed.data_extractors.ethnicity.result.value"
+                                "name": "extractors.content_relaxed.data_extractors.ethnicity.result.value", 
+                                "weight": 0.5
                             }, 
                             {
                                 "name": "extractors.content_strict.data_extractors.nationality.result.value"
                             }, 
                             {
-                                "name": "extractors.content_relaxed.data_extractors.nationality.result.value"
+                                "name": "extractors.content_relaxed.data_extractors.nationality.result.value", 
+                                "weight": 0.5
                             }
                         ], 
                         "isOptional": false, 
@@ -718,47 +849,56 @@
                         "variable": "?ethnicity"
                     }, 
                     {
+                        "_id": "b59833c74ff9465f9b264365d1a1441f", 
                         "fields": [
                             {
-                                "name": "extractors.content_strict.text.result.value"
+                                "name": "extractors.content_strict.data_extractors.title.result.value"
                             }, 
                             {
-                                "name": "extractors.content_relaxed.text.result.value"
+                                "name": "extractors.content_relaxed.data_extractors.title.result.value", 
+                                "weight": 0.5
                             }
                         ], 
                         "isOptional": false, 
                         "predicate": "title", 
-                        "type": "owl:Thing", 
+                        "query_type": "match_phrase", 
+                        "type": "Title", 
                         "variable": "?title"
                     }, 
                     {
+                        "_id": "977d75e31a2f4bb881b16f08973bd4a0", 
                         "constraint": "blonde", 
                         "fields": [
                             {
                                 "name": "extractors.content_strict.data_extractors.hair-color.result.value"
                             }, 
                             {
-                                "name": "extractors.content_strict.text.result.value"
+                                "name": "extractors.content_strict.text.result.value", 
+                                "weight": 0.1
                             }, 
                             {
-                                "name": "extractors.content_relaxed.text.result.value"
+                                "name": "extractors.content_relaxed.text.result.value", 
+                                "weight": 0.1
                             }
                         ], 
-                        "isOptional": false, 
+                        "isOptional": true, 
                         "predicate": "hairColor", 
                         "type": "HairColor"
                     }, 
                     {
+                        "_id": "b1f71a49386d4ffd82b9c2bb9875a123", 
                         "constraint": "straw", 
                         "fields": [
                             {
                                 "name": "extractors.content_strict.data_extractors.hair-color.result.value"
                             }, 
                             {
-                                "name": "extractors.content_strict.text.result.value"
+                                "name": "extractors.content_strict.text.result.value", 
+                                "weight": 0.1
                             }, 
                             {
-                                "name": "extractors.content_relaxed.text.result.value"
+                                "name": "extractors.content_relaxed.text.result.value", 
+                                "weight": 0.1
                             }
                         ], 
                         "isOptional": true, 
@@ -766,16 +906,19 @@
                         "type": "HairColor"
                     }, 
                     {
+                        "_id": "4c710088a2aa4558a2e95b1222163ae1", 
                         "constraint": "blond", 
                         "fields": [
                             {
                                 "name": "extractors.content_strict.data_extractors.hair-color.result.value"
                             }, 
                             {
-                                "name": "extractors.content_strict.text.result.value"
+                                "name": "extractors.content_strict.text.result.value", 
+                                "weight": 0.1
                             }, 
                             {
-                                "name": "extractors.content_relaxed.text.result.value"
+                                "name": "extractors.content_relaxed.text.result.value", 
+                                "weight": 0.1
                             }
                         ], 
                         "isOptional": true, 
@@ -783,16 +926,19 @@
                         "type": "HairColor"
                     }, 
                     {
+                        "_id": "2611b431b19b4fc99ffccf8f9eda91f5", 
                         "constraint": "yellow", 
                         "fields": [
                             {
                                 "name": "extractors.content_strict.data_extractors.hair-color.result.value"
                             }, 
                             {
-                                "name": "extractors.content_strict.text.result.value"
+                                "name": "extractors.content_strict.text.result.value", 
+                                "weight": 0.1
                             }, 
                             {
-                                "name": "extractors.content_relaxed.text.result.value"
+                                "name": "extractors.content_relaxed.text.result.value", 
+                                "weight": 0.1
                             }
                         ], 
                         "isOptional": true, 
@@ -802,17 +948,21 @@
                 ], 
                 "filters": [
                     {
-                        "constraint": "the enchanting mistress", 
+                        "_id": "dade13da76014b13b2212dc47ce5dd45", 
+                        "constraint": "enchanting mistress", 
                         "fields": [
                             {
-                                "name": "extractors.content_strict.text.result.value"
+                                "name": "extractors.content_strict.data_extractors.title.result.value"
                             }, 
                             {
-                                "name": "extractors.content_relaxed.text.result.value"
+                                "name": "extractors.content_relaxed.data_extractors.title.result.value", 
+                                "weight": 0.5
                             }
                         ], 
+                        "isOptional": true, 
                         "operator": "=", 
-                        "type": "owl:Thing", 
+                        "query_type": "match_phrase", 
+                        "type": "Title", 
                         "variable": "?title"
                     }
                 ], 

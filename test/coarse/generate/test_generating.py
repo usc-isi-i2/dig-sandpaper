@@ -33,10 +33,10 @@ class TestCoarseGenerating(unittest.TestCase):
                          4)
         self.assertEqual(where1["clauses"][1]["fields"][1]["name"],
                          "extractors.content_relaxed.data_extractors.city.result.value")
-        #self.assertNotIn("weight", where1["clauses"][1]["fields"][1])
         self.assertEquals(where1["clauses"][1]["fields"][1]["weight"], 0.5)
         self.assertNotIn("weight", where0["clauses"][0]["fields"][1])
-        #print json.dumps(generated_queries, sort_keys=True, indent=4)
+        self.assertEqual(where0["clauses"][3]["query_type"], "match_phrase")
+        self.assertEqual(where0["filters"][0]["query_type"], "match_phrase")
 
     def test_basic_coarse_generating_elasticsearch_compiler(self):
         config = load_json_file("1_config_step_two.json")

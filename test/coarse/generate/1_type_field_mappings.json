@@ -26,6 +26,11 @@
 	"PostingDate":[
 		"fields.posting-date.strict.name",
 		"fields.posting-date.relaxed.name"
+	],
+	"Title": [
+		"extractors.content_strict.data_extractors.title.result.value",
+		"extractors.content_relaxed.data_extractors.title.result.value"
+
 	]
 
 }

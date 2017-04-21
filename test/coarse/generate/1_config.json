@@ -14,6 +14,11 @@
         "type": "FieldWeightMapping",
         "name": "FieldWeightMapping",
         "field_weight_mappings": "test/coarse/generate/1_field_weights.json"
+    },
+    {
+        "type": "TypeQueryMapping",
+        "name": "TypeQueryMapping",
+        "type_query_mappings": "test/coarse/generate/1_type_query_mappings.json"
     }
     ]
 }

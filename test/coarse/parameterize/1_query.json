@@ -6,11 +6,11 @@
         "select": {
             "variables": [
                 {
-                    "type": "simple", 
+                    "type": "owl:Thing", 
                     "variable": "?ad"
                 }, 
                 {
-                    "type": "simple", 
+                    "type": "Ethnicity", 
                     "variable": "?ethnicity"
                 }
             ]
@@ -18,48 +18,56 @@
         "where": {
             "clauses": [
                 {
+                    "_id": "8095858734504635993430e6eee227b3", 
                     "constraint": "1234567890", 
-                    "isOptional": false, 
+                    "isOptional": true, 
                     "predicate": "phone", 
                     "type": "Phone"
                 }, 
                 {
+                    "_id": "76a07918afc047e98bf8e774df26ddf5", 
                     "constraint": "toronto, ontario", 
-                    "isOptional": false, 
+                    "isOptional": true, 
                     "predicate": "location", 
                     "type": "Location"
                 }, 
                 {
+                    "_id": "9ac78613ad6f4c119958b27eee639e3e", 
                     "isOptional": false, 
                     "predicate": "ethnicity", 
                     "type": "Ethnicity", 
                     "variable": "?ethnicity"
                 }, 
                 {
+                    "_id": "b59833c74ff9465f9b264365d1a1441f", 
                     "isOptional": false, 
                     "predicate": "title", 
-                    "type": "owl:Thing", 
+                    "type": "Title", 
                     "variable": "?title"
                 }, 
                 {
+                    "_id": "977d75e31a2f4bb881b16f08973bd4a0", 
                     "constraint": "blonde", 
-                    "isOptional": false, 
+                    "isOptional": true, 
                     "predicate": "hairColor", 
                     "type": "HairColor"
                 }, 
                 {
+                    "_id": "b1f71a49386d4ffd82b9c2bb9875a123", 
                     "constraint": "straw", 
                     "isOptional": true, 
                     "predicate": "hairColor", 
                     "type": "HairColor"
                 }, 
                 {
+                    "_id": "4c710088a2aa4558a2e95b1222163ae1", 
                     "constraint": "blond", 
                     "isOptional": true, 
                     "predicate": "hairColor", 
                     "type": "HairColor"
                 }, 
                 {
+                    "_id": "2611b431b19b4fc99ffccf8f9eda91f5", 
                     "constraint": "yellow", 
                     "isOptional": true, 
                     "predicate": "hairColor", 
@@ -68,9 +76,11 @@
             ], 
             "filters": [
                 {
-                    "constraint": "the enchanting mistress", 
+                    "_id": "dade13da76014b13b2212dc47ce5dd45", 
+                    "constraint": "enchanting mistress", 
+                    "isOptional": true, 
                     "operator": "=", 
-                    "type": "owl:Thing", 
+                    "type": "Title", 
                     "variable": "?title"
                 }
             ], 
