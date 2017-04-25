@@ -101,6 +101,15 @@ class TestCoarsePreprocessing(unittest.TestCase):
         self.assertEqual(w["type"], "Ad")
         self.assertEqual(w["clauses"][0]["type"], "Cluster")
 
+    def test_group_by_typing(self):
+        config = load_json_file("6_config.json")
+        query = load_json_file("6_query.json")
+        preprocessor = Preprocessor(config)
+
+        result = preprocessor.preprocess(query)
+        g = result["SPARQL"]["group-by"]
+        self.assertEqual(g["variables"][0]["type"], "Ethnicity")
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -55,6 +55,13 @@ class TestCoarseParameterizing(unittest.TestCase):
 
         result = parameterizer.parameterize(query)
 
+    def test_basic_coarse_preprocessing_with_date_filter(self):
+        config = load_json_file("6_config.json")
+        query = load_json_file("6_query.json")
+        parameterizer = Parameterizer(config)
+
+        result = parameterizer.parameterize(query)
+
 
 if __name__ == '__main__':
     unittest.main()

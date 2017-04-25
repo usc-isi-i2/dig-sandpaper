@@ -65,6 +65,11 @@ class PredicateDictConstraintTypeMapper(object):
         for s in query["SPARQL"]["select"]["variables"]:
             s["type"] = clause_variable_to_type.get(s["variable"], "owl:Thing")
 
+        if "group-by" in query["SPARQL"]:
+            if "variables" in query["SPARQL"]["group-by"]:
+                for v in query["SPARQL"]["group-by"]["variables"]:
+                    v["type"] = clause_variable_to_type.get(v["variable"], "owl:Thing")
+
         return query
 
 

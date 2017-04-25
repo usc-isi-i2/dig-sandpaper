@@ -2,7 +2,7 @@ import json
 import codecs
 import random
 from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Search, Q
+from elasticsearch_dsl import Search, Q, A
 from elasticsearch_dsl.query import MultiMatch, Match, MatchPhrase, DisMax, Bool, Exists, ConstantScore, Range
 
 __name__ = "QueryCompiler"
@@ -157,6 +157,12 @@ class ElasticsearchQueryCompiler(object):
         for key in highlight_fields:
             s = s.highlight(key, **highlight_fields[key])
 
+
+        if query["type"].lower() == "aggregation":
+            for sv in select_variables:
+                if "function" in sv:
+                    a = A('terms', field=sv["fields"][0]["name"])
+                    s.aggs.bucket(sv["variable"], a)
         return s
 
 

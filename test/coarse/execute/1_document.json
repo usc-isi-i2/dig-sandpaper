@@ -8,7 +8,7 @@
 				"hair-color": {"result":{"value": "blonde"}},
 				"local-phone": {"result":{"value": "4567890"}},
 				"phone": {"result":{"value": "1234567890"}},
-				"ethnicity": {"result":{"value": "caucasian"}},
+				"ethnicity": {"result":{"value": "caucasian", "name": "caucasian"}},
 				"nationality": {"result":{"value": "caucasian"}},
 				"title": {"result":{"value": "the enchanting mistress"}}
 			},

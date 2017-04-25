@@ -103,7 +103,28 @@ class TestCoarseExecuting(unittest.TestCase):
             self.assertEquals(len(result.hits), 1)
 
         test.test_utils.reset_elasticsearch(config["components"][0])
-    
+
+    def test_basic_coarse_executing_aggregation(self):
+        config = load_json_file("6_config.json")
+        queries = load_json_file("6_query.json")
+        document = load_json_file("6_document.json")
+
+        test.test_utils.initialize_elasticsearch([document],
+                                                 config["components"][0])
+
+        executor = Executor(config)
+
+        for query in queries:
+            result = executor.execute(query)
+            result_dict = result.to_dict()
+            self.assertEquals(len(result.hits), 1)
+            self.assertIn("aggregations", result_dict)
+            self.assertIn("?ethnicity", result_dict["aggregations"])
+            self.assertEquals(1, len(result_dict["aggregations"]["?ethnicity"]["buckets"]))
+            self.assertEquals(1, result_dict["aggregations"]["?ethnicity"]["buckets"][0]["doc_count"])
+
+        test.test_utils.reset_elasticsearch(config["components"][0])   
+
 
 if __name__ == '__main__':
     unittest.main()

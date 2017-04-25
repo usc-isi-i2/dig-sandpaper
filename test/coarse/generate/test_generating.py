@@ -130,5 +130,25 @@ class TestCoarseGenerating(unittest.TestCase):
         self.assertEqual(len(generated_queries), 1)
 
 
+    def test_basic_aggregation(self):
+        config = load_json_file("6_config.json")
+        parameterized_queries = load_json_file("6_query.json")
+        generator = Generator(config)
+
+        generated_queries = [generator.generate(
+            q) for q in parameterized_queries]
+        self.assertEqual(len(generated_queries), 1)
+
+    def test_basic_aggregation(self):
+        config = load_json_file("6_config_step_two.json")
+        parameterized_queries = load_json_file("6_query_step_two.json")
+        generator = Generator(config)
+
+        generated_queries = [generator.generate(
+            q) for q in parameterized_queries]
+        self.assertEqual(len(generated_queries), 1)
+        self.assertIn("aggs", generated_queries[0]["ELASTICSEARCH"]["search"])
+        self.assertIn("?ethnicity", generated_queries[0]["ELASTICSEARCH"]["search"]["aggs"])
+
 if __name__ == '__main__':
     unittest.main()
