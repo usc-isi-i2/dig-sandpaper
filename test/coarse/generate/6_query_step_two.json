@@ -1,0 +1,165 @@
+[
+    {
+        "SPARQL": {
+            "group-by": {
+                "variables": [
+                    {
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.ethnicity.result.name"
+                            }
+                        ], 
+                        "type": "Ethnicity", 
+                        "variable": "?ethnicity"
+                    }
+                ]
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.ethnicity.result.name"
+                            }
+                        ], 
+                        "function": "count", 
+                        "type": "Ethnicity", 
+                        "variable": "?ethnicity"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "_id": "75161e7a6405487ca7a61f0176a6f0dd", 
+                        "constraint": "1234567890", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.phone.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.phone.result.value", 
+                                "weight": 0.5
+                            }, 
+                            {
+                                "name": "extractors.content_strict.data_extractors.local-phone.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.local-phone.result.value", 
+                                "weight": 0.5
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "phone", 
+                        "type": "Phone"
+                    }, 
+                    {
+                        "_id": "2635497303c64cf18f22686e464cdc78", 
+                        "constraint": "Toronto, Ontario", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.city.result.value", 
+                                "weight": 4
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.city.result.value", 
+                                "weight": 0.5
+                            }, 
+                            {
+                                "name": "extractors.content_strict.data_extractors.country.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.country.result.value", 
+                                "weight": 0.5
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "location", 
+                        "type": "Location"
+                    }, 
+                    {
+                        "_id": "5cb1a9f193bb446aafea196e943832e2", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.ethnicity.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.ethnicity.result.value", 
+                                "weight": 0.5
+                            }, 
+                            {
+                                "name": "extractors.content_strict.data_extractors.nationality.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.nationality.result.value", 
+                                "weight": 0.5
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "ethnicity", 
+                        "type": "Ethnicity", 
+                        "variable": "?ethnicity"
+                    }, 
+                    {
+                        "_id": "ff24c511c6654fe6a8d9547f87475e12", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.title.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.title.result.value", 
+                                "weight": 0.5
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "title", 
+                        "type": "Title", 
+                        "variable": "?title"
+                    }, 
+                    {
+                        "_id": "0b43795fb9d9446d86c94679e345ba76", 
+                        "constraint": "blonde", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.hair-color.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.text.result.value", 
+                                "weight": 0.1
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.text.result.value", 
+                                "weight": 0.1
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "_id": "3f1332dc781a4ed5941c4f17264ce21d", 
+                        "constraint": "the enchanting mistress", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.title.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.title.result.value", 
+                                "weight": 0.5
+                            }
+                        ], 
+                        "operator": "=", 
+                        "type": "Title", 
+                        "variable": "?title"
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "field_count": 1, 
+        "type": "Aggregation"
+    }
+]

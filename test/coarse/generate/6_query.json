@@ -1,0 +1,75 @@
+[
+    {
+        "SPARQL": {
+            "group-by": {
+                "variables": [
+                    {
+                        "type": "Ethnicity", 
+                        "variable": "?ethnicity"
+                    }
+                ]
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "function": "count", 
+                        "type": "Ethnicity", 
+                        "variable": "?ethnicity"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "_id": "75161e7a6405487ca7a61f0176a6f0dd", 
+                        "constraint": "1234567890", 
+                        "isOptional": false, 
+                        "predicate": "phone", 
+                        "type": "Phone"
+                    }, 
+                    {
+                        "_id": "2635497303c64cf18f22686e464cdc78", 
+                        "constraint": "Toronto, Ontario", 
+                        "isOptional": false, 
+                        "predicate": "location", 
+                        "type": "Location"
+                    }, 
+                    {
+                        "_id": "5cb1a9f193bb446aafea196e943832e2", 
+                        "isOptional": false, 
+                        "predicate": "ethnicity", 
+                        "type": "Ethnicity", 
+                        "variable": "?ethnicity"
+                    }, 
+                    {
+                        "_id": "ff24c511c6654fe6a8d9547f87475e12", 
+                        "isOptional": false, 
+                        "predicate": "title", 
+                        "type": "Title", 
+                        "variable": "?title"
+                    }, 
+                    {
+                        "_id": "0b43795fb9d9446d86c94679e345ba76", 
+                        "constraint": "blonde", 
+                        "isOptional": false, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "_id": "3f1332dc781a4ed5941c4f17264ce21d", 
+                        "constraint": "the enchanting mistress", 
+                        "operator": "=", 
+                        "type": "Title", 
+                        "variable": "?title"
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "field_count": 1, 
+        "type": "Aggregation"
+    }
+]

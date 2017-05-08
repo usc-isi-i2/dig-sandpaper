@@ -1,0 +1,31 @@
+{
+	"doc_id": "ABCDEFGHIJKLMNOPQ",
+	"extractors": {
+		"content_strict":{
+			"data_extractors":{
+				"city": {"result":{"value": "Toronto"}},
+				"country": {"result":{"value": "Canada"}},
+				"hair-color": {"result":{"value": "blonde"}},
+				"local-phone": {"result":{"value": "4567890"}},
+				"phone": {"result":{"value": "1234567890"}},
+				"ethnicity": {"result":{"value": "caucasian", "name": "caucasian"}},
+				"nationality": {"result":{"value": "caucasian"}},
+				"title": {"result":{"value": "the enchanting mistress"}}
+			},
+			"text": {"result":{"value": "I am the enchanting mistress available in Toronto Canada at 1234567890.  I am a blonde caucasian."}}
+		},
+		"content_relaxed":{
+			"data_extractors":{
+				"city": {"result":{"value": "Toronto"}},
+				"country": {"result":{"value": "Canada"}},
+				"hair-color": {"result":{"value": "blonde"}},
+				"local-phone": {"result":{"value": "4567890"}},
+				"phone": {"result":{"value": "1234567890"}},
+				"ethnicity": {"result":{"value": "caucasian"}},
+				"nationality": {"result":{"value": "caucasian"}},
+				"title": {"result":{"value": "the enchanting mistress"}}
+			},
+			"text": {"result":{"value": "I am the enchanting mistress available in Toronto Canada at 1234567890.  I am a blonde caucasian."}}
+		}
+	}
+}

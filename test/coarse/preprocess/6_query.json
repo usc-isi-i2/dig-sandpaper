@@ -1,0 +1,56 @@
+{
+        "SPARQL": {
+            "group-by": {
+                "variables": [ {"variable":"?ethnicity"}]
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "function", 
+                        "variable": "?ethnicity",
+                        "function": "count"
+
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "constraint": "1234567890", 
+                        "isOptional": false, 
+                        "predicate": "phone"
+                    }, 
+                    {
+                        "constraint": "Toronto, Ontario", 
+                        "isOptional": false, 
+                        "predicate": "location"
+                    }, 
+                    {
+                        "isOptional": false, 
+                        "predicate": "ethnicity", 
+                        "variable": "?ethnicity"
+                    }, 
+                    {
+                        "isOptional": false, 
+                        "predicate": "title", 
+                        "variable": "?title"
+                    },
+                    {
+                        "isOptional": false,
+                        "predicate": "hairColor",
+                        "constraint": "blonde"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "constraint": "the enchanting mistress", 
+                        "operator": "=", 
+                        "variable": "?title"
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "type": "Aggregation"
+    }
