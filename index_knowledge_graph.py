@@ -36,6 +36,9 @@ if __name__ == "__main__":
     	kg = jl["knowledge_graph"]
     	indexed = {}
     	jl["indexed"] = indexed
+        if "_id" in jl:
+            jl["doc_id"] = jl["_id"]
+        jl.pop("_id", None)
 
     	for (pred, objs) in kg.iteritems():
     		for obj in objs:
