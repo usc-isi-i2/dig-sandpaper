@@ -1,0 +1,4 @@
+{
+	"segments": ["title", "inferlink_description", "content_strict"],
+	"methods": ["gurobi", "extract_from_landmark"]
+}

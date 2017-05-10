@@ -1,0 +1,18 @@
+{
+  "age": "Age",
+  "city": "City",
+  "country": "Country",
+  "email": "Email",
+  "ethnicity": "Ethnicity",
+  "eye_color": "EyeColor",
+  "hair_color": "HairColor",
+  "height": "Height",
+  "name": "Name",
+  "phone": "Phone",
+  "posting_date": "PostingDate",
+  "price": "Price",
+  "service": "Service", 
+  "weight": "Weight",
+  "tld": "TopLevelDomain",
+  "url": "URL"
+}

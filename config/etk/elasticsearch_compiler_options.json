@@ -1,0 +1,19 @@
+{
+  "boost_musts": true,
+  "default_source_fields": [
+    "doc_id",
+    "tld",
+    "url",
+    "knowledge_graph.*"
+  ],
+  "highlight": {
+    "fields": {
+      "indexed.*": {
+        "number_of_fragments": 0
+      },
+      "content_extraction.*": {
+        "number_of_fragments": 0
+      }
+    }
+  }
+}
