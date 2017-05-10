@@ -50,8 +50,10 @@ if __name__ == "__main__":
             for segment in segments:
                 segment_props = {"key": {"type": "string",
                                          "index": "not_analyzed"},
-                                 "name": {"type": "string"}
+                                 "value": {"type": "string"}
                                 }
+                if semantic_type == "email":
+                    segment_props["value"]["analyzer"] = "url_component_analyzer"
                 method_props[segment] = {"properties": segment_props}
 
 
