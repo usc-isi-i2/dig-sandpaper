@@ -1,0 +1,53 @@
+{
+  "owl:Thing": [
+    "content_extraction.content_strict.text"
+  ],
+  "City":[
+    "indexed.city.other_method.content_strict.key"
+  ],
+  "Country":[
+    "indexed.country.other_method.content_strict.key"
+  ],
+  "Age": [
+    "indexed.age.extract_from_landmark.content_strict.key"
+  ],
+  "Email": [
+    "indexed.email.other_method.content_strict.key"
+  ],
+  "Ethnicity":[
+    "indexed.ethnicity.other_method.content_strict.key"
+  ],
+  "EyeColor":[
+    "indexed.eye_color.other_method.content_strict.key"
+  ],
+  "HairColor":[
+    "indexed.hair_color.other_method.content_strict.key"
+  ],
+  "Height": [
+    "indexed.height.other_method.content_strict.key"
+  ],
+  "Name": [
+    "indexed.name.other_method.content_strict.key"
+  ],
+  "Phone": [
+    "indexed.phone.other_method.content_strict.key"
+  ],
+  "PostingDate": [
+    "indexed.posting_date.other_method.content_strict.key"
+  ],
+  "Price": [
+    "indexed.price.other_method.content_strict.key"
+  ],
+  "Service": [
+    "indexed.service.other_method.content_strict.key"
+  ],
+  "Weight": [
+    "indexed.weight.other_method.content_strict.key"
+  ],
+  "TopLevelDomain": [
+    "tld.raw"
+  ],
+  "URL": [
+    "url.raw"
+  ]
+}
