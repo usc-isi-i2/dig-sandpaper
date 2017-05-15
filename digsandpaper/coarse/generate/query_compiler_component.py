@@ -141,8 +141,11 @@ class ElasticsearchQueryCompiler(object):
         if "excluded_source_fields" in self.elasticsearch_compiler_options:
             excluded_source_fields = self.elasticsearch_compiler_options["excluded_source_fields"]
             source_fields = source_fields.difference(excluded_source_fields)
+            s = s.source(includes=list(source_fields), excludes=excluded_source_fields)
+        else:
+            s = s.source(includes=list(source_fields))
 
-        s = s.source(includes=list(source_fields))
+        
         if "group-by" in query["SPARQL"]:
             if "limit" in query["SPARQL"]["group-by"]:
                 s = s.extra(size=int(query["SPARQL"]["group-by"]["limit"]))
