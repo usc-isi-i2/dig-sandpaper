@@ -6,12 +6,18 @@
     "url",
     "knowledge_graph.*"
   ],
+  "excluded_source_fields": [
+    "content_extraction.content_relaxed.text"
+  ],
   "highlight": {
     "fields": {
       "indexed.*": {
         "number_of_fragments": 0
       },
-      "content_extraction.*": {
+      "content_extraction.content_strict.text": {
+        "number_of_fragments": 0
+      },
+      "content_extraction.title.text": {
         "number_of_fragments": 0
       }
     }
