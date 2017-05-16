@@ -30,42 +30,50 @@ if __name__ == "__main__":
 
     o = codecs.open(output_file, 'w', 'utf-8')
     for jl in jl_file_iterator(input_path):
-    	if "knowledge_graph" not in jl:
-    		continue
+        if "knowledge_graph" not in jl:
+            continue
 
-    	kg = jl["knowledge_graph"]
-    	indexed = {}
-    	jl["indexed"] = indexed
+        kg = jl["knowledge_graph"]
+        indexed = {}
+        jl["indexed"] = indexed
         if "_id" in jl:
             jl["doc_id"] = jl["_id"]
         jl.pop("_id", None)
 
-    	for (pred, objs) in kg.iteritems():
-    		for obj in objs:
-	    		key = obj["key"]
-	    		value = obj["value"]
-	    		result = {}
-	    		if key: 
-	    			result["key"] = key
-	    		if value:
-	    		    result["value"] = value
-	    		if pred not in indexed:
-	    			indexed[pred] = {}
+        for (pred, objs) in kg.iteritems():
+            for obj in objs:
 
-	    		for prov in obj["provenance"]:
-	    			method = prov.get("method", "other_method")
-	    			if method not in interesting_methods:
-	    				method = "other_method"
-	    			source = prov["source"]
-	    			segment = source.get("segment", "other_segment")
-	    			if segment not in interesting_segments:
-	    				segment = "other_segment"
-	    			if method not in indexed[pred]:
-	    				indexed[pred][method] = {}
-	    			if segment not in indexed[pred][method]:
-	    				indexed[pred][method][segment] = []
-	    			if result not in indexed[pred][method][segment]:
-	    			    indexed[pred][method][segment].append(result)
+                key = obj["key"]
+                value = obj["value"]
+                result = {}
+                if key: 
+                    result["key"] = key
+                if value:
+                    result["value"] = value
+                if pred not in indexed:
+                    indexed[pred] = {}
+                if "high_confidence_keys" not in indexed[pred]:
+                    indexed[pred]["high_confidence_keys"] = []
+                high_confidence_keys = set(indexed[pred]["high_confidence_keys"])
+                if obj.get("confidence", 0.0) > 0.7:
+                    high_confidence_keys.add(key)
+                indexed[pred]["high_confidence_keys"] = list(high_confidence_keys)
+
+                for prov in obj["provenance"]:
+                    method = prov.get("method", "other_method")
+                    if method not in interesting_methods:
+                        method = "other_method"
+                    source = prov["source"]
+                    segment = source.get("segment", "other_segment")
+                    if segment not in interesting_segments:
+                        segment = "other_segment"
+                    if method not in indexed[pred]:
+                        indexed[pred][method] = {}
+                    if segment not in indexed[pred][method]:
+                        indexed[pred][method][segment] = []
+                    if result not in indexed[pred][method][segment]:
+                        indexed[pred][method][segment].append(result)
+
 
         o.write(json.dumps(jl) + '\n')
 

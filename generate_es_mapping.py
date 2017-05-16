@@ -42,7 +42,8 @@ if __name__ == "__main__":
         semantic_types = semantic_types | frozenset(data_extraction["fields"].keys())
 
     for semantic_type in semantic_types:
-        semantic_type_props = {}
+        semantic_type_props = {"high_confidence_keys":{"type": "string",
+                                         "index": "not_analyzed"}}
         root_props[semantic_type] = {"properties":semantic_type_props}
         for method in methods:
             method_props = {}
