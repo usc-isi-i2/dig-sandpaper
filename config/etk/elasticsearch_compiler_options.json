@@ -4,7 +4,9 @@
     "doc_id",
     "tld",
     "url",
-    "knowledge_graph.*"
+    "knowledge_graph.*",
+    "content_extraction.content_strict.text",
+    "content_extraction.title.text"
   ],
   "excluded_source_fields": [
     "content_extraction.content_relaxed.text"
