@@ -86,5 +86,5 @@ if __name__ == '__main__':
                                       	                     	      interesting_segments)))
                    
 
-    #docs.saveAsSequenceFile(output_path, compressionCodecClass=compression)
-    docs.values().saveAsTextFile(output_path)
+    docs.saveAsSequenceFile(output_path, compressionCodecClass=compression)
+    #docs.values().saveAsTextFile(output_path)
