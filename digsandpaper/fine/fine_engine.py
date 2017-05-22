@@ -18,6 +18,7 @@ class FineEngine(object):
         return True
 
     def find_value(self, doc, field_elements):
+        #print field_elements
         while len(field_elements) > 1:
             field_element = field_elements.pop(0)
             if '[' in field_element:
@@ -41,13 +42,16 @@ class FineEngine(object):
                     doc[field_element] = {}
                 doc = doc[field_element]
         field_element = field_elements[0]
+        #print "getting {}".format(field_element)
         if isinstance(doc, list):
             if len(doc)> 0:
                 doc = doc[0]
+                return doc.get(field_element, None)
             return None
         return doc.get(field_element, None)
 
     def execute(self, expanded_queries, coarse_results):
+        
         all_answers = []
         for (query, results) in zip(expanded_queries, coarse_results):
             answer_context = {}
@@ -67,10 +71,12 @@ class FineEngine(object):
             result = results.to_dict()
 
             for hit in result["hits"]["hits"]:
+                #print json.dumps(hit["_source"].get("knowledge_graph", "{}").get("ethnicity", {}), indent=4)
 
                 matches = [match.split(":") for match in  hit.get("matched_queries", list())]
                 answer = []
                 for v in variables:
+                    #print "variable {}".format(v)
 
                     potential_matched_clauses = []
                     if where["variable"] == v["variable"]:
@@ -82,23 +88,32 @@ class FineEngine(object):
                     best_weight = 0.0
                     best_value = None
                     for c in potential_matched_clauses:
-                        clause_id = c.get("clause_id", "")
-                        matches_for_clause = [match for match in matches if match[0] == clause_id]
-                        
-
+                        #print json.dumps(c)
+                        clause_id = c.get("_id", "")
+                        matches_for_clause = [match for match in matches if match[0].startswith(clause_id) and clause_id]
+                        #print "clause_id {}".format(clause_id)
+                        #print "matches for clause {}".format(json.dumps(matches_for_clause))
                         for field in c.get("fields", []):
+                            
                             name = field["name"]
                             weight = field.get("weight", 1.0)
+                            #print "trying {} {}".format(name, weight)
                             value = None
+
                             if len(matches_for_clause) > 0:
+                                #print "matches_for_clause"
                                 for match in matches_for_clause:
                                     if match[1] == name:
                                          value = match[2]
                             else:
                                 field_elements = name.split(".")
+                                #print "split field elements {}".format(field_elements)
                                 value = self.find_value(hit["_source"], field_elements)
+
                             if value:
+                                #print value[:10]
                                 if weight > best_weight:
+                                    #print "best {} {}".format(name, weight)
                                     best_field = name
                                     best_weight = weight
                                     best_value = value
