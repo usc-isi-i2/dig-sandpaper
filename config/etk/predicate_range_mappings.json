@@ -7,6 +7,7 @@
   "eye_color": "EyeColor",
   "hair_color": "HairColor",
   "height": "Height",
+  "location": "Location",
   "name": "Name",
   "phone": "Phone",
   "posting_date": "PostingDate",
