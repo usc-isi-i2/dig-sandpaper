@@ -2,14 +2,17 @@
   "owl:Thing": [
     "content_extraction.content_strict.text"
   ],
+  "Address": [
+    "indexed.address.high_confidence_keys"
+  ],
+  "Age": [
+    "indexed.age.high_confidence_keys"
+  ],
   "City":[
     "indexed.city.high_confidence_keys"
   ],
   "Country":[
     "indexed.country.high_confidence_keys"
-  ],
-  "Age": [
-    "indexed.age.high_confidence_keys"
   ],
   "Email": [
     "indexed.email.high_confidence_keys"
@@ -19,6 +22,9 @@
   ],
   "EyeColor":[
     "indexed.eye_color.high_confidence_keys"
+  ],
+  "Gender": [
+    "indexed.gender.high_confidence_keys"
   ],
   "HairColor":[
     "indexed.hair_color.high_confidence_keys"
@@ -37,6 +43,9 @@
   ],
   "Price": [
     "indexed.price.high_confidence_keys"
+  ],
+  "Review": [
+    "indexed.review.high_confidence_keys"
   ],
   "Service": [
     "indexed.service.high_confidence_keys"
