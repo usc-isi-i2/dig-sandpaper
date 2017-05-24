@@ -41,6 +41,9 @@
   "Service": [
     "indexed.service.high_confidence_keys"
   ],
+  "State": [
+    "indexed.state.high_confidence_keys"
+  ],
   "Weight": [
     "indexed.weight.high_confidence_keys"
   ],

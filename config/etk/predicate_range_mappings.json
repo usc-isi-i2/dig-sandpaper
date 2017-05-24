@@ -13,6 +13,7 @@
   "posting_date": "PostingDate",
   "price": "Price",
   "service": "Service", 
+  "state": "State",
   "weight": "Weight",
   "tld": "TopLevelDomain",
   "url": "URL"
