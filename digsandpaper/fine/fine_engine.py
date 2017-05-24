@@ -17,7 +17,7 @@ class FineEngine(object):
 
         return True
 
-    def find_value(self, doc, field_elements):
+    def find_values(self, doc, field_elements):
         #print field_elements
         while len(field_elements) > 1:
             field_element = field_elements.pop(0)
@@ -45,8 +45,13 @@ class FineEngine(object):
         #print "getting {}".format(field_element)
         if isinstance(doc, list):
             if len(doc)> 0:
-                doc = doc[0]
-                return doc.get(field_element, None)
+                values = list()
+                for d in doc:
+                    #print json.dumps(d)
+                    v = d.get(field_element, None)
+                    if v:
+                        values.append(v)
+                return values
             return None
         return doc.get(field_element, None)
 
@@ -108,21 +113,29 @@ class FineEngine(object):
                             else:
                                 field_elements = name.split(".")
                                 #print "split field elements {}".format(field_elements)
-                                value = self.find_value(hit["_source"], field_elements)
+                                value = self.find_values(hit["_source"], field_elements)
+                                #print "found {}".format(value)
 
                             if value:
-                                #print value[:10]
-                                if weight > best_weight:
-                                    #print "best {} {}".format(name, weight)
-                                    best_field = name
-                                    best_weight = weight
-                                    best_value = value
-                                if weight == best_weight and (isinstance(best_value, basestring) 
-                                                              and isinstance(value, basestring) 
-                                                              and len(best_value) < len(value)):
-                                    best_field = name
-                                    best_weight = weight
-                                    best_value = value
+                                if isinstance(value, basestring) or not isinstance(value, list):
+                                    val = list()
+                                    val.append(value)
+                                    value = val
+                                for vv in value:
+                                    #print vv[:10]
+                                    if weight > best_weight:
+                                        #print "best {} {}".format(name, weight)
+                                        best_field = name
+                                        best_weight = weight
+                                        best_value = vv
+                                    elif weight == best_weight and (isinstance(best_value, basestring) 
+                                                                  and isinstance(vv, basestring) 
+                                                                  and len(best_value) < len(vv)):
+                                        #print "updating tie {} {}".format(best_value, vv)
+                                        best_field = name
+                                        best_weight = weight
+                                        best_value = vv
+                                    #print best_value
 
                     if best_value:
                        answer.append(best_value)
