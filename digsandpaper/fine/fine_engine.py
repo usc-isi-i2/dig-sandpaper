@@ -117,6 +117,13 @@ class FineEngine(object):
                                     best_field = name
                                     best_weight = weight
                                     best_value = value
+                                if weight == best_weight and (isinstance(best_value, basestring) 
+                                                              and isinstance(value, basestring) 
+                                                              and len(best_value) < len(value)):
+                                    best_field = name
+                                    best_weight = weight
+                                    best_value = value
+
                     if best_value:
                        answer.append(best_value)
                     else:
