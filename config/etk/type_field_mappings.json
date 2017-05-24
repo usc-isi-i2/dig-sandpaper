@@ -270,6 +270,11 @@
     "content_extraction.content_strict.text",
     "content_extraction.title.text"
   ],
+  "Title": [    
+    "content_extraction.content_relaxed.text",
+    "content_extraction.content_strict.text",
+    "content_extraction.title.text"
+  ],
   "Weight": [
     "indexed.weight.gurobi.inferlink_description.value",
     "indexed.weight.gurobi.content_strict.value",
