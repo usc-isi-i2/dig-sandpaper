@@ -21,12 +21,14 @@ def main(args):
     	              type="string", dest="endpoint", default=None)
     parser.add_option("-q", "--query", action="store",
                       type="string", dest="query")
+    parser.add_option("-c", action="store_true", dest="is_coarse", default=False)
     (c_options, args) = parser.parse_args()
 
     query_file = c_options.query
     host = c_options.host
     port = c_options.port
     endpoint = c_options.endpoint
+    is_coarse = c_options.is_coarse
 
     if not query_file:
         parser.error('Query file not specified.  Use -q or --query')
@@ -35,6 +37,8 @@ def main(args):
         endpoint = "http://{}:{}/search".format(host, port)
     if not endpoint.endswith("/search"):
         endpoint = "{}/search".format(endpoint)
+    if is_coarse:
+        endpoint = "{}/coarse".format(endpoint)
 
     query_file_json = load_json_file(query_file)
     if isinstance(query_file_json, list):
