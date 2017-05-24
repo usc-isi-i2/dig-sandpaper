@@ -49,6 +49,26 @@ class ConstraintTypeTransformations(object):
                 value, filename, 'eval')
             self.constraint_type_transformations[key] = compiled_transformation
 
+    def preprocess_filter(self, f):
+        if "clauses" in f:
+            if isinstance(f["clauses"], list):
+                f["clauses"] = [self.preprocess_filter(c) for c in f["clauses"]]
+                return f
+            elif isinstance(f["clauses"], dict):
+                f["clauses"] = self.preprocess_filter(f["clauses"])
+                return f
+        else:
+            if "constraint" not in f or "type" not in f:
+                return f
+            compiled_transformation = self.constraint_type_transformations.get(
+            f.get("type", "owl:Thing"), 
+            self.constraint_type_transformations.get("owl:Thing"))
+            data = {}
+            data["value"] = f["constraint"]
+            f["constraint"] = eval(
+                compiled_transformation, self.module.__dict__, data)                
+            return f
+
     def preprocess_clause(self, clause):
         if "constraint" not in clause:
             if "clauses" in clause:
@@ -67,6 +87,10 @@ class ConstraintTypeTransformations(object):
     def preprocess(self, query):
         for clause in clause_jsonpath.find(query["SPARQL"]["where"]):
             self.preprocess_clause(clause.value)
+
+        if "filters" in query["SPARQL"]["where"]:
+            filters = query["SPARQL"]["where"]["filters"]
+            query["SPARQL"]["where"]["filters"] = [self.preprocess_filter(f) for f in filters]
 
         return query
 
