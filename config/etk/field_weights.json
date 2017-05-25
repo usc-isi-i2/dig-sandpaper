@@ -30,7 +30,7 @@
       "other_method": {
         "*": 10,
         "other_segment":{
-          "*": 2.1
+          "*": 5.1
         }
       }
     },
@@ -67,6 +67,12 @@
       }
     },
     "city":  { 
+      "*": {
+        "*": 6,
+        "other_segment": 2.1
+      }
+    },
+    "address":  { 
       "*": {
         "*": 6,
         "other_segment": 2.1
