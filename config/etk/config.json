@@ -74,6 +74,11 @@
           "field_weight_mappings": "config/etk/field_weights.json"
         },
         {
+            "type": "TypeQueryMapping",
+            "name": "TypeQueryMapping",
+            "type_query_mappings": "config/etk/type_query_mappings.json"
+        },
+        {
           "type_doc_type_mappings": "config/etk/type_doc_type_mappings.json",
           "type": "TypeDocTypeMapping",
           "name": "TypeDocTypeMapping"
