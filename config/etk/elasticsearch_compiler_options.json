@@ -1,4 +1,5 @@
 {
+  "convert_text_filters_to_shoulds": true,
   "boost_musts": true,
   "default_source_fields": [
     "doc_id",

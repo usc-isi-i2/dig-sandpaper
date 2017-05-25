@@ -106,11 +106,13 @@ class ElasticsearchQueryCompiler(object):
                 source_fields = self.generate_filter(clause,
                                                      sub_filters,
                                                      source_fields)
-            if operator == "and":
+            if operator == "and" and len(sub_filters) > 1:
                 q = Bool(filter=sub_filters)
             elif operator == "or":
                 q = Bool(should=[ConstantScore(filter=sf)
                                  for sf in sub_filters])
+            else:
+                q = sub_filters[0]
             filters.append(q)
         else:
             source_fields |= set([field["name"] for field in f["fields"]])
@@ -258,6 +260,24 @@ class ElasticsearchQueryCompiler(object):
             for f in filter_clauses:
                 source_fields = self.generate_filter(f, filters, source_fields)
 
+        if self.elasticsearch_compiler_options.get("convert_text_filters_to_shoulds", False):
+        
+            valid_filters = list()
+            converted_filters = list()
+            for f in filters:
+                if isinstance(f, DisMax):
+                    is_matches = True
+                    for q in f.queries:
+                        if isinstance(q, Range):
+                            is_matches = False
+                        break
+                if is_matches:
+                    converted_filters.append(f)
+                else:
+                    valid_filters.append(f)
+
+            shoulds.extend(converted_filters)
+            filters= valid_filters
         q = Bool(must=musts,
                  should=shoulds,
                  filter=filters,
