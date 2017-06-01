@@ -101,6 +101,10 @@ class FineEngine(object):
                         for field in c.get("fields", []):
                             
                             name = field["name"]
+                            if name in ["content_extraction.content_relaxed.text",
+    "content_extraction.content_strict.text",
+    "content_extraction.title.text"]:
+                                continue
                             weight = field.get("weight", 1.0)
                             #print "trying {} {}".format(name, weight)
                             value = None
@@ -198,5 +202,9 @@ class FineEngine(object):
                 if maximum:
                     answer_context["agg"] = maximum
 
+            if "id" in query:
+                answer_context["question_id"] = query["id"]
+            if "type" in query:
+                answer_context["type"] = query["type"]
             all_answers.append(answer_context)
         return all_answers
