@@ -42,6 +42,7 @@ class ElasticsearchQueryCompiler(object):
         else:
             match_params = {}
             match_field_params = {}
+            match_field_params["boost"] = field.get("weight", 1.0) * 5
             match_field_params["query"] = f["constraint"]
             match_field_params["_name"] = "{}:{}:{}".format(f.get("_id"),
                                                             field.get("name"),
@@ -52,6 +53,7 @@ class ElasticsearchQueryCompiler(object):
                 match_field_params["slop"] = 25
                 return MatchPhrase(**match_params)
             else: 
+                match_field_params["minimum_should_match"] = max(1, len(f.get("constraint").split(" "))/2)
                 return Match(**match_params)
 
     def translate_clause(self, clause, field):
@@ -265,6 +267,7 @@ class ElasticsearchQueryCompiler(object):
             valid_filters = list()
             converted_filters = list()
             for f in filters:
+                is_matches = False
                 if isinstance(f, DisMax):
                     is_matches = True
                     for q in f.queries:
