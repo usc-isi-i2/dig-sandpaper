@@ -94,6 +94,11 @@
     "indexed.age.other_method.other_segment.value",
     "content_extraction.title.text"
   ],
+  "Content": [
+    "content_extraction.content_relaxed.text",
+    "content_extraction.content_strict.text",
+    "content_extraction.title.text"
+  ],
   "Email": [
     "indexed.email.gurobi.inferlink_description.value",
     "indexed.email.gurobi.content_strict.value",

@@ -2,6 +2,7 @@
   "address": "Address",
   "age": "Age",
   "city": "City",
+  "content": "Content",
   "country": "Country",
   "email": "Email",
   "ethnicity": "Ethnicity",
