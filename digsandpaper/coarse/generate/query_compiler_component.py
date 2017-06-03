@@ -149,10 +149,11 @@ class ElasticsearchQueryCompiler(object):
         else:
             s = s.source(includes=list(source_fields))
 
-        
+        limit = 20
         if "group-by" in query["SPARQL"]:
             if "limit" in query["SPARQL"]["group-by"]:
-                s = s.extra(size=int(query["SPARQL"]["group-by"]["limit"]))
+                limit = int(query["SPARQL"]["group-by"]["limit"])
+                s = s.extra(size=limit)
 
             if "offset" in query["SPARQL"]["group-by"]:
                 s = s.extra(from_=int(query["SPARQL"]["group-by"]["offset"]))
@@ -169,10 +170,31 @@ class ElasticsearchQueryCompiler(object):
             s = s.highlight(key, **highlight_fields[key])
 
 
+        order_by_values = None
+        if "order-by" in query["SPARQL"]:
+            order_by = query["SPARQL"]["order-by"]
+            order_by_values = order_by["values"]
+
         if query["type"].lower() == "aggregation":
             for sv in select_variables:
                 if "function" in sv:
-                    a = A('terms', field=sv["fields"][0]["name"])
+                    variable = sv["variable"]
+
+                    asc_or_desc = "asc"
+                    order = { "_count" : "asc"}
+                    if order_by_values:
+                        order_by_value = order_by_values[0].lower()
+                        if order_by_value.startswith("desc("):
+                            asc_or_desc = "desc"
+                            order_by_value = order_by_value[5:-1]
+
+                        order = { "_count" : asc_or_desc }
+                        if order_by_value.startswith("?"):
+                             order = { "_term" : asc_or_desc }
+                    
+                    a = A('terms', field=sv["fields"][0]["name"], 
+                          size=limit, order=order)
+                    print "values {} {}".format(limit, json.dumps(order))
                     s.aggs.bucket(sv["variable"], a)
         return s
 
