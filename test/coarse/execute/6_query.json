@@ -280,7 +280,11 @@
             }, 
             "order-by": {
                 "values": [
-                    "DESC(COUNT(?ethnicity))"
+                    {
+                        "function": "count", 
+                        "order": "desc", 
+                        "variable": "?ethnicity"
+                    }
                 ]
             }, 
             "select": {

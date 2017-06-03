@@ -15,7 +15,13 @@
                 ]
             }, 
             "order-by": {
-                "values": ["DESC(COUNT(?ethnicity))"]
+                "values": [
+                    {
+                        "variable": "?ethnicity",
+                        "function": "count",
+                        "order": "desc"
+                    }
+                ]
             },
             "select": {
                 "variables": [

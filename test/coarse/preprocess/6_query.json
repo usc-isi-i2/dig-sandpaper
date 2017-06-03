@@ -12,7 +12,16 @@
 
                     }
                 ]
-            }, 
+            },  
+            "order-by": {
+                "values": [
+                    {
+                        "variable": "?ethnicity",
+                        "function": "count",
+                        "order": "desc"
+                    }
+                ]
+            },
             "where": {
                 "clauses": [
                     {

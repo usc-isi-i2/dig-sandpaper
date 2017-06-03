@@ -180,21 +180,19 @@ class ElasticsearchQueryCompiler(object):
                 if "function" in sv:
                     variable = sv["variable"]
 
-                    asc_or_desc = "asc"
-                    order = { "_count" : "asc"}
+                    asc_or_desc = "desc"
+                    order_function = "_count"
                     if order_by_values:
-                        order_by_value = order_by_values[0].lower()
-                        if order_by_value.startswith("desc("):
-                            asc_or_desc = "desc"
-                            order_by_value = order_by_value[5:-1]
-
-                        order = { "_count" : asc_or_desc }
-                        if order_by_value.startswith("?"):
-                             order = { "_term" : asc_or_desc }
+                        order_by_value = order_by_values[0]
+                        order = order_by_value.get("order", "asc")
+                        if "function" not in order_by_value:
+                            order_function = "_term" 
+                        else:
+                            order_function = "_{}".format(order_by_value["function"].lower())
+                    order = { order_function : asc_or_desc }
                     
                     a = A('terms', field=sv["fields"][0]["name"], 
                           size=limit, order=order)
-                    print "values {} {}".format(limit, json.dumps(order))
                     s.aggs.bucket(sv["variable"], a)
         return s
 
