@@ -184,7 +184,7 @@ class ElasticsearchQueryCompiler(object):
                     order_function = "_count"
                     if order_by_values:
                         order_by_value = order_by_values[0]
-                        order = order_by_value.get("order", "asc")
+                        asc_or_desc = order_by_value.get("order", "asc")
                         if "function" not in order_by_value:
                             order_function = "_term" 
                         else:
