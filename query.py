@@ -54,6 +54,7 @@ def main(args):
                 sys.stderr.write("{} query failed error code: {}\n".format(query.get("id", "unknown"), r.status_code))
         print "]"
     else:
+        query = query_file_json
         r = requests.post(endpoint, json.dumps(query))
         print(r.text)
 
