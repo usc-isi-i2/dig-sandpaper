@@ -16,6 +16,7 @@
   "posting_date": "PostingDate",
   "price": "Price",
   "review_id": "ReviewId",
+  "review_site_id": "ReviewId",
   "service": "Service", 
   "services": "Service",
   "state": "State",

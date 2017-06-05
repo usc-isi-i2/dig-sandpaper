@@ -66,6 +66,12 @@
         "other_segment": 2.1
       }
     },
+    "review_id":  { 
+      "*": {
+        "*": 5,
+        "other_segment": 2.1
+      }
+    },
     "city":  { 
       "*": {
         "*": 6,

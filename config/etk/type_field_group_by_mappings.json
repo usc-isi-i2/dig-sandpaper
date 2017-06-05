@@ -44,8 +44,8 @@
   "Price": [
     "indexed.price.high_confidence_keys"
   ],
-  "Review": [
-    "indexed.review.high_confidence_keys"
+  "ReviewId": [
+    "indexed.review_id.high_confidence_keys"
   ],
   "Service": [
     "indexed.service.high_confidence_keys"
