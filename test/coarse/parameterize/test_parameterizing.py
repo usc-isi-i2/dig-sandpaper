@@ -41,21 +41,21 @@ class TestCoarseParameterizing(unittest.TestCase):
         self.assertEqual(f["clauses"][1]["type"],
                          "owl:Thing")
 
-    def test_basic_coarse_preprocessing_with_no_type_mapping(self):
+    def test_basic_coarse_parameterizing_with_no_type_mapping(self):
         config = load_json_file("3_config.json")
         query = load_json_file("3_query.json")
         parameterizer = Parameterizer(config)
 
         result = parameterizer.parameterize(query)
 
-    def test_basic_coarse_preprocessing_with_date_filter(self):
+    def test_basic_coarse_parameterizing_with_date_filter(self):
         config = load_json_file("4_config.json")
         query = load_json_file("4_query.json")
         parameterizer = Parameterizer(config)
 
         result = parameterizer.parameterize(query)
 
-    def test_basic_coarse_preprocessing_with_date_filter(self):
+    def test_basic_coarse_parameterizing_group_by(self):
         config = load_json_file("6_config.json")
         query = load_json_file("6_query.json")
         parameterizer = Parameterizer(config)

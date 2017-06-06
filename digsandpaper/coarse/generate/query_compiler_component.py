@@ -30,7 +30,7 @@ class ElasticsearchQueryCompiler(object):
     def translate_filter(self, f, field):
         range_operators = {"<": "lt", "<=": "lte", ">": "gt", ">=": "gte"}
         op = f["operator"]
-        if op in range_operators:
+        if isinstance(op, basestring) and op in range_operators:
             range_params = {}
             range_field_params = {}
             range_field_params[range_operators[op]] = f["constraint"]
@@ -38,6 +38,20 @@ class ElasticsearchQueryCompiler(object):
             range_field_params["_name"] = "{}:{}:{}".format(f.get("_id"),
                                                             field.get("name"),
                                                             f.get("constraint"))
+            return Range(**range_params)
+        if not isinstance(op, basestring) and isinstance(op, list):
+            range_params = {}
+            range_field_params = {}
+            for (o, c) in zip(op, f["constraint"]):
+                range_field_params[range_operators[o]] = c
+            range_params[field["name"]] = range_field_params
+            _name = ""
+            for (i, c) in zip(f.get("_id"), f.get("constraint")):
+                _name = "{}:{}:{}:{}".format(_name, i,
+                                                            field.get("name"),
+                                                            c)
+            _name = _name[1:]
+            range_field_params["_name"] = _name
             return Range(**range_params)
         else:
             match_params = {}
@@ -104,17 +118,57 @@ class ElasticsearchQueryCompiler(object):
         if compound_filter:
             clauses = f["clauses"]
             sub_filters = []
-            for clause in clauses:
-                source_fields = self.generate_filter(clause,
+            
+
+            if operator == "and" and len(clauses) > 1:
+                
+                clauses_by_variable = {}
+                compound_clauses = []
+                for clause in clauses:
+                    if "variable" in clause:
+                        cs = clauses_by_variable.get(clause["variable"], [])
+                        cs.append(clause)
+                        clauses_by_variable[clause["variable"]] = cs
+                    else:
+                        compound_clauses.append(clause)
+
+                for (variable, clauses) in clauses_by_variable.iteritems():
+                    if len(clauses) == 1:
+                        source_fields = self.generate_filter(clauses[0],
+                                                         sub_filters,
+                                                         source_fields)
+                    else:
+                        ops = []
+                        constraints = []
+                        ids = []
+                        for clause in clauses:
+                            ops.append(clause["operator"])
+                            constraints.append(clause["constraint"])
+                            ids.append(clause["_id"])
+                        new_clause = {}
+                        new_clause["operator"] = ops
+                        new_clause["constraint"] = constraints
+                        new_clause["_id"] = ids
+                        new_clause["type"] = clauses[0]["type"]
+                        new_clause["fields"] = clauses[0]["fields"]
+                        source_fields = self.generate_filter(new_clause,
+                                                         sub_filters,
+                                                         source_fields)
+                for clause in compound_clauses:
+                    source_fields = self.generate_filter(clause,
+                                                         sub_filters,
+                                                         source_fields)
+                q = Bool(filter=sub_filters)
+            else: 
+                for clause in clauses:
+                    source_fields = self.generate_filter(clause,
                                                      sub_filters,
                                                      source_fields)
-            if operator == "and" and len(sub_filters) > 1:
-                q = Bool(filter=sub_filters)
-            elif operator == "or":
-                q = Bool(should=[ConstantScore(filter=sf)
+                if operator == "or":
+                    q = Bool(should=[ConstantScore(filter=sf)
                                  for sf in sub_filters])
-            else:
-                q = sub_filters[0]
+                else:
+                    q = sub_filters[0]
             filters.append(q)
         else:
             source_fields |= set([field["name"] for field in f["fields"]])
@@ -124,7 +178,10 @@ class ElasticsearchQueryCompiler(object):
                 sub_filters = []
                 for field in f["fields"]:
                     sub_filters.append(self.translate_filter(f, field))
-                q = DisMax(queries=sub_filters)
+                if isinstance(f["operator"], list) and len(f["operator"]) > 0:
+                    q = Bool(should=sub_filters)
+                else:
+                    q = DisMax(queries=sub_filters)
                 filters.append(q)
         return source_fields
 

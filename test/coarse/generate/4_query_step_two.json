@@ -15,14 +15,16 @@
             "where": {
                 "clauses": [
                     {
+                        "_id": "755e297410144674b3dde319b9d3e86a", 
                         "fields": [
                             {
-                                "name": "extractors.content_strict.text.result.value"
+                                "name": "fields.posting-date.strict.name", 
+                                "weight": 3
                             }
                         ], 
                         "isOptional": false, 
                         "predicate": "postingDate", 
-                        "type": "owl:Thing", 
+                        "type": "PostingDate", 
                         "variable": "?postingDate"
                     }
                 ], 
@@ -30,10 +32,12 @@
                     {
                         "clauses": [
                             {
+                                "_id": "c2dbb4e4ea824d3a9fa177aef9c171d2", 
                                 "constraint": "2015-03-31", 
                                 "fields": [
                                     {
-                                        "name": "fields.posting-date.strict.name"
+                                        "name": "fields.posting-date.strict.name", 
+                                        "weight": 3
                                     }
                                 ], 
                                 "operator": "<=", 
@@ -41,10 +45,12 @@
                                 "variable": "?postingDate"
                             }, 
                             {
+                                "_id": "e12012b07a704e6a8cbf90dce3900120", 
                                 "constraint": "2015-02-28", 
                                 "fields": [
                                     {
-                                        "name": "fields.posting-date.strict.name"
+                                        "name": "fields.posting-date.strict.name", 
+                                        "weight": 3
                                     }
                                 ], 
                                 "operator": ">", 
