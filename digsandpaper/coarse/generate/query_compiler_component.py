@@ -108,7 +108,7 @@ class ElasticsearchQueryCompiler(object):
             if query_type == "match_phrase":
                 match_params_mp = {}
                 match_field_params_mp = copy.copy(match_field_params)
-                match_field_params_mp["boost"] = match_field_params_mp["boost"] * len(f.get("constraint").split(" "))
+                match_field_params_mp["boost"] = match_field_params_mp["boost"] * len(clause.get("constraint").split(" "))
                 match_field_params_mp["_name"] = match_field_params_mp["_name"] + ":match_phrase"
                 match_params_mp[field["name"]] = match_field_params_mp
                 match_field_params_mp["slop"] = 10
