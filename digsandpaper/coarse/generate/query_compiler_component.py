@@ -78,6 +78,8 @@ class ElasticsearchQueryCompiler(object):
                     msm = max(1, terms/2)
                 match_field_params["minimum_should_match"] = msm
                 mp =  MatchPhrase(**match_params_mp)
+                if f.get("type", "owl:Thing") == "owl:Thing":
+                    match_field_params["boost"] = field.get("weight", 1.0) * 2
                 m = Match(**match_params)
                 return Bool(must=[m], should=[mp])
             else: 
@@ -87,6 +89,8 @@ class ElasticsearchQueryCompiler(object):
                 else:
                     msm = max(1, terms/2)
                 match_field_params["minimum_should_match"] = msm
+                if f.get("type", "owl:Thing") == "owl:Thing":
+                    match_field_params["boost"] = field.get("weight", 1.0) * 2
                 return Match(**match_params)
 
     def translate_clause(self, clause, field):
@@ -112,6 +116,8 @@ class ElasticsearchQueryCompiler(object):
                 m = Match(**match_params)
                 return Bool(must=[m], should=[mp])
             else:
+                if clause.get("type", "owl:Thing") == "owl:Thing":
+                    match_field_params["boost"] = field.get("weight", 1.0) * 2
                 return Match(**match_params)
         else:
             return Exists(field=field["name"])
