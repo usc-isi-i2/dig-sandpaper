@@ -394,22 +394,29 @@ class ElasticsearchQueryCompiler(object):
                  should=shoulds,
                  filter=filters,
                  must_not=must_nots)
-        if "boost_musts" in self.elasticsearch_compiler_options:
-            boost = 10.0
-            weighted_by_musts = []
-            minimum_should_match = len(shoulds)
-            if minimum_should_match > 0:
-                for x in range(0, len(shoulds)):
-                    weighted_q = Bool(must=musts,
-                          should=shoulds,
-                          filter=filters,
-                          must_not=must_nots,
-                          boost=boost,
-                          minimum_should_match=minimum_should_match - x)
-                    weighted_by_musts.append(weighted_q)
-                    boost = boost / 2
-                weighted_must = Bool(should=weighted_by_musts, disable_coord=True)
-                q = weighted_must
+        if "boost_musts" in self.elasticsearch_compiler_options and\
+            len(musts) > 0:
+            if len(musts) == 1:
+                shoulds.extend(musts)
+                q = Bool(should=shoulds,
+                         filter=filters,
+                         must_not=must_nots)
+            else:
+                boost = 10.0
+                weighted_by_musts = []
+                minimum_should_match = len(shoulds)
+                if minimum_should_match > 0:
+                    for x in range(0, len(shoulds)):
+                        weighted_q = Bool(must=musts,
+                              should=shoulds,
+                              filter=filters,
+                              must_not=must_nots,
+                              boost=boost,
+                              minimum_should_match=minimum_should_match - x)
+                        weighted_by_musts.append(weighted_q)
+                        boost = boost / 2
+                    weighted_must = Bool(should=weighted_by_musts, disable_coord=True)
+                    q = weighted_must
 
         s = Search()
         s.query = q
