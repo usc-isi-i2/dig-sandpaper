@@ -344,14 +344,20 @@ class ElasticsearchQueryCompiler(object):
                 #es_clause = self.translate_clause_helper(clause, fields, True)
                 #sub_query["clause_name"] = es_clause["_name"]
             else:
-                es_clause = self.translate_clause_helper(clause, fields, False)
-            if clause.get("isOptional", False):
-                predicate = clause.get("predicate")
-                if not predicate in shoulds_by_predicate:
-                    shoulds_by_predicate[predicate] = list()
-                shoulds_by_predicate.get(predicate).append(es_clause)
-            else:
-                musts.append(es_clause)
+                #this is a we need an answer for this clause
+                if "filter_for_fields_of_unbound_variables" not in self.elasticsearch_compiler_options or \
+                    self.elasticsearch_compiler_options["filter_for_fields_of_unbound_variables"]:
+                    es_clause = self.translate_clause_helper(clause, fields, False)
+                else:
+                    es_clause = None
+            if es_clause: 
+                if clause.get("isOptional", False):
+                    predicate = clause.get("predicate")
+                    if not predicate in shoulds_by_predicate:
+                        shoulds_by_predicate[predicate] = list()
+                    shoulds_by_predicate.get(predicate).append(es_clause)
+                else:
+                    musts.append(es_clause)
 
         for key, value in shoulds_by_predicate.iteritems():
             if len(value) > 1:

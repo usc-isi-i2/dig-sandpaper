@@ -1,6 +1,7 @@
 {
   "convert_text_filters_to_shoulds": true,
   "boost_musts": true,
+  "filter_for_fields_of_unbound_variables": false,
   "default_source_fields": [
     "doc_id",
     "tld",
