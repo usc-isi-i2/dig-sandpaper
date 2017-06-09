@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 setup(
     name='digsandpaper',
-    version='0.1.4-r013',
+    version='0.1.4-r014',
     description='digsandpaper',
     author='Jason Slepicka',
     author_email='jasonslepicka@gmail.com',
