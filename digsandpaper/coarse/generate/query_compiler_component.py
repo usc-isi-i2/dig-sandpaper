@@ -1,6 +1,7 @@
 import json
 import codecs
 import random
+import copy
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search, Q, A
 from elasticsearch_dsl.query import MultiMatch, Match, MatchPhrase, DisMax, Bool, Exists, ConstantScore, Range
@@ -64,10 +65,28 @@ class ElasticsearchQueryCompiler(object):
             match_params[field["name"]] = match_field_params
             query_type = f.get("query_type", "match")
             if query_type == "match_phrase":
-                match_field_params["slop"] = 25
-                return MatchPhrase(**match_params)
+                match_params_mp = {}
+                match_field_params_mp = copy.copy(match_field_params)
+                match_field_params_mp["boost"] = match_field_params_mp["boost"] * 10
+                match_field_params_mp["_name"] = match_field_params_mp["_name"] + ":match_phrase"
+                match_params_mp[field["name"]] = match_field_params_mp
+                match_field_params_mp["slop"] = 10
+                terms = len(f.get("constraint").split(" "))
+                if terms > 5:
+                    msm = terms / 2 + 1
+                else:
+                    msm = max(1, terms/2)
+                match_field_params["minimum_should_match"] = msm
+                mp =  MatchPhrase(**match_params_mp)
+                m = Match(**match_params)
+                return Bool(must=[m], should=[mp])
             else: 
-                match_field_params["minimum_should_match"] = max(1, len(f.get("constraint").split(" "))/2)
+                terms = len(f.get("constraint").split(" "))
+                if terms > 5:
+                    msm = terms / 2 + 1
+                else:
+                    msm = max(1, terms/2)
+                match_field_params["minimum_should_match"] = msm
                 return Match(**match_params)
 
     def translate_clause(self, clause, field):
@@ -83,8 +102,15 @@ class ElasticsearchQueryCompiler(object):
                                                             clause.get("constraint"))
             match_params[field["name"]] = match_field_params
             if query_type == "match_phrase":
-                match_field_params["slop"] = 25
-                return MatchPhrase(**match_params)
+                match_params_mp = {}
+                match_field_params_mp = copy.copy(match_field_params)
+                match_field_params_mp["boost"] = match_field_params_mp["boost"] * len(f.get("constraint").split(" "))
+                match_field_params_mp["_name"] = match_field_params_mp["_name"] + ":match_phrase"
+                match_params_mp[field["name"]] = match_field_params_mp
+                match_field_params_mp["slop"] = 10
+                mp =  MatchPhrase(**match_params_mp)
+                m = Match(**match_params)
+                return Bool(must=[m], should=[mp])
             else:
                 return Match(**match_params)
         else:

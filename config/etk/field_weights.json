@@ -4,7 +4,7 @@
   },
   "content_extraction":{
     "content_relaxed": {
-      "*": 0.1
+      "*": 1
     },
     "content_strict": {
       "*": 2
