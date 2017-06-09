@@ -16,7 +16,7 @@ class CoarseEngine(object):
         self.generator = Generator(self.config.get("generate", {}))
         self.executor = Executor(self.config.get("execute", {}))
 
-    def execute(self, query):
+    def generate(self, query):
         # preprocess
         preprocessed_query = self.preprocessor.preprocess(query)
         # parameterize
@@ -25,6 +25,12 @@ class CoarseEngine(object):
         # generate
         generated_queries = [self.generator.generate(q)
                              for q in parameterized_queries]
+        
+        return generated_queries
+
+    def execute(self, query):
+
+        generated_queries = self.generate(query)
         # execute
         results = [self.executor.execute(q) for q in generated_queries]
 

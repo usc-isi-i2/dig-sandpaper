@@ -18,5 +18,8 @@ class Engine(object):
     def execute_coarse(self, query):
         return self.coarse.execute(query)
 
+    def generate_coarse(self, query):
+        return self.coarse.generate(query)
+
     def execute_fine(self, expanded_queries, coarse_results):
         return self.fine.execute(expanded_queries, coarse_results)

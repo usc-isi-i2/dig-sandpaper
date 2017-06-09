@@ -27,6 +27,11 @@ def coarse():
     qs_with_rs = [{"query": q, "result": r.to_dict()} for q, r in zip(qs, rs)]
     return json.dumps(qs_with_rs)
 
+@app.route("/search/coarse/generate", methods=['POST'])
+def coarse_generate():
+    query = json.loads(request.data)
+    qs = engine.generate_coarse(query)
+    return json.dumps(qs)
 
 @app.route("/search/fine", methods=['POST'])
 def fine():
