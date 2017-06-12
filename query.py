@@ -48,13 +48,21 @@ def main(args):
     query_file_json = load_json_file(query_file)
     if isinstance(query_file_json, list):
         print "["
+        query_count = len(query_file_json)
+        i = 0
+        separator = ","
         for query in query_file_json:
+            i = i + 1
             r =requests.post(endpoint, json.dumps(query))
             if r.status_code == 200:
+                
+                if query_count == i:
+                    separator=""
+
                 if r.text[0] == '[':
-                    print "{},".format(r.text[1:-1])
+                    print "{}{}".format(r.text[1:-1], separator)
                 else:
-                    print "{},".format(r.text)
+                    print "{}{}".format(r.text, separator)
             else: 
                 sys.stderr.write("{} query failed error code: {}\n".format(query.get("id", "unknown"), r.status_code))
         print "]"
