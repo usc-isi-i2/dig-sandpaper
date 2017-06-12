@@ -222,6 +222,7 @@
     "tld.raw",
     "tld",
     "url",
-    "url.raw"
+    "url.raw",
+    "raw_content"
   ]
 }

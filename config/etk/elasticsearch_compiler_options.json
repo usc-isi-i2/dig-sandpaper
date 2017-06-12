@@ -11,7 +11,8 @@
     "content_extraction.title.text"
   ],
   "excluded_source_fields": [
-    "content_extraction.content_relaxed.text"
+    "content_extraction.content_relaxed.text",
+    "raw_content"
   ],
   "highlight": {
     "fields": {

@@ -2,6 +2,7 @@
   "tld":  { 
     "*": 100    
   },
+    "raw_content": 2,
   "content_extraction":{
     "content_relaxed": {
       "*": 1
@@ -73,6 +74,12 @@
       }
     },
     "city":  { 
+      "*": {
+        "*": 6,
+        "other_segment": 2.1
+      }
+    },
+    "posting_date": {
       "*": {
         "*": 6,
         "other_segment": 2.1

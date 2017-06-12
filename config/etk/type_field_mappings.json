@@ -2,7 +2,8 @@
   "owl:Thing": [
     "content_extraction.content_relaxed.text",
     "content_extraction.content_strict.text",
-    "content_extraction.title.text"
+    "content_extraction.title.text",
+    "raw_content"
   ],
   "Address":[
     "indexed.address.gurobi.inferlink_description.value",
@@ -97,7 +98,8 @@
   "Content": [
     "content_extraction.content_relaxed.text",
     "content_extraction.content_strict.text",
-    "content_extraction.title.text"
+    "content_extraction.title.text",
+    "raw_content"
   ],
   "Email": [
     "indexed.email.gurobi.inferlink_description.value",
@@ -112,7 +114,8 @@
     "indexed.email.other_method.content_strict.value",
     "indexed.email.other_method.title.value",
     "indexed.email.other_method.other_segment.value",
-    "content_extraction.title.text"
+    "content_extraction.title.text",
+    "raw_content"
   ],
   "Ethnicity":[
     "indexed.ethnicity.gurobi.inferlink_description.value",
@@ -269,7 +272,8 @@
     "indexed.phone.other_method.other_segment.value",
     "content_extraction.content_relaxed.text",
     "content_extraction.content_strict.text",
-    "content_extraction.title.text"
+    "content_extraction.title.text",
+    "raw_content"
   ],
   "PostingDate": [
     "indexed.posting_date.gurobi.inferlink_description.key",

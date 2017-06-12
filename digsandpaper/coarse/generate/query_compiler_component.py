@@ -2,6 +2,7 @@ import json
 import codecs
 import random
 import copy
+import re
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search, Q, A
 from elasticsearch_dsl.query import MultiMatch, Match, MatchPhrase, DisMax, Bool, Exists, ConstantScore, Range
@@ -116,7 +117,16 @@ class ElasticsearchQueryCompiler(object):
                 m = Match(**match_params)
                 return Bool(must=[m], should=[mp])
             else:
-                if clause.get("type", "owl:Thing") == "owl:Thing":
+                if "Date" in clause.get("type", "owl:Thing"):
+                    match_field_params.pop("query", None)
+                    if re.match("\d\d\d\d-\d\d-\d\d",clause["constraint"]): 
+                        match_field_params["gte"] = clause["constraint"]
+                    else:
+                        match_field_params["gte"] = "{}||/d".format(clause["constraint"])
+                    match_field_params["lt"] =  "{}||+1d/d".format(clause["constraint"])
+                    return Range(**match_params)
+
+                elif clause.get("type", "owl:Thing") == "owl:Thing":
                     match_field_params["boost"] = field.get("weight", 1.0) * 2
                 return Match(**match_params)
         else:
@@ -410,10 +420,11 @@ class ElasticsearchQueryCompiler(object):
             else:
                 boost = 10.0
                 weighted_by_musts = []
+                shoulds.extend(musts)
                 minimum_should_match = len(shoulds)
                 if minimum_should_match > 0:
                     for x in range(0, len(shoulds)):
-                        weighted_q = Bool(must=musts,
+                        weighted_q = Bool(
                               should=shoulds,
                               filter=filters,
                               must_not=must_nots,
@@ -423,6 +434,12 @@ class ElasticsearchQueryCompiler(object):
                         boost = boost / 2
                     weighted_must = Bool(should=weighted_by_musts, disable_coord=True)
                     q = weighted_must
+        else:
+            shoulds.extend(musts)
+            q = Bool(
+                 should=shoulds,
+                 filter=filters,
+                 must_not=must_nots)
 
         s = Search()
         s.query = q

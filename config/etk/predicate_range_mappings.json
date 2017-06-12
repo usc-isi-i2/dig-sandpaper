@@ -13,6 +13,7 @@
   "location": "Location",
   "name": "Name",
   "phone": "Phone",
+  "post_date": "PostingDate",
   "posting_date": "PostingDate",
   "price": "Price",
   "review_id": "ReviewId",
