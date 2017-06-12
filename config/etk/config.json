@@ -19,8 +19,12 @@
           "dict_constraint_mappings": "config/etk/dict_constraint_mappings.json"
         },
         {
-            "type": "ConstraintRelaxation",
-            "name": "IsOptionalConstraintRelaxer"
+          "type": "ConstraintExpansion",
+          "name": "HeightConstraintExpander"
+        },
+        {
+          "type": "ConstraintExpansion",
+          "name": "PhoneConstraintExpander"
         }
       ]
     },
