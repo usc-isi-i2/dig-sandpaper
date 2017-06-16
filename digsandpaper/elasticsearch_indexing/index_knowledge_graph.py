@@ -14,8 +14,11 @@ def jl_file_iterator(file):
             document = json.loads(line)
             yield document
 
-def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments,
-                                 max_key_count, max_provenance_count):
+def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark"], 
+                                 interesting_segments=["title", "content_strict"],
+                                 max_key_count=100, 
+                                 max_provenance_count=1000):
+    
     if "knowledge_graph" not in jl:
         return jl
 
@@ -81,6 +84,7 @@ def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments,
 
         indexed[pred]["high_confidence_keys"] = list(indexed[pred]["high_confidence_keys"])
     if total_key_count < max_key_count and total_provenance_count < max_provenance_count:
+
         return jl
     else:
         return None
@@ -94,9 +98,15 @@ if __name__ == "__main__":
 
     input_path = args[0]
     output_file = args[1]
-    properties_file = args[2]
-
-    properties = load_json_file(properties_file)
+    if len(args) >2:
+        properties_file = args[2]
+    else:
+        properties_file = None
+    
+    if properties_file:
+        properties = load_json_file(properties_file)
+    else:
+        properties = {}
     interesting_methods = properties.get("methods", [])
     interesting_segments = properties.get("segments", [])
     max_key_count = properties.get("max_key_count", 100)

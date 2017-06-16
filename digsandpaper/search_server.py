@@ -4,7 +4,10 @@ from flask_api import status
 from flask_cors import CORS, cross_origin
 import json
 import requests
+import StringIO
+import codecs
 from elasticsearch_mapping.generate import generate_from_project_config
+from elasticsearch_indexing.index_knowledge_graph import index_knowledge_graph_fields
 from urllib import unquote
 
 app = Flask(__name__)
@@ -35,6 +38,38 @@ def generate_mapping():
     project_config = response.json()
     m = generate_from_project_config(project_config)
     return json.dumps(m)
+
+def jl_file_iterator(file):
+    line = file.readline()
+    while line :
+        document = json.loads(line)
+        yield document
+        line = file.readline()
+
+@app.route("/indexing/fields", methods=['POST'])
+def index_fields():
+    if (request.headers['Content-Type'] == 'application/x-gzip'):
+        gz_data_as_file = StringIO.StringIO(request.data)
+        uncompressed = gzip.GzipFile(fileobj=gz_data_as_file, mode='rb')
+        jls = uncompressed.read().decode('utf-8') 
+    elif (request.headers['Content-Type'] == 'application/json' or
+          request.headers['Content-Type'] == 'application/x-jsonlines'):
+        jls = request.data.decode('utf-8')
+    else:
+        return "Only supported content types are application/x-gzip, application/json and application/x-jsonlines", status.HTTP_400_BAD_REQUEST
+    reader = codecs.getreader('utf-8')
+    jls_as_file = reader(StringIO.StringIO(jls))
+    jls = [json.dumps(jl) for jl in [index_knowledge_graph_fields(jl) for jl in jl_file_iterator(jls_as_file)] if jl is not None]
+    indexed_jls = "\n".join(jls)
+    if (request.headers['Content-Type'] == 'application/x-gzip'):
+        indexed_jls_as_file = StringIO.StringIO()
+        compressed = gzip.GzipFile(
+            filename=FILENAME, mode='wb', fileobj=indexed_jls_as_file)
+        compressed.write(indexed_jls)
+        compressed.close()
+        return indexed_jls_as_file.getvalue()
+    else:
+        return indexed_jls
 
 
 @app.route("/search", methods=['POST'])
