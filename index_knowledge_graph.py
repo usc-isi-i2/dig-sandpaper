@@ -14,7 +14,8 @@ def jl_file_iterator(file):
             document = json.loads(line)
             yield document
 
-def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments):
+def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments,
+                                 max_key_count, max_provenance_count):
     if "knowledge_graph" not in jl:
         return jl
 
@@ -24,6 +25,9 @@ def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments):
     if "_id" in jl:
         jl["doc_id"] = jl["_id"]
     jl.pop("_id", None)
+
+    total_provenance_count = 0
+    total_key_count = 0 
 
     for (pred, objs) in kg.iteritems():
         for obj in objs:
@@ -39,12 +43,20 @@ def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments):
                 indexed[pred] = {}
             if "high_confidence_keys" not in indexed[pred]:
                 indexed[pred]["high_confidence_keys"] = set()
+            if "key_count" not in indexed[pred]:
+                indexed[pred]["key_count"] = 0
+            indexed[pred]["key_count"] = indexed[pred]["key_count"] + 1
+            total_key_count = total_key_count + 1
+            if "providence_count" not in indexed[pred]:
+                indexed[pred]["providence_count"] = 0
             
             if obj.get("confidence", 0.0) > 0.7:
                 indexed[pred]["high_confidence_keys"].add(key)
 
             tally = {}
             for prov in obj["provenance"]:
+                indexed[pred]["providence_count"] = indexed[pred]["providence_count"] + 1
+                total_provenance_count = total_provenance_count + 1
                 method = prov.get("method", "other_method")
                 if method not in interesting_methods:
                     method = "other_method"
@@ -68,7 +80,11 @@ def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments):
                     indexed[pred][method][segment].append(result)
 
         indexed[pred]["high_confidence_keys"] = list(indexed[pred]["high_confidence_keys"])
-    return jl
+    if total_key_count < max_key_count and total_provenance_count < max_provenance_count:
+        return jl
+    else:
+        return None
+
 
 
 if __name__ == "__main__":
@@ -83,10 +99,14 @@ if __name__ == "__main__":
     properties = load_json_file(properties_file)
     interesting_methods = properties.get("methods", [])
     interesting_segments = properties.get("segments", [])
+    max_key_count = properties.get("max_key_count", 100)
+    max_provenance_count = properties.get("max_provenance_count", 1000)
 
     o = codecs.open(output_file, 'w', 'utf-8')
     for jl in jl_file_iterator(input_path):
-        jl = index_knowledge_graph_fields(jl, interesting_methods, interesting_segments)
-        o.write(json.dumps(jl) + '\n')
+        jl = index_knowledge_graph_fields(jl, interesting_methods, interesting_segments,
+                                          max_key_count, max_provenance_count)
+        if jl:
+             o.write(json.dumps(jl) + '\n')
 
     o.close()

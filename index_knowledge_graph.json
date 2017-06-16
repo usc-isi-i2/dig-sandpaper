@@ -1,4 +1,6 @@
 {
-	"segments": ["title", "inferlink_description", "content_strict"],
-	"methods": ["gurobi", "extract_from_landmark"]
+	"segments": ["title", "content_strict"],
+	"methods": ["extract_from_landmark"],
+	"max_key_count" : 100,
+	"max_provenance_count" : 1000
 }
