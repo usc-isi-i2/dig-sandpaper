@@ -16,6 +16,7 @@ setup(
                       'elasticsearch-dsl>=2.0.0,<3.0.0',
                       'requests',
                       'Flask',
+                      'Flask-API',
                       'flask-cors',
                       'jsonpath-rw>=1.4.0',
                       'jsonpath-rw-ext>=1.0.0']
