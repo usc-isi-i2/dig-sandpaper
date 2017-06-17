@@ -38,7 +38,10 @@ class ConstraintTypeTransformations(object):
     def _configure(self):
         filename = "__constraint_type_transformations"
         file = self.config["constraint_type_transformations"]
-        self.constraint_type_transformations_to_compile = load_json_file(file)
+        if isinstance(file, dict):
+            self.constraint_type_transformations_to_compile = file
+        else:
+            self.constraint_type_transformations_to_compile = load_json_file(file)
         self.constraint_type_transformations = {}
         self.constraint_type_transformations["owl:Thing"] = compiler\
             .compile("value",

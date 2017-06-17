@@ -25,7 +25,10 @@ class SparqlRootUnnesting(object):
 
     def _configure(self):
         file = self.config["root_info"]
-        self.root_info = load_json_file(file)
+        if isinstance(file, dict):
+            self.root_info = file
+        else:
+            self.root_info = load_json_file(file)
         self.root_type = self.root_info["root_type"] # "ad"
         self.root_predicates = self.root_info["root_predicates"] # [price, name, blah]
         self.inverse_predicates = self.root_info["inverse_predicates"] # {cluster: ad}

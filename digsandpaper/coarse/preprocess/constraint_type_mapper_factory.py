@@ -35,7 +35,10 @@ class PredicateDictConstraintTypeMapper(object):
 
     def _configure(self):
         predicate_range_file = self.config["predicate_range_mappings"]
-        self.predicate_range_mappings = load_json_file(predicate_range_file)
+        if isinstance(predicate_range_file, dict):
+            self.predicate_range_mappings = predicate_range_file
+        else:
+            self.predicate_range_mappings = load_json_file(predicate_range_file)
 
     def preprocess_filter(self, f, clause_variable_to_type):
         if "clauses" in f:

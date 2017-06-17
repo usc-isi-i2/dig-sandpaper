@@ -19,7 +19,10 @@ class TypeFieldGroupByMapping(object):
 
     def _configure(self):
         file = self.config["type_field_mappings"]
-        self.type_field_mapping = load_json_file(file)
+        if isinstance(file, dict):
+            self.type_field_mapping = file
+        else:
+            self.type_field_mapping = load_json_file(file)
 
     def generate(self, query):
         select = query["SPARQL"]["select"]

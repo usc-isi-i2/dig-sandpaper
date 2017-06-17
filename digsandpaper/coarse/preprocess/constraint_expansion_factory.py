@@ -102,7 +102,10 @@ class DictConstraintExpander(LambdaConstraintExpander):
 
     def _configure(self):
         file = self.config["dict_constraint_mappings"]
-        self.dict_constraint_mappings = load_json_file(file)
+        if isinstance(file, dict):
+            self.dict_constraint_mappings = file
+        else:
+            self.dict_constraint_mappings = load_json_file(file)
         self.expand = lambda clause: self.dict_constraint_mappings.get(
                 clause["type"], {}).get(clause["constraint"], [])
 

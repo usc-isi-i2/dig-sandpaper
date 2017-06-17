@@ -21,7 +21,10 @@ class TypeQueryMapping(object):
 
     def _configure(self):
         file = self.config["type_query_mappings"]
-        self.type_query_mapping = load_json_file(file)
+        if isinstance(file, dict):
+            self.type_query_mapping = file
+        else:
+            self.type_query_mapping = load_json_file(file)
 
     def add_types_to_filters(self, f):
         if "type" in f:

@@ -27,7 +27,10 @@ class ElasticsearchQueryCompiler(object):
 
     def _configure(self):
         file = self.config["elasticsearch_compiler_options"]
-        self.elasticsearch_compiler_options = load_json_file(file)
+        if isinstance(file, dict):
+            self.elasticsearch_compiler_options = file
+        else:
+            self.elasticsearch_compiler_options = load_json_file(file)
 
     def translate_filter(self, f, field):
         range_operators = {"<": "lt", "<=": "lte", ">": "gt", ">=": "gte"}

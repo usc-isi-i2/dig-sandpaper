@@ -21,7 +21,10 @@ class TypeDocTypeMapping(object):
 
     def _configure(self):
         file = self.config["type_doc_type_mappings"]
-        self.type_doc_type_mappings = load_json_file(file)
+        if isinstance(file, dict):
+            self.type_doc_type_mappings = file
+        else:
+            self.type_doc_type_mappings = load_json_file(file)
 
     def generate(self, query):
         where = query["SPARQL"]["where"]

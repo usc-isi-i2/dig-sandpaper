@@ -21,7 +21,10 @@ class FieldWeightMapping(object):
 
     def _configure(self):
         file = self.config["field_weight_mappings"]
-        self.field_weight_mapping = load_json_file(file)
+        if isinstance(file, dict):
+            self.field_weight_mapping = file
+        else:
+            self.field_weight_mapping = load_json_file(file)
 
     def find_weight(self, field_path, nested_field_weight_mapping):
         if not isinstance(field_path, list) or len(field_path) == 0:

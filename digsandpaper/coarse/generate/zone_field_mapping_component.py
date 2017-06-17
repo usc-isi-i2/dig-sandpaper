@@ -21,7 +21,10 @@ class ZoneFieldMapping(object):
 
     def _configure(self):
         file = self.config["zone_field_mappings"]
-        self.zone_field_mapping = load_json_file(file)
+        if isinstance(file, dict):
+            self.zone_field_mapping = file
+        else:
+            self.zone_field_mapping = load_json_file(file)
 
     def in_zones(self, zones, field):
         for zone in zones:
