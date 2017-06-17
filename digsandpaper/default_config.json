@@ -1,0 +1,190 @@
+{
+  "fine": {},
+  "coarse": {
+    "preprocess": {
+      "components": [
+        {
+          "type": "ConstraintTypeMapper",
+          "name": "PredicateDictConstraintTypeMapper",
+          "predicate_range_mappings": {
+            "tld": "topleveldomain",
+            "url": "url"
+          }
+        },
+        {
+          "type": "ConstraintConsistency",
+          "name": "ConstraintTypeTransformations",
+          "constraint_type_transformations": {
+            "title": "' '.join([v for v in value.split(' ') if v not in ['i', 'am', 'the', 'a', 'an', 'in', 'is', 'for']])",
+            "description": "' '.join(v for v in value.split(' ') if v not in ['i', 'am', 'the', 'a', 'an', 'in', 'is', 'for'])",
+            "content": "' '.join(v for v in value.split(' ') if v not in ['i', 'am', 'the', 'a', 'an', 'in', 'is', 'for'])"
+          }
+        },
+        {
+          "type": "ConstraintExpansion",
+          "name": "HeightConstraintExpander"
+        },
+        {
+          "type": "ConstraintExpansion",
+          "name": "PhoneConstraintExpander"
+        }
+      ]
+    },
+    "parameterize": {
+      "components": [
+        {
+          "type": "ClauseCombination",
+          "name": "NoClauseCombination"
+        },
+        {
+          "type": "FieldCombination",
+          "name": "AtLeastOneFieldCombination"
+        }
+      ]
+    },
+    "execute": {
+      "components": [
+        {
+          "host": "localhost",
+          "type": "ExecuteQueryComponent",
+          "name": "ExecuteElasticsearchQuery",
+          "port": 9200
+        }
+      ]
+    },
+    "generate": {
+      "components": [
+        {
+          "type": "TypeFieldMapping",
+          "name": "TypeFieldMapping",
+          "type_field_mappings": {
+            "owl:Thing": [
+              "content_extraction.content_relaxed.text",
+              "content_extraction.content_strict.text",
+              "content_extraction.title.text",
+              "raw_content"
+            ],
+            "content": [
+              "content_extraction.content_relaxed.text",
+              "content_extraction.content_strict.text",
+              "content_extraction.title.text",
+              "raw_content"
+            ],
+            "topleveldomain": [
+              "tld.raw",
+              "tld"
+            ],
+            "url": [
+              "url",
+              "url.raw",
+              "tld"
+            ]
+          }
+        },
+        {
+          "type": "TypeFieldMapping",
+          "name": "TypeFieldGroupByMapping",
+          "type_field_mappings": {
+            "owl:Thing": [
+              "content_extraction.content_strict.text"
+            ],
+            "topleveldomain": [
+              "tld.raw"
+            ],
+            "url": [
+              "url.raw"
+            ]
+          }
+        },
+        {
+          "type": "FieldWeightMapping",
+          "name": "FieldWeightMapping",
+          "field_weight_mappings": {
+            "tld": {
+              "*": 10
+            },
+            "raw_content": 1,
+            "content_extraction": {
+              "content_relaxed": {
+                "*": 1
+              },
+              "content_strict": {
+                "*": 2
+              },
+              "title": {
+                "*": 3
+              }
+            },
+            "indexed": {
+              "*": {
+                "extract_from_landmark": {
+                  "*": 5,
+                  "other_segment": 2.1
+                },
+                "*": {
+                  "*": 3,
+                  "other_segment": 2.1
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "TypeQueryMapping",
+          "name": "TypeQueryMapping",
+          "type_query_mappings": {
+            "title": "match_phrase"
+          }
+        },
+        {
+          "type_doc_type_mappings": {
+            "Ad": "ads"
+          },
+          "type": "TypeDocTypeMapping",
+          "name": "TypeDocTypeMapping"
+        },
+        {
+          "type_index_mappings": {
+            "Ad": "dig-etk-search"
+          },
+          "type": "TypeIndexMapping",
+          "name": "TypeIndexMapping"
+        },
+        {
+          "elasticsearch_compiler_options": {
+            "convert_text_filters_to_shoulds": true,
+            "boost_musts": true,
+            "filter_for_fields_of_unbound_variables": false,
+            "default_source_fields": [
+              "doc_id",
+              "tld",
+              "url",
+              "knowledge_graph.*",
+              "content_extraction.content_strict.text",
+              "content_extraction.title.text"
+            ],
+            "excluded_source_fields": [
+              "content_extraction.content_relaxed.text",
+              "raw_content"
+            ],
+            "highlight": {
+              "fields": {
+                "indexed.*": {
+                  "number_of_fragments": 0
+                },
+                "content_extraction.content_strict.text": {
+                  "number_of_fragments": 0
+                },
+                "content_extraction.title.text": {
+                  "number_of_fragments": 0
+                }
+              }
+            }
+          },
+          "type": "QueryCompiler",
+          "name": "ElasticsearchQueryCompiler"
+        }
+      ]
+    }
+  }
+}
