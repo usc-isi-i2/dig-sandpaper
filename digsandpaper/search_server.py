@@ -2,10 +2,12 @@ from flask import Flask
 from flask import request
 from flask_api import status
 from flask_cors import CORS, cross_origin
+import os
 import json
 import requests
 import StringIO
 import codecs
+from engine import Engine
 from elasticsearch_mapping.generate import generate_from_project_config
 from elasticsearch_indexing.index_knowledge_graph import index_knowledge_graph_fields
 from urllib import unquote
@@ -16,6 +18,17 @@ CORS(app, supports_credentials=True)
 engine = None
 default_project_url = None
 default_es_endpoint = None
+
+
+_location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+
+def load_project_json_file(file_name):
+    file = json.load(codecs.open(os.path.join(_location__, file_name),
+                                  'r', 'utf-8'))
+    return file
+
 
 @app.route("/")
 def hello():
@@ -51,7 +64,7 @@ def get_url(url):
         response = requests.get(url)
     return response
 
-def call_generate_mapping(url, project):
+def get_project_config(url, project):
     if url and project:
         response = get_url('{}/projects/{}'.format(url, project))
     elif url and not project:
@@ -62,6 +75,10 @@ def call_generate_mapping(url, project):
         return "Please provide either a url and/or a project as url params to retrieve fields to generate an elasticserach mapping", status.HTTP_400_BAD_REQUEST
 
     project_config = response.json()
+    return project_config
+
+def call_generate_mapping(url, project):
+    project_config = get_project_config(url, project)
     return generate_from_project_config(project_config)
 
 @app.route("/mapping/generate", methods=['GET'])
@@ -157,6 +174,8 @@ def coarse_generate():
     qs = engine.generate_coarse(query)
     return json.dumps(qs)
 
+
+
 @app.route("/search/fine", methods=['POST'])
 def fine():
     return "Hello World!"
@@ -172,3 +191,32 @@ def set_default_project_url(d):
 def set_default_es_endpoint(d):
     global default_es_endpoint
     default_es_endpoint = d
+
+
+@app.route("/config", methods=['POST'])
+def config():
+    url = request.args.get('url', None)
+    project = request.args.get('project', None)
+    project_config = get_project_config(url, project)
+    endpoint = request.args.get('endpoint', default_es_endpoint)
+    index = request.args.get('index', None)
+    if not request.data:
+        default_c = load_project_json_file("default_config.json")
+    else:
+        default_c = json.loads(request.data)
+    c = default_c
+    execute_component = c["coarse"]["execute"]["components"][0]
+    execute_component.pop("host", None)
+    execute_component.pop("port", None)
+    endpoints = list()
+    endpoints.append(unquote(endpoint))
+    execute_component["endpoints"] = endpoints
+    generate_components = c["coarse"]["generate"]["components"]
+    for gc in generate_components:
+        if gc["name"] == "TypeIndexMapping":
+            gc["type_index_mappings"]["Ad"] = index
+
+    set_engine(Engine(c))
+    return "Applied config for project {}".format(project)
+
+
