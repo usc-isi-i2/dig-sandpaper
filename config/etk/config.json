@@ -31,11 +31,6 @@
     "parameterize": {
       "components": [
         {
-          "zone_count": 1,
-          "type": "ZoneHierarchy",
-          "name": "MultipleZoneHierarchy"
-        },
-        {
           "type": "ClauseCombination",
           "name": "NoClauseCombination"
         },
@@ -66,11 +61,6 @@
           "type": "TypeFieldMapping",
           "name": "TypeFieldGroupByMapping",
           "type_field_mappings": "config/etk/type_field_group_by_mappings.json"
-        },
-        {
-          "zone_field_mappings": "config/etk/zone_field_mappings.json",
-          "type": "ZoneFieldMapping",
-          "name": "ZoneFieldMapping"
         },
         {
           "type": "FieldWeightMapping",
