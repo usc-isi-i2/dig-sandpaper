@@ -50,15 +50,15 @@ def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark
                 indexed[pred]["key_count"] = 0
             indexed[pred]["key_count"] = indexed[pred]["key_count"] + 1
             total_key_count = total_key_count + 1
-            if "providence_count" not in indexed[pred]:
-                indexed[pred]["providence_count"] = 0
+            if "provenance_count" not in indexed[pred]:
+                indexed[pred]["provenance_count"] = 0
             
             if obj.get("confidence", 0.0) > 0.7:
                 indexed[pred]["high_confidence_keys"].add(key)
 
             tally = {}
             for prov in obj["provenance"]:
-                indexed[pred]["providence_count"] = indexed[pred]["providence_count"] + 1
+                indexed[pred]["provenance_count"] = indexed[pred]["provenance_count"] + 1
                 total_provenance_count = total_provenance_count + 1
                 method = prov.get("method", "other_method")
                 if method not in interesting_methods:

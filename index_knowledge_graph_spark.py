@@ -41,15 +41,15 @@ def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments,
                 indexed[pred]["key_count"] = 0
             indexed[pred]["key_count"] = indexed[pred]["key_count"] + 1
             total_key_count = total_key_count + 1
-            if "providence_count" not in indexed[pred]:
-                indexed[pred]["providence_count"] = 0
+            if "provenance_count" not in indexed[pred]:
+                indexed[pred]["provenance_count"] = 0
 
             if obj.get("confidence", 0.0) > 0.7:
             	indexed[pred]["high_confidence_keys"].add(key)
 
             tally = {}
             for prov in obj["provenance"]:
-                indexed[pred]["providence_count"] = indexed[pred]["providence_count"] + 1
+                indexed[pred]["provenance_count"] = indexed[pred]["provenance_count"] + 1
                 total_provenance_count = total_provenance_count + 1
                 method = prov.get("method", "other_method")
                 if method not in interesting_methods:
@@ -103,7 +103,7 @@ if __name__ == '__main__':
                                                                       interesting_methods,
                                                                       interesting_segments,
                                                                       max_key_count,
-                                                                      max_provenance_count))).filter(lambda (k,v): v is not None and len(v) > 0)
+                                                                      max_provenance_count))).filter(lambda (k,v): v != "{}")
                    
 
     docs.saveAsSequenceFile(output_path, compressionCodecClass=compression)
