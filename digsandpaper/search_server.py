@@ -212,9 +212,37 @@ def config():
     endpoints.append(unquote(endpoint))
     execute_component["endpoints"] = endpoints
     generate_components = c["coarse"]["generate"]["components"]
+    preprocess_components = c["coarse"]["preprocess"]["components"]
+    predicate_type_mapping = {}
+    type_field_mapping = {}
+    type_group_field_mapping = {}
+    field_weight_mapping = {}
+    methods=["extract_from_landmark", "other_method"]
+    segments=["title", "content_strict", "other_segment"]
     for gc in generate_components:
         if gc["name"] == "TypeIndexMapping":
             gc["type_index_mappings"]["Ad"] = index
+        if gc["name"] == "TypeFieldGroupByMapping":
+            type_group_field_mapping = gc["type_field_mappings"]
+        if gc["name"] == "TypeFieldMapping":
+            type_field_mapping = gc["type_field_mappings"]
+        if gc["name"] == "FieldWeightMapping":
+            field_weight_mapping = gc["field_weight_mappings"]
+    for pc in preprocess_components:
+        if pc["name"] == "PredicateDictConstraintTypeMapper":
+           predicate_type_mapping = pc["predicate_range_mappings"]
+        
+    for field_name, spec in project_config["fields"].iteritems():
+        predicate_type_mapping[field_name] = field_name.lower()
+        type_group_field_mapping[field_name] = "indexed.{}.high_confidence_keys".format(field_name)
+        fields = list()
+        fields.extend(type_field_mapping["owl:Thing"])
+        for method in methods:
+            for segment in segments:
+                fields.append("indexed.{}.{}.{}.value".format(field_name, method, segment))
+        type_field_mapping[field_name] = fields
+    
+    #add field weight mapping
 
     set_engine(Engine(c))
     return "Applied config for project {}".format(project)

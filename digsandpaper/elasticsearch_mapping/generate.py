@@ -26,8 +26,8 @@ def jl_file_iterator(file):
 
 
 def generate(default_mapping, semantic_types, 
-             methods=["extract_from_landmark"],
-             segments=["title", "content_strict"]):
+             methods=["extract_from_landmark", "other_method"],
+             segments=["title", "content_strict", "other_segment"]):
 
     root = {}
     root_props = {}

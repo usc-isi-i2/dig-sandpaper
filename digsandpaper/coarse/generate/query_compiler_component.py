@@ -120,7 +120,7 @@ class ElasticsearchQueryCompiler(object):
                 m = Match(**match_params)
                 return Bool(must=[m], should=[mp])
             else:
-                if "Date" in clause.get("type", "owl:Thing"):
+                if "date" in clause.get("type", "owl:Thing").lower():
                     match_field_params.pop("query", None)
                     if re.match("\d\d\d\d-\d\d-\d\d",clause["constraint"]): 
                         match_field_params["gte"] = clause["constraint"]
