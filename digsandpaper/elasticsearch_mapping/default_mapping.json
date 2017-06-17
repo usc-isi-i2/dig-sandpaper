@@ -1,0 +1,172 @@
+{
+  "mappings": {
+    "ads": {
+      "properties": {
+        "content_extraction": {
+          "properties": {
+            "content_relaxed" : {
+              "properties" : {
+                "data_extraction": {
+                  "enabled":false
+                },
+                "simple_tokens" : {
+                  "type" : "string",
+                  "index" : "no"
+                },
+                "spacy_extraction" : {
+                  "enabled":false
+                },
+                "text" : {
+                  "type" : "string"
+                },
+                "tokens" : {
+                  "enabled": false
+                }
+              }
+            },
+            "content_strict" : {
+              "properties" : {
+                "data_extraction": {
+                  "enabled":false
+                },
+                "simple_tokens" : {
+                  "type" : "string",
+                  "index" : "no"
+                },
+                "spacy_extraction" : {
+                  "enabled": false
+                },
+                "text" : {
+                  "type" : "string"
+                },
+                "tokens" : {
+                  "enabled": false
+                }
+              }
+            },
+            "inferlink_extractions": {
+              "enabled": false
+            },
+            "title" : {
+              "properties" : {
+                "data_extraction": {
+                  "enabled":false
+                },
+                "simple_tokens" : {
+                  "type" : "string",
+                  "index" : "no"
+                },
+                "spacy_extraction" : {
+                  "enabled": false
+                },
+                "text" : {
+                  "type" : "string"
+                },
+                "tokens" : {
+                  "enabled": false
+                }
+              }
+            },
+            "url" : {
+              "properties" : {
+                "data_extraction": {
+                  "enabled":false
+                },
+                "simple_tokens" : {
+                  "type" : "string",
+                  "index" : "no"
+                },
+                "spacy_extraction" : {
+                  "enabled": false
+                },
+                "text" : {
+                  "type" : "string"
+                },
+                "tokens" : {
+                  "enabled": false
+                }
+              }
+            }
+          }
+        },
+        "crawl_data":{
+            "enabled": false
+        },
+        "doc_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "extracted_metadata": {
+          "enabled": false
+        },
+        "extractions": {
+          "enabled": false
+        },
+        "knowledge_graph":{
+            "enabled": false
+        },
+    "indexed": {
+        "enabled": false
+    },
+        "timestamp" : {
+          "type" : "date",
+          "format" : "strict_date_optional_time||epoch_millis"
+        },
+        "tld": {
+          "type": "string",
+            "fields" : {
+              "raw" : {
+                "type" : "string",
+                "index" : "not_analyzed"
+              }
+            },
+            "analyzer" : "url_component_analyzer"
+        },
+        "url": {
+          "type": "string",
+          "fields": {
+            "raw": {
+              "index": "not_analyzed",
+              "type": "string"
+            }
+          },
+          "analyzer" : "url_component_analyzer"
+        }
+      }
+    }
+  },
+  "settings": {
+    "index": {
+      "creation_date": "1486591332105",
+      "number_of_shards": "5",
+      "number_of_replicas": "0",
+      "uuid": "d10DIkVkTpSKpGhxzxQzqg",
+      "version": {
+        "created": "2040199"
+      },
+      "analysis" : {
+          "filter" : {
+            "url_component_filter" : {
+              "type" : "lowercase"
+            }
+          },
+          "analyzer" : {
+            "url_analyzer" : {
+              "tokenizer" : "uax_url_email"
+            },
+            "url_component_analyzer" : {
+              "filter" : "url_component_filter",
+              "tokenizer" : "url_component_tokenizer"
+            }
+          },
+          "tokenizer" : {
+            "url_component_tokenizer" : {
+              "flags" : "CASE_INSENSITIVE|COMMENTS",
+              "pattern" : "[^A-Za-z0-9]",
+              "type" : "pattern"
+            }
+          }
+        }
+    }
+  }
+}
