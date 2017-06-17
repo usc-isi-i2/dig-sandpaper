@@ -111,10 +111,10 @@ def _index_fields(request):
     if (request.headers['Content-Type'] == 'application/x-gzip'):
         gz_data_as_file = StringIO.StringIO(request.data)
         uncompressed = gzip.GzipFile(fileobj=gz_data_as_file, mode='rb')
-        jls = uncompressed.read().decode('utf-8') 
+        jls = uncompressed.read()
     elif (request.headers['Content-Type'] == 'application/json' or
           request.headers['Content-Type'] == 'application/x-jsonlines'):
-        jls = request.data.decode('utf-8')
+        jls = request.data
     else:
         return "Only supported content types are application/x-gzip, application/json and application/x-jsonlines", status.HTTP_400_BAD_REQUEST
     reader = codecs.getreader('utf-8')
