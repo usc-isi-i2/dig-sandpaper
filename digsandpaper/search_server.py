@@ -9,35 +9,78 @@ import codecs
 from elasticsearch_mapping.generate import generate_from_project_config
 from elasticsearch_indexing.index_knowledge_graph import index_knowledge_graph_fields
 from urllib import unquote
+from urlparse import urlparse
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 engine = None
-
+default_project_url = None
+default_es_endpoint = None
 
 @app.route("/")
 def hello():
     return "DIG Sandpaper"
 
+def post_url(url, data):
+    url = unquote(url)
+    parsed_url = urlparse(url)
+    # for some reason requests is ignoring usernames and passwords in urls
+    if parsed_url.username:
+        response = requests.post(url, auth=(parsed_url.username, parsed_url.password), data=data)
+    else:
+        response = requests.post(url, data=data)
+    return response
 
-@app.route("/mapping", methods=['GET'])
-def generate_mapping():
-    url = request.args.get('url', None)
-    project = request.args.get('project', None)
-    if url and project:
-        url = unquote(url)
-        response = requests.get('{}/projects/{}'.format(url, project))
-    elif url and not project:
-        url = unquote(url)
+def put_url(url, data):
+    url = unquote(url)
+    parsed_url = urlparse(url)
+    # for some reason requests is ignoring usernames and passwords in urls
+    if parsed_url.username:
+        response = requests.put(url, auth=(parsed_url.username, parsed_url.password), data=data)
+    else:
+        response = requests.put(url, data=data)
+    return response
+
+def get_url(url):
+    url = unquote(url)
+    parsed_url = urlparse(url)
+    # for some reason requests is ignoring usernames and passwords in urls
+    if parsed_url.username:
+        response = requests.get(url, auth=(parsed_url.username, parsed_url.password))
+    else:
         response = requests.get(url)
+    return response
+
+def call_generate_mapping(url, project):
+    if url and project:
+        response = get_url('{}/projects/{}'.format(url, project))
+    elif url and not project:
+        response = get_url(url)
     elif not url and project:
-        response = requests.get('{}/projects/{}'.format(default_url, project))
+        response = get_url('{}/projects/{}'.format(default_project_url, project))
     else:
         return "Please provide either a url and/or a project as url params to retrieve fields to generate an elasticserach mapping", status.HTTP_400_BAD_REQUEST
 
     project_config = response.json()
-    m = generate_from_project_config(project_config)
+    return generate_from_project_config(project_config)
+
+@app.route("/mapping/generate", methods=['GET'])
+def generate_mapping():
+    url = request.args.get('url', None)
+    project = request.args.get('project', None)
+    m = call_generate_mapping(url, project)
     return json.dumps(m)
+
+@app.route("/mapping", methods=['PUT','POST'])
+def add_mapping():
+    url = request.args.get('url', None)
+    project = request.args.get('project', None)
+    m = call_generate_mapping(url, project)
+    index = request.args.get('index', None)
+    endpoint = request.args.get('endpoint', default_es_endpoint)
+    put_url('{}/{}'.format(endpoint, index),
+            data=json.dumps(m))
+    return "index {} added for project {}".format(index, project)
 
 def jl_file_iterator(file):
     line = file.readline()
@@ -46,8 +89,8 @@ def jl_file_iterator(file):
         yield document
         line = file.readline()
 
-@app.route("/indexing/fields", methods=['POST'])
-def index_fields():
+
+def _index_fields(request):
     if (request.headers['Content-Type'] == 'application/x-gzip'):
         gz_data_as_file = StringIO.StringIO(request.data)
         uncompressed = gzip.GzipFile(fileobj=gz_data_as_file, mode='rb')
@@ -60,6 +103,11 @@ def index_fields():
     reader = codecs.getreader('utf-8')
     jls_as_file = reader(StringIO.StringIO(jls))
     jls = [json.dumps(jl) for jl in [index_knowledge_graph_fields(jl) for jl in jl_file_iterator(jls_as_file)] if jl is not None]
+    return jls
+
+@app.route("/indexing/fields", methods=['POST'])
+def index_fields():
+    jls = _index_fields(request)
     indexed_jls = "\n".join(jls)
     if (request.headers['Content-Type'] == 'application/x-gzip'):
         indexed_jls_as_file = StringIO.StringIO()
@@ -71,6 +119,22 @@ def index_fields():
     else:
         return indexed_jls
 
+def chunker(seq, size):
+    return (seq[pos:pos + size] for pos in xrange(0, len(seq), size))
+
+@app.route("/indexing", methods=['POST'])
+def index():
+    endpoint = request.args.get('endpoint', default_es_endpoint)
+    index = request.args.get('index', None)
+    t = request.args.get('type', "ads")
+    jls = _index_fields(request)
+    url = "{}/{}/{}/_bulk".format(endpoint, index, t)
+    counter = 0
+    for chunk in chunker(jls, 100):
+        bulk_request = '{"index":{}}\n' + '\n{"index":{}}\n'.join(chunk) + '\n'
+        counter += len(chunk)
+        r = post_url(url, bulk_request)
+    return "Indexed {} documents".format(counter)
 
 @app.route("/search", methods=['POST'])
 def search():
@@ -97,7 +161,14 @@ def coarse_generate():
 def fine():
     return "Hello World!"
 
-
 def set_engine(e):
     global engine
     engine = e
+
+def set_default_project_url(d):
+    global default_project_url
+    default_project_url = d
+
+def set_default_es_endpoint(d):
+    global default_es_endpoint
+    default_es_endpoint = d
