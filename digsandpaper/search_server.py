@@ -29,6 +29,18 @@ def load_project_json_file(file_name):
                                   'r', 'utf-8'))
     return file
 
+def get_default_es_endpoint():
+    global engine
+    global default_es_endpoint
+    if default_es_endpoint:
+        return default_es_endpoint
+    if engine:
+        execute_component = engine.config["coarse"]["execute"]["components"][0]
+        if "endpoints" in execute_component:
+            default_es_endpoint = execute_component["endpoints"]
+        if "host" in execute_component and "port" in execute_component:
+            default_es_endpoint = ["{}:{}".format(execute_component["host"], execute_component["port"])]
+    return default_es_endpoint
 
 @app.route("/")
 def hello():
@@ -77,8 +89,9 @@ def get_project_config(url, project):
     project_config = response.json()
     return project_config
 
-def call_generate_mapping(url, project):
-    project_config = get_project_config(url, project)
+def call_generate_mapping(url, project, project_config=None):
+    if not project_config:
+        project_config = get_project_config(url, project)
     return generate_from_project_config(project_config)
 
 @app.route("/mapping/generate", methods=['GET'])
@@ -92,12 +105,13 @@ def generate_mapping():
 def add_mapping():
     url = request.args.get('url', None)
     project = request.args.get('project', None)
-    m = call_generate_mapping(url, project)
-    index = request.args.get('index', None)
-    endpoint = request.args.get('endpoint', default_es_endpoint)
+    project_config = get_project_config(url, project)
+    m = call_generate_mapping(url, project, project_config)
+    index = request.args.get('index',  project_config["index"]["full"])
+    endpoint = request.args.get('endpoint', get_default_es_endpoint())
     put_url('{}/{}'.format(endpoint, index),
             data=json.dumps(m))
-    return "index {} added for project {}".format(index, project)
+    return "index {} added for project {}\n".format(index, project)
 
 def jl_file_iterator(file):
     line = file.readline()
@@ -141,7 +155,7 @@ def chunker(seq, size):
 
 @app.route("/indexing", methods=['POST'])
 def index():
-    endpoint = request.args.get('endpoint', default_es_endpoint)
+    endpoint = request.args.get('endpoint', get_default_es_endpoint())
     index = request.args.get('index', None)
     t = request.args.get('type', "ads")
     jls = _index_fields(request)
@@ -151,7 +165,7 @@ def index():
         bulk_request = '{"index":{}}\n' + '\n{"index":{}}\n'.join(chunk) + '\n'
         counter += len(chunk)
         r = post_url(url, bulk_request)
-    return "Indexed {} documents".format(counter)
+    return "Indexed {} documents\n".format(counter)
 
 @app.route("/search", methods=['POST'])
 def search():
@@ -198,8 +212,8 @@ def config():
     url = request.args.get('url', None)
     project = request.args.get('project', None)
     project_config = get_project_config(url, project)
-    endpoint = request.args.get('endpoint', default_es_endpoint)
-    index = request.args.get('index', None)
+    endpoint = request.args.get('endpoint', get_default_es_endpoint())
+    index = request.args.get('index', project_config["index"]["full"])
     if not request.data:
         default_c = load_project_json_file("default_config.json")
     else:
@@ -208,8 +222,11 @@ def config():
     execute_component = c["coarse"]["execute"]["components"][0]
     execute_component.pop("host", None)
     execute_component.pop("port", None)
-    endpoints = list()
-    endpoints.append(unquote(endpoint))
+    if isinstance(endpoint, basestring):
+        endpoints = list()
+        endpoints.append(unquote(endpoint))
+    else:
+        endpoints = endpoint
     execute_component["endpoints"] = endpoints
     generate_components = c["coarse"]["generate"]["components"]
     preprocess_components = c["coarse"]["preprocess"]["components"]
