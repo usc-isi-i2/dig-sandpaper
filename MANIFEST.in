@@ -1,0 +1,2 @@
+include digsandpaper/*.json
+include digsandpaper/elasticsearch_mapping/*.json

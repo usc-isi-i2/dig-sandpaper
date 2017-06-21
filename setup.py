@@ -12,6 +12,7 @@ setup(
     download_url='https://github.com/usc-isi-i2/dig-sandpaper',
     packages=find_packages(),
     keywords=['ir', 'search'],
+    include_package_data=True,
     install_requires=['elasticsearch>=2.0.0,<3.0.0',
                       'elasticsearch-dsl>=2.0.0,<3.0.0',
                       'requests',
