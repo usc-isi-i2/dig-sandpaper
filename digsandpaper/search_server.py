@@ -107,8 +107,10 @@ def add_mapping():
     project = request.args.get('project', None)
     project_config = get_project_config(url, project)
     m = call_generate_mapping(url, project, project_config)
-    index = request.args.get('index',  project_config["index"]["full"])
+    index = request.args.get('index', project_config["index"]["full"])
     endpoint = request.args.get('endpoint', get_default_es_endpoint())
+    if not isinstance(endpoint, basestring):
+        endpoint = endpoint[0]
     put_url('{}/{}'.format(endpoint, index),
             data=json.dumps(m))
     return "index {} added for project {}\n".format(index, project)
