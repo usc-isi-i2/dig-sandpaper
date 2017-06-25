@@ -163,8 +163,17 @@ def index():
     jls = _index_fields(request)
     url = "{}/{}/{}/_bulk".format(endpoint, index, t)
     counter = 0
+    # this is inefficent
     for chunk in chunker(jls, 100):
-        bulk_request = '{"index":{}}\n' + '\n{"index":{}}\n'.join(chunk) + '\n'
+        bulk_request = ""
+        bulk_request_format = '{"index":{}}\n'
+        for c in chunk:
+            doc_id = json.loads(c).get("doc_id", None)
+            if doc_id:
+                doc_request = '{"index":{"_id":"' + doc_id + '"}}\n' + c + '\n'
+            else:
+                doc_request = bulk_request_format + c + '\n'
+            bulk_request = bulk_request + doc_request
         counter += len(chunk)
         r = post_url(url, bulk_request)
     return "Indexed {} documents\n".format(counter)
