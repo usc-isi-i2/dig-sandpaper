@@ -102,12 +102,9 @@
         "extractions": {
           "enabled": false
         },
-        "knowledge_graph":{
+        "indexed": {
             "enabled": false
         },
-    "indexed": {
-        "enabled": false
-    },
         "timestamp" : {
           "type" : "date",
           "format" : "strict_date_optional_time||epoch_millis"
