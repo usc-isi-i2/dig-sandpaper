@@ -34,15 +34,23 @@ class TypeFieldGroupByMapping(object):
                     t = v["type"]
                     if t in self.type_field_mapping:
                         v["fields"] = []
-                        for field in self.type_field_mapping[t]:
-                            v["fields"].append({"name": field})
+                        tfm = self.type_field_mapping[t]
+                        if isinstance(tfm, basestring):
+                            v["fields"].append({"name": tfm})
+                        else:
+                            for field in tfm:
+                                v["fields"].append({"name": field})
 
             for s in select["variables"]:
                 t = s["type"]
                 if t in self.type_field_mapping:
                     s["fields"] = []
-                    for field in self.type_field_mapping[t]:
-                        s["fields"].append({"name": field})                
+                    tfm = self.type_field_mapping[t]
+                    if isinstance(tfm, basestring):
+                        s["fields"].append({"name": tfm})
+                    else:
+                        for field in self.type_field_mapping[t]:
+                            s["fields"].append({"name": field})
 
         return query
 
