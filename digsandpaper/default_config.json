@@ -64,6 +64,7 @@
               "content_extraction.title.text",
               "raw_content"
             ],
+            "Ad": ["doc_id"],
             "content": [
               "content_extraction.content_relaxed.text",
               "content_extraction.content_strict.text",

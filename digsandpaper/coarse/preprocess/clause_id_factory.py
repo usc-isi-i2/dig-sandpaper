@@ -26,6 +26,9 @@ class UUIDClauseIdMapper(object):
         filters = where.get("filters",[])
         for clause in clauses:
             clause["_id"] = uuid.uuid4().hex
+            if "clauses" in clause:
+                for c in clause["clauses"]:
+                    c["_id"] = uuid.uuid4().hex
         for f in filters:
             self.preprocess_filter(f)
         return query

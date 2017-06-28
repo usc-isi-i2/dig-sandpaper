@@ -32,6 +32,11 @@ class ExecuteElasticsearchQuery(object):
 
         return
 
+    def replace_range_operator(self, v, op, new_value):
+        if op in v:
+            if v[op].startswith("__placeholder__"):
+                 v[op] = v[op].replace("__placeholder__", new_value.split()[0])         
+
     def replace_value(self, doc, clause_id, new_value):
         for (k,v) in doc.iteritems():
             if isinstance(v, list):
@@ -42,7 +47,11 @@ class ExecuteElasticsearchQuery(object):
                 if "_name" in v and v["_name"].startswith(clause_id):
                     if "query" in v:
                         if v["query"] == "__placeholder__":
-                            v["query"] = new_value            
+                            v["query"] = new_value
+                    self.replace_range_operator(v, "lt", new_value)
+                    self.replace_range_operator(v, "lte", new_value)
+                    self.replace_range_operator(v, "gt", new_value)
+                    self.replace_range_operator(v, "gte", new_value)
                 self.replace_value(v, clause_id, new_value)
 
 
@@ -82,15 +91,29 @@ class ExecuteElasticsearchQuery(object):
 
     def get_previous_results(self, previous_query, previous_results):
         fields = previous_query["clause_fields"]
-        to_insert = []
-        for hit in previous_results["hits"]["hits"]:
-            for field in fields:
-                name = field["name"]
-                field_elements = name.split(".")
-                values = []
-                self.find_values(hit["_source"], field_elements, values)
-                to_insert.extend(values)
-        return to_insert
+        if "variable_to_clause_id" in previous_query:
+            to_insert_by_variable = {}
+            for hit in previous_results["hits"]["hits"]:
+                for field in fields:
+                    variable = field["variable"]
+                    to_insert = to_insert_by_variable.get(variable, [])
+                    name = field["name"]
+                    field_elements = name.split(".")
+                    values = []
+                    self.find_values(hit["_source"], field_elements, values)
+                    to_insert.extend(values)
+                    to_insert_by_variable[variable] = to_insert
+            return to_insert_by_variable
+        else:
+            to_insert = []
+            for hit in previous_results["hits"]["hits"]:
+                for field in fields:
+                    name = field["name"]
+                    field_elements = name.split(".")
+                    values = []
+                    self.find_values(hit["_source"], field_elements, values)
+                    to_insert.extend(values)
+            return to_insert
 
     def execute_search(self, query):
         s = Search().from_dict(query["search"])\
@@ -102,18 +125,27 @@ class ExecuteElasticsearchQuery(object):
         if isinstance(query["ELASTICSEARCH"], dict):
             return self.execute_search(query["ELASTICSEARCH"])
         elif isinstance(query["ELASTICSEARCH"], list):
+            all_results = []
             previous_results = None
             previous_query = None
             for query in query["ELASTICSEARCH"]:
-                if not "clause_id" in query:
+                if "clause_fields" not in query:
                     if previous_results and previous_query:
                         previous_results_dict = previous_results.to_dict()
                         to_insert = self.get_previous_results(previous_query, previous_results_dict)
-                        clause_id = previous_query["clause_id"]
-                        self.replace_value(query, clause_id, " ".join(to_insert))
-                    return self.execute_search(query)
+                        if isinstance(to_insert, dict):
+                            for var, clause_ids in previous_query["variable_to_clause_id"].iteritems():
+                                for clause_id in clause_ids:
+                                    print "replacing {}".format(clause_id)
+                                    self.replace_value(query, clause_id, " ".join(to_insert[var]))
+                        else:
+                            clause_id = previous_query["clause_id"]
+                            self.replace_value(query, clause_id, " ".join(to_insert))
+                    all_results.append(self.execute_search(query))
+                    return all_results
                 else:
                     previous_results = self.execute_search(query)
+                    all_results.append(previous_results)
                     previous_query = query
 
         return response

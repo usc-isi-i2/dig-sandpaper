@@ -5,6 +5,7 @@
     "content_extraction.title.text",
     "raw_content"
   ],
+  "Ad": ["doc_id"],
   "Address":[
     "indexed.address.gurobi.inferlink_description.value",
     "indexed.address.gurobi.content_strict.value",

@@ -56,9 +56,11 @@ class FineEngine(object):
         return doc.get(field_element, None)
 
     def execute(self, expanded_queries, coarse_results):
-        
+
         all_answers = []
         for (query, results) in zip(expanded_queries, coarse_results):
+            if isinstance(results, list):
+                results = results[-1]
             answer_context = {}
             answers = []
             answer_variables = []

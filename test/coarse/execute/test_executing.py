@@ -100,7 +100,8 @@ class TestCoarseExecuting(unittest.TestCase):
 
         for query in queries:
             result = executor.execute(query)
-            self.assertEquals(len(result.hits), 1)
+            self.assertEquals(len(result), 2)
+            self.assertEquals(len(result[1].hits), 1)
 
         test.test_utils.reset_elasticsearch(config["components"][0])
 

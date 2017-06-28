@@ -9,6 +9,7 @@ def load_json_file(file_name):
     rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
     return rules
 
+
 class TypeFieldGroupByMapping(object):
     name = "TypeFieldGroupByMapping"
     component_type = __name__
@@ -92,16 +93,15 @@ class TypeFieldMapping(object):
                         where["fields"].append({"name": field})
 
         for clause in where_clauses:
-            if "type" not in clause:
-                continue
-            t = clause["type"]
-            if t in self.type_field_mapping:
-                if "clauses" in clause:
-                    self.generate_where(clause)
-                else:
-                    clause["fields"] = []
-                    for field in self.type_field_mapping[t]:
-                        clause["fields"].append({"name": field})
+            if "clauses" in clause:
+                self.generate_where(clause)
+            else:
+                clause["fields"] = []
+                if "type" in clause:
+                    t = clause["type"]
+                    if t in self.type_field_mapping:
+                        for field in self.type_field_mapping[t]:
+                            clause["fields"].append({"name": field})
 
         if "filters" in where:
             filters = where["filters"]

@@ -44,7 +44,7 @@ def get_default_es_endpoint():
 
 @app.route("/")
 def hello():
-    return "DIG Sandpaper"
+    return "DIG Sandpaper\n"
 
 def post_url(url, data):
     url = unquote(url)
@@ -84,7 +84,7 @@ def get_project_config(url, project):
     elif not url and project:
         response = get_url('{}/projects/{}'.format(default_project_url, project))
     else:
-        return "Please provide either a url and/or a project as url params to retrieve fields to generate an elasticserach mapping", status.HTTP_400_BAD_REQUEST
+        return "Please provide either a url and/or a project as url params to retrieve fields to generate an elasticserach mapping\n", status.HTTP_400_BAD_REQUEST
 
     project_config = response.json()
     return project_config
@@ -186,11 +186,18 @@ def search():
     return json.dumps(answers)
 
 
+def coarse_results_to_dict(r):
+    if isinstance(r, dict):
+        return r.to_dict()
+    else:
+        return [rr.to_dict() for rr in r]
+
+
 @app.route("/search/coarse", methods=['POST'])
 def coarse():
     query = json.loads(request.data)
     (qs, rs) = engine.execute_coarse(query)
-    qs_with_rs = [{"query": q, "result": r.to_dict()} for q, r in zip(qs, rs)]
+    qs_with_rs = [{"query": q, "result": coarse_results_to_dict(r)} for q, r in zip(qs, rs)]
     return json.dumps(qs_with_rs)
 
 @app.route("/search/coarse/generate", methods=['POST'])
@@ -203,7 +210,7 @@ def coarse_generate():
 
 @app.route("/search/fine", methods=['POST'])
 def fine():
-    return "Hello World!"
+    return "Hello World!\n"
 
 def set_engine(e):
     global engine
@@ -273,6 +280,6 @@ def config():
     #add field weight mapping
 
     set_engine(Engine(c))
-    return "Applied config for project {}".format(project)
+    return "Applied config for project {}\n".format(project)
 
 
