@@ -142,6 +142,8 @@ class ExecuteElasticsearchQuery(object):
                             clause_id = previous_query["clause_id"]
                             self.replace_value(query, clause_id, " ".join(to_insert))
                     all_results.append(self.execute_search(query))
+                    if len(all_results) == 1:
+                        return all_results[0]
                     return all_results
                 else:
                     previous_results = self.execute_search(query)

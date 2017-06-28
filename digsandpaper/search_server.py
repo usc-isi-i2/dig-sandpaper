@@ -187,10 +187,10 @@ def search():
 
 
 def coarse_results_to_dict(r):
-    if isinstance(r, dict):
-        return r.to_dict()
-    else:
+    if isinstance(r, list):
         return [rr.to_dict() for rr in r]
+    else:
+        return r.to_dict()
 
 
 @app.route("/search/coarse", methods=['POST'])
