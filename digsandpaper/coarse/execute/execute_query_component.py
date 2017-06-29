@@ -55,6 +55,7 @@ class ExecuteElasticsearchQuery(object):
                 self.replace_value(v, clause_id, new_value)
 
 
+    # assumes results is set
     def find_values(self, doc, field_elements, results):
         while len(field_elements) > 1:
             field_element = field_elements[0]
@@ -87,7 +88,7 @@ class ExecuteElasticsearchQuery(object):
         field_element = field_elements[0]
 
         if field_element in doc:
-            results.append(doc[field_element])
+            results.add(doc[field_element])
 
     def get_previous_results(self, previous_query, previous_results):
         fields = previous_query["clause_fields"]
@@ -96,24 +97,22 @@ class ExecuteElasticsearchQuery(object):
             for hit in previous_results["hits"]["hits"]:
                 for field in fields:
                     variable = field["variable"]
-                    to_insert = to_insert_by_variable.get(variable, [])
+                    to_insert = to_insert_by_variable.get(variable, set())
                     name = field["name"]
                     field_elements = name.split(".")
-                    values = []
-                    self.find_values(hit["_source"], field_elements, values)
-                    to_insert.extend(values)
+                    self.find_values(hit["_source"], field_elements, to_insert)
                     to_insert_by_variable[variable] = to_insert
+            for variable in to_insert_by_variable.keys():
+                to_insert_by_variable[variable] = list(to_insert_by_variable[variable])
             return to_insert_by_variable
         else:
-            to_insert = []
+            to_insert = set()
             for hit in previous_results["hits"]["hits"]:
                 for field in fields:
                     name = field["name"]
                     field_elements = name.split(".")
-                    values = []
-                    self.find_values(hit["_source"], field_elements, values)
-                    to_insert.extend(values)
-            return to_insert
+                    self.find_values(hit["_source"], field_elements, to_insert)
+            return list(to_insert)
 
     def execute_search(self, query):
         s = Search().from_dict(query["search"])\
