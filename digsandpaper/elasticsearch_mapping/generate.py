@@ -78,7 +78,7 @@ if __name__ == "__main__":
 
     parser = OptionParser(conflict_handler="resolve")
     parser.add_option("-u", "--url", action="store",
-                      type="string", dest="url", default="http://localhost:9879")
+                      type="string", dest="url", default=None)
     parser.add_option("-c", "--config", action="store",
                       type="string", dest="config")
     parser.add_option("-e", "--etk", action="store_true",
