@@ -54,7 +54,7 @@ def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments,
                 method = prov.get("method", "other_method")
                 if method not in interesting_methods:
                     method = "other_method"
-                source = prov["source"]
+                source = prov.get("source", {})
                 segment = source.get("segment", "other_segment")
                 if segment not in interesting_segments:
                     segment = "other_segment"
