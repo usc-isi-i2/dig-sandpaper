@@ -29,13 +29,24 @@ def load_project_json_file(file_name):
                                   'r', 'utf-8'))
     return file
 
+def get_engine():
+    global engine
+    if engine:
+        return engine
+    else:
+        import sys
+        c = load_json_file(sys.argv[11])
+        engine = Engine(c)
+        set_engine(engine)
+        return engine
+
 def get_default_es_endpoint():
     global engine
     global default_es_endpoint
     if default_es_endpoint:
         return default_es_endpoint
     if engine:
-        execute_component = engine.config["coarse"]["execute"]["components"][0]
+        execute_component = get_engine().config["coarse"]["execute"]["components"][0]
         if "endpoints" in execute_component:
             default_es_endpoint = execute_component["endpoints"]
         if "host" in execute_component and "port" in execute_component:
@@ -158,6 +169,8 @@ def chunker(seq, size):
 @app.route("/indexing", methods=['POST'])
 def index():
     endpoint = request.args.get('endpoint', get_default_es_endpoint())
+    if not isinstance(endpoint, basestring):
+        endpoint = endpoint[0]
     index = request.args.get('index', None)
     t = request.args.get('type', "ads")
     jls = _index_fields(request)
@@ -181,8 +194,8 @@ def index():
 @app.route("/search", methods=['POST'])
 def search():
     query = json.loads(request.data)
-    (qs, rs) = engine.execute_coarse(query)
-    answers = engine.execute_fine(qs, rs)
+    (qs, rs) = get_engine().execute_coarse(query)
+    answers = get_engine().execute_fine(qs, rs)
     return json.dumps(answers)
 
 
@@ -196,14 +209,14 @@ def coarse_results_to_dict(r):
 @app.route("/search/coarse", methods=['POST'])
 def coarse():
     query = json.loads(request.data)
-    (qs, rs) = engine.execute_coarse(query)
+    (qs, rs) = get_engine().execute_coarse(query)
     qs_with_rs = [{"query": q, "result": coarse_results_to_dict(r)} for q, r in zip(qs, rs)]
     return json.dumps(qs_with_rs)
 
 @app.route("/search/coarse/generate", methods=['POST'])
 def coarse_generate():
     query = json.loads(request.data)
-    qs = engine.generate_coarse(query)
+    qs = get_engine().generate_coarse(query)
     return json.dumps(qs)
 
 
@@ -283,3 +296,6 @@ def config():
     return "Applied config for project {}\n".format(project)
 
 
+def load_json_file(file_name):
+    rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
+    return rules

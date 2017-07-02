@@ -39,7 +39,10 @@ def main(args):
     engine = Engine(config)
     if server:
         search_server.set_engine(engine)
-        search_server.app.run(host, port, threaded=True)
+        if not host and not port:
+            search_server.app.run()
+        else:
+            search_server.app.run(host, port, threaded=True)
     else:
         query = load_json_file(query_file)
         result = engine.execute(query)

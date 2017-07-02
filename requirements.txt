@@ -6,3 +6,5 @@ requests
 Flask
 Flask-API
 flask-cors
+gunicorn
+eventlet
