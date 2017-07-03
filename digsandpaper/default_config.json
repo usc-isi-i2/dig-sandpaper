@@ -119,12 +119,24 @@
             "indexed": {
               "*": {
                 "extract_from_landmark": {
-                  "*": 5,
-                  "other_segment": 2.1
+                  "*": {
+                    "value": 5,
+                    "key": 10.1
+                  },
+                  "other_segment": {
+                    "value": 2.1,
+                    "key": 5.1
+                  }
                 },
                 "*": {
-                  "*": 3,
-                  "other_segment": 2.1
+                  "*": {
+                    "value": 3,
+                    "key": 6.1
+                  },
+                  "other_segment": {
+                    "value": 2.1,
+                    "key": 5.1
+                  }
                 }
               }
             }

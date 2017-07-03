@@ -45,13 +45,19 @@
       "extract_from_landmark": {
         "*": 15,
         "other_segment":{
-          "*": 2.1
+          "*": 2.1,
+          "key": 15.1
         }
       },
       "other_method": {
         "*": 10,
+        "title":{
+          "*": 10,
+          "key": 15.1
+        },
         "other_segment":{
-          "*": 2.1
+          "*": 2.1,
+          "key": 10.1
         }
       }
     },
@@ -73,7 +79,7 @@
         "other_segment": 2.1
       }
     },
-    "social_media_id":  { 
+    "social_media_id  ":  { 
       "*": {
         "*": 5,
         "other_segment": 2.1

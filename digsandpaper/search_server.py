@@ -288,6 +288,8 @@ def config():
         for method in methods:
             for segment in segments:
                 fields.append("indexed.{}.{}.{}.value".format(field_name, method, segment))
+                if "email" in field_name:
+                    fields.append("indexed.{}.{}.{}.key".format(field_name, method, segment))
         type_field_mapping[field_name] = fields
     
     #add field weight mapping
