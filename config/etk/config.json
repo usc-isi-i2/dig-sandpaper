@@ -46,7 +46,8 @@
           "host": "localhost",
           "type": "ExecuteQueryComponent",
           "name": "ExecuteElasticsearchQuery",
-          "port": 9200
+          "port": 9200,
+          "timeout": 180
         }
       ]
     },

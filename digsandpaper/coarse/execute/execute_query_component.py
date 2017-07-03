@@ -28,8 +28,10 @@ class ExecuteElasticsearchQuery(object):
             self.host = self.config["host"]
             self.port = self.config["port"]
             self.endpoints = ["{}:{}".format(self.host, self.port)]
+        print self.config.get("timeout",10)
         connections.create_connection(hosts=self.endpoints,
-                                      timeout=180, maxsize=25)
+                                      timeout=self.config.get("timeout",10),
+                                      maxsize=25)
 
         return
 
