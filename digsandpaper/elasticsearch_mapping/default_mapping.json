@@ -13,6 +13,10 @@
                   "type" : "string",
                   "index" : "no"
                 },
+                "simple_tokens_original_case" : {
+                  "type" : "string",
+                   "index": "no"
+                },
                 "spacy_extraction" : {
                   "enabled":false
                 },
@@ -33,6 +37,10 @@
                   "type" : "string",
                   "index" : "no"
                 },
+                "simple_tokens_original_case" : {
+                  "type" : "string",
+                   "index": "no"
+                },
                 "spacy_extraction" : {
                   "enabled": false
                 },
@@ -40,6 +48,9 @@
                   "type" : "string"
                 },
                 "tokens" : {
+                  "enabled": false
+                },
+                "tokens_original_case" : {
                   "enabled": false
                 }
               }
@@ -56,6 +67,10 @@
                   "type" : "string",
                   "index" : "no"
                 },
+                "simple_tokens_original_case" : {
+                  "type" : "string",
+                   "index": "no"
+                },
                 "spacy_extraction" : {
                   "enabled": false
                 },
@@ -63,6 +78,9 @@
                   "type" : "string"
                 },
                 "tokens" : {
+                  "enabled": false
+                },
+                "tokens_original_case" : {
                   "enabled": false
                 }
               }
@@ -76,6 +94,10 @@
                   "type" : "string",
                   "index" : "no"
                 },
+                "simple_tokens_original_case" : {
+                  "type" : "string",
+                   "index": "no"
+                },
                 "spacy_extraction" : {
                   "enabled": false
                 },
@@ -83,6 +105,9 @@
                   "type" : "string"
                 },
                 "tokens" : {
+                  "enabled": false
+                },
+                "tokens_original_case" : {
                   "enabled": false
                 }
               }
