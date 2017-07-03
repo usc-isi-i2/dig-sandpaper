@@ -73,6 +73,12 @@
         "other_segment": 2.1
       }
     },
+    "social_media_id":  { 
+      "*": {
+        "*": 5,
+        "other_segment": 2.1
+      }
+    },
     "city":  { 
       "*": {
         "*": 6,

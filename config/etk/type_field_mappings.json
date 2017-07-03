@@ -335,6 +335,23 @@
     "content_extraction.content_strict.text",
     "content_extraction.title.text"
   ],
+  "SocialMediaId": [
+    "indexed.social_media_id.gurobi.inferlink_description.value",
+    "indexed.social_media_id.gurobi.content_strict.value",
+    "indexed.social_media_id.gurobi.title.value",
+    "indexed.social_media_id.gurobi.other_segment.value",
+    "indexed.social_media_id.extract_from_landmark.inferlink_description.value",
+    "indexed.social_media_id.extract_from_landmark.content_strict.value",
+    "indexed.social_media_id.extract_from_landmark.title.value",
+    "indexed.social_media_id.extract_from_landmark.other_segment.value",
+    "indexed.social_media_id.other_method.inferlink_description.value",
+    "indexed.social_media_id.other_method.content_strict.value",
+    "indexed.social_media_id.other_method.title.value",
+    "indexed.social_media_id.other_method.other_segment.value",
+    "content_extraction.content_relaxed.text",
+    "content_extraction.content_strict.text",
+    "content_extraction.title.text"
+  ],
   "State": [
     "indexed.state.gurobi.inferlink_description.value",
     "indexed.state.gurobi.content_strict.value",

@@ -20,6 +20,7 @@
   "review_site_id": "ReviewId",
   "service": "Service", 
   "services": "Service",
+  "social_media_id": "SocialMediaId",
   "state": "State",
   "street_address": "Address",
   "title": "Title",
