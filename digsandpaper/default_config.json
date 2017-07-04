@@ -1,6 +1,7 @@
 {
   "fine": {},
   "coarse": {
+    "log_requests": "/tmp",
     "preprocess": {
       "components": [
         {
@@ -209,5 +210,9 @@
         }
       ]
     }
+  },
+  "indexing": {
+    "log_requests": "/tmp",
+    "log_responses": "/tmp"
   }
 }

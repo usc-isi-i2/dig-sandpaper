@@ -18,7 +18,7 @@ CORS(app, supports_credentials=True)
 engine = None
 default_project_url = None
 default_es_endpoint = None
-
+current_project = "static"
 
 _location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -174,8 +174,16 @@ def index():
     index = request.args.get('index', None)
     t = request.args.get('type', "ads")
     jls = _index_fields(request)
+    log_requests =  get_engine().config.get("indexing",{}).get("log_requests", None)
+    if log_requests:
+        with open(os.path.join(log_requests, "indexing.{}.jl".format(index)), "a") as myfile:
+            for jl in jls:
+                myfile.write(jl)
     url = "{}/{}/{}/_bulk".format(endpoint, index, t)
     counter = 0
+    after_filtering = len(jls)
+    failed = 0
+    succeeded = 0
     # this is inefficent
     for chunk in chunker(jls, 100):
         bulk_request = ""
@@ -189,7 +197,17 @@ def index():
             bulk_request = bulk_request + doc_request
         counter += len(chunk)
         r = post_url(url, bulk_request)
-    return "Indexed {} documents\n".format(counter)
+        bulk_response = r.json()
+        for doc_response in bulk_response.get("items", []):
+            index_response = doc_response.get("index", {})
+            failed = index_response.get("shards", {}).get("failed", 0)
+            succeeded = index_response.get("shards", {}).get("succeeded", 0)
+        log_responses =  get_engine().config.get("indexing",{}).get("log_responses", None)
+        if log_responses:
+            with open(os.path.join(log_responses, "indexing.{}.responses.jl".format(index)), "a") as myfile:
+                myfile.write(json.dumps(bulk_response))
+
+    return "Posted {} documents. {} succeeded. {} 0 failed.\n".format(counter, succeeded, failed)
 
 @app.route("/search", methods=['POST'])
 def search():
@@ -209,6 +227,10 @@ def coarse_results_to_dict(r):
 @app.route("/search/coarse", methods=['POST'])
 def coarse():
     query = json.loads(request.data)
+    log_requests =  get_engine().config.get("coarse",{}).get("log_requests", None)
+    if log_requests:
+        with open(os.path.join(log_requests, "coarse.{}.jl".format(current_project)), "a") as myfile:
+            myfile.write(json.dumps(query))
     (qs, rs) = get_engine().execute_coarse(query)
     qs_with_rs = [{"query": q, "result": coarse_results_to_dict(r)} for q, r in zip(qs, rs)]
     return json.dumps(qs_with_rs)
@@ -242,6 +264,8 @@ def set_default_es_endpoint(d):
 def config():
     url = request.args.get('url', None)
     project = request.args.get('project', None)
+    global current_project
+    current_project = project
     project_config = get_project_config(url, project)
     endpoint = request.args.get('endpoint', get_default_es_endpoint())
     index = request.args.get('index', project_config["index"]["full"])

@@ -90,5 +90,9 @@
         }
       ]
     }
+  },
+  "indexing": {
+    "log_requests": "/tmp",
+    "log_responses": "/tmp"
   }
 }
