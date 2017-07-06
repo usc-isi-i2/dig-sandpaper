@@ -26,5 +26,6 @@
   "title": "Title",
   "weight": "Weight",
   "tld": "TopLevelDomain",
-  "url": "URL"
+  "url": "URL",
+  "website": "Website"
 }

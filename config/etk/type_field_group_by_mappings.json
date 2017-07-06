@@ -64,5 +64,8 @@
   ],
   "URL": [
     "url.raw"
+  ],
+  "Website": [
+    "indexed.website.high_confidence_keys"
   ]
 }
