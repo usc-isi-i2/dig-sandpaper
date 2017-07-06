@@ -11,12 +11,14 @@ _location__ = os.path.realpath(
 
 def load_project_json_file(file_name):
     file = json.load(codecs.open(os.path.join(_location__, file_name),
-                                  'r', 'utf-8'))
+                                 'r', 'utf-8'))
     return file
+
 
 def load_json_file(file_name):
     rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
     return rules
+
 
 def jl_file_iterator(file):
     with codecs.open(file, 'r', 'utf-8') as f:
@@ -25,10 +27,9 @@ def jl_file_iterator(file):
             yield document
 
 
-def generate(default_mapping, semantic_types, 
+def generate(default_mapping, semantic_types,
              methods=["extract_from_landmark", "other_method"],
              segments=["title", "content_strict", "other_segment"]):
-
     root = {}
     root_props = {}
     root["indexed"] = {"properties": root_props}
@@ -64,27 +65,30 @@ def generate(default_mapping, semantic_types,
                     segment_props["value"]["format"] = "strict_date_optional_time||epoch_millis"
                 method_props[segment] = {"properties": segment_props}
 
-
     default_mapping["mappings"]["ads"]["properties"]["indexed"] = root["indexed"]
 
     return default_mapping
 
 
-def generate_from_etk_config(etk_config, default_mapping=None):
+def generate_from_etk_config(etk_config, default_mapping=None, shards=5):
     if not default_mapping:
         default_mapping = load_project_json_file("default_mapping.json")
     semantic_types = frozenset()
     for data_extraction in etk_config["data_extraction"]:
         semantic_types = semantic_types | frozenset(data_extraction["fields"].keys())
     mapping = generate(default_mapping, semantic_types)
+    mapping['settings']['index']['number_of_shards'] = shards
     return mapping
 
-def generate_from_project_config(project_config, default_mapping=None):
+
+def generate_from_project_config(project_config, default_mapping=None, shards=5):
     if not default_mapping:
         default_mapping = load_project_json_file("default_mapping.json")
     semantic_types = frozenset(project_config["fields"].keys())
     mapping = generate(default_mapping, semantic_types)
+    mapping['settings']['index']['number_of_shards'] = shards
     return mapping
+
 
 if __name__ == "__main__":
 
@@ -101,6 +105,8 @@ if __name__ == "__main__":
                       type="string", dest="output")
     parser.add_option("-d", "--default_mapping", action="store",
                       type="string", dest="default_mapping")
+    parser.add_option("-s", "--shards", action="store",
+                      type="string", dest="shards", default="5")
     (c_options, args) = parser.parse_args()
 
     config_file = c_options.config
@@ -109,13 +115,13 @@ if __name__ == "__main__":
     default_mapping_file = c_options.default_mapping
     url = c_options.url
     etk = c_options.etk
-
+    shards = c_options.shards
 
     if properties_file:
         properties = load_json_file(properties_file)
     else:
         properties = {}
-    if not url and config_file:        
+    if not url and config_file:
         config = load_json_file(config_file)
     elif url:
         parsed_url = urlparse(url)
@@ -128,7 +134,7 @@ if __name__ == "__main__":
     default_mapping = None
     if default_mapping_file:
         default_mapping = load_json_file(default_mapping_file)
-        
+
     methods = properties.get("methods", ["extract_from_landmark"])
     segments = properties.get("segments", ["title", "content_strict"])
     methods.append("other_method")
@@ -140,12 +146,10 @@ if __name__ == "__main__":
         default_mapping = load_project_json_file("default_mapping.json")
 
     if etk:
-        mapping = generate_from_etk_config(config, default_mapping)
+        mapping = generate_from_etk_config(config, default_mapping, shards)
     else:
         mapping = generate_from_project_config(config, default_mapping)
 
     o = codecs.open(output_file, 'w', 'utf-8')
     o.write(json.dumps(mapping, indent=4, sort_keys=True) + '\n')
     o.close()
-
-
