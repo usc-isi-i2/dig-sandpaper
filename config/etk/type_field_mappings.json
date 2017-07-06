@@ -404,5 +404,29 @@
     "url",
     "url.raw",
     "tld"
+  ],
+  "Website": [
+    "indexed.website.gurobi.inferlink_description.value",
+    "indexed.website.gurobi.content_strict.value",
+    "indexed.website.gurobi.title.value",
+    "indexed.website.gurobi.other_segment.value",
+    "indexed.website.extract_from_landmark.inferlink_description.value",
+    "indexed.website.extract_from_landmark.inferlink_description.key",
+    "indexed.website.extract_from_landmark.content_strict.value",
+    "indexed.website.extract_from_landmark.content_strict.key",
+    "indexed.website.extract_from_landmark.title.value",
+    "indexed.website.extract_from_landmark.title.key",
+    "indexed.website.extract_from_landmark.other_segment.value",
+    "indexed.website.extract_from_landmark.other_segment.key",
+    "indexed.website.other_method.inferlink_description.value",
+    "indexed.website.other_method.inferlink_description.key",
+    "indexed.website.other_method.content_strict.value",
+    "indexed.website.other_method.content_strict.key",
+    "indexed.website.other_method.title.value",
+    "indexed.website.other_method.title.key",
+    "indexed.website.other_method.other_segment.value",
+    "indexed.website.other_method.other_segment.key",
+    "content_extraction.title.text",
+    "raw_content"
   ]
 }
