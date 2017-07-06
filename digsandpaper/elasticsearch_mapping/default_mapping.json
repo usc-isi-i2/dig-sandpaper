@@ -170,6 +170,10 @@
           "filter" : {
             "url_component_filter" : {
               "type" : "lowercase"
+            },
+            "email_url_stop":{
+              "type": "stop",
+              "stopwords": ["com", "gmail", "yahoo", "net", "www", "hotmail"]
             }
           },
           "analyzer" : {
@@ -177,7 +181,7 @@
               "tokenizer" : "uax_url_email"
             },
             "url_component_analyzer" : {
-              "filter" : "url_component_filter",
+              "filter" : ["url_component_filter", "email_url_stop"],
               "tokenizer" : "url_component_tokenizer"
             }
           },
