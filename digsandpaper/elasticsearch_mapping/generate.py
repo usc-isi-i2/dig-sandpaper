@@ -32,11 +32,21 @@ def generate(default_mapping, semantic_types,
     root = {}
     root_props = {}
     root["indexed"] = {"properties": root_props}
+    default_prov_ev_props = {"extracted_value": {"type": "string"}}
+    default_prov_props = {"properties": default_prov_ev_props}
+    default_knowledge_graph_props = {"key": {"type": "string"},
+                                     "provenance": default_prov_props,
+                                     "value": {"type": "string"}}
+    kg_to_copy = {"properties": default_knowledge_graph_props}
+    knowledge_graph = {}
+    default_mapping["mappings"]["ads"]["properties"]["knowledge_graph"] = {"properties": knowledge_graph}
 
     for semantic_type in semantic_types:
-        semantic_type_props = {"high_confidence_keys":{"type": "string",
-                                         "index": "not_analyzed"}}
-        root_props[semantic_type] = {"properties":semantic_type_props}
+        # not copying yet
+        knowledge_graph[semantic_type] = kg_to_copy
+        semantic_type_props = {"high_confidence_keys": {"type": "string",
+                                                        "index": "not_analyzed"}}
+        root_props[semantic_type] = {"properties": semantic_type_props}
         for method in methods:
             method_props = {}
             semantic_type_props[method] = {"properties": method_props}
@@ -44,7 +54,7 @@ def generate(default_mapping, semantic_types,
                 segment_props = {"key": {"type": "string",
                                          "index": "not_analyzed"},
                                  "value": {"type": "string"}
-                                }
+                                 }
                 if semantic_type == "email":
                     segment_props["value"]["analyzer"] = "url_component_analyzer"
                 if "date" in semantic_type:
