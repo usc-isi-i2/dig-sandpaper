@@ -57,6 +57,8 @@ def generate(default_mapping, semantic_types,
                                  }
                 if semantic_type == "email":
                     segment_props["value"]["analyzer"] = "url_component_analyzer"
+                if semantic_type == "website":
+                    segment_props["value"]["analyzer"] = "url_component_analyzer"
                 if "date" in semantic_type:
                     segment_props["value"]["type"] = "date"
                     segment_props["value"]["format"] = "strict_date_optional_time||epoch_millis"
