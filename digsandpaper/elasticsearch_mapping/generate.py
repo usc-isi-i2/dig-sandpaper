@@ -86,22 +86,26 @@ def generate(default_mapping, semantic_types,
     return default_mapping
 
 
-def generate_from_etk_config(etk_config, default_mapping=None, shards=5):
+def generate_from_etk_config(etk_config, default_mapping=None, shards=5,
+             methods=["extract_from_landmark", "other_method"],
+             segments=["title", "content_strict", "other_segment"]):
     if not default_mapping:
         default_mapping = load_project_json_file("default_mapping.json")
     semantic_types = frozenset()
     for data_extraction in etk_config["data_extraction"]:
         semantic_types = semantic_types | frozenset(data_extraction["fields"].keys())
-    mapping = generate(default_mapping, semantic_types)
+    mapping = generate(default_mapping, semantic_types, methods, segments)
     mapping['settings']['index']['number_of_shards'] = shards
     return mapping
 
 
-def generate_from_project_config(project_config, default_mapping=None, shards=5):
+def generate_from_project_config(project_config, default_mapping=None, shards=5,
+             methods=["extract_from_landmark", "other_method"],
+             segments=["title", "content_strict", "other_segment"]):
     if not default_mapping:
         default_mapping = load_project_json_file("default_mapping.json")
     semantic_types = frozenset(project_config["fields"].keys())
-    mapping = generate(default_mapping, semantic_types)
+    mapping = generate(default_mapping, semantic_types, methods, segments)
     mapping['settings']['index']['number_of_shards'] = shards
     return mapping
 
@@ -132,7 +136,6 @@ if __name__ == "__main__":
     url = c_options.url
     etk = c_options.etk
     shards = c_options.shards
-
     if properties_file:
         properties = load_json_file(properties_file)
     else:
@@ -162,9 +165,9 @@ if __name__ == "__main__":
         default_mapping = load_project_json_file("default_mapping.json")
 
     if etk:
-        mapping = generate_from_etk_config(config, default_mapping, shards)
+        mapping = generate_from_etk_config(config, default_mapping, shards, methods, segments)
     else:
-        mapping = generate_from_project_config(config, default_mapping)
+        mapping = generate_from_project_config(config, default_mapping, methods, segments)
 
     o = codecs.open(output_file, 'w', 'utf-8')
     o.write(json.dumps(mapping, indent=4, sort_keys=True) + '\n')
