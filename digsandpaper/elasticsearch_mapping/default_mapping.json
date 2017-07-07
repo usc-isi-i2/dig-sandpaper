@@ -58,6 +58,9 @@
             "inferlink_extractions": {
               "enabled": false
             },
+            "table": {
+              "enabled": false
+            },
             "title" : {
               "properties" : {
                 "data_extraction": {
