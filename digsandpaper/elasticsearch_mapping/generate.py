@@ -35,7 +35,7 @@ def generate(default_mapping, semantic_types,
     root["indexed"] = {"properties": root_props}
     default_prov_ev_props = {"extracted_value": {"type": "string"}}
     default_prov_props = {"properties": default_prov_ev_props}
-    default_knowledge_graph_props = {"key": {"type": "string"},
+    default_knowledge_graph_props = {"key": {"type": "string", "index": "not_analyzed"},
                                      "provenance": default_prov_props,
                                      "value": {"type": "string"}}
     kg_to_copy = {"properties": default_knowledge_graph_props}
@@ -63,6 +63,22 @@ def generate(default_mapping, semantic_types,
                 if "date" in semantic_type:
                     segment_props["value"]["type"] = "date"
                     segment_props["value"]["format"] = "strict_date_optional_time||epoch_millis"
+                    knowledge_graph[semantic_type] = dict()
+                    knowledge_graph[semantic_type]["properties"] = dict()
+                    knowledge_graph[semantic_type]["properties"]["value"] = dict()
+                    knowledge_graph[semantic_type]["properties"]["value"]["type"] = "date"
+                    knowledge_graph[semantic_type]["properties"]["value"]["format"] = "strict_date_optional_time||epoch_millis"
+                    knowledge_graph[semantic_type]["properties"]["key"] = dict()
+                    knowledge_graph[semantic_type]["properties"]["key"]["type"] = "date"
+                    knowledge_graph[semantic_type]["properties"]["key"]["format"] = "strict_date_optional_time||epoch_millis"
+                    knowledge_graph[semantic_type]["properties"]["provenance"] = {
+                                                                            "properties": {
+                                                                                "extracted_value": {
+                                                                                    "type": "string"
+                                                                                    }
+                                                                                }
+                                                                            }
+
                 method_props[segment] = {"properties": segment_props}
 
     default_mapping["mappings"]["ads"]["properties"]["indexed"] = root["indexed"]
