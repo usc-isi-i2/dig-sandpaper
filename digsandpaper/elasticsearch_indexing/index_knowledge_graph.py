@@ -16,8 +16,8 @@ def jl_file_iterator(file):
 
 def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark"], 
                                  interesting_segments=["title", "content_strict"],
-                                 max_key_count=100, 
-                                 max_provenance_count=1000):
+                                 max_key_count=500, 
+                                 max_provenance_count=500):
     
     if "knowledge_graph" not in jl:
         return jl
