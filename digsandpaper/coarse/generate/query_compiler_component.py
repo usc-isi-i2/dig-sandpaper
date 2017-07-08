@@ -480,8 +480,9 @@ class ElasticsearchQueryCompiler(object):
                  should=shoulds,
                  filter=filters,
                  must_not=must_nots)
-        if "boost_musts" in self.elasticsearch_compiler_options and\
-            len(musts) > 0:
+        if ("boost_musts" in self.elasticsearch_compiler_options and
+            len(musts) > 0) or\
+                "boost_shoulds" in self.elasticsearch_compiler_options:
             if len(musts) == 1:
                 shoulds.extend(musts)
                 q = Bool(should=shoulds,
@@ -491,25 +492,28 @@ class ElasticsearchQueryCompiler(object):
                 boost = 10.0
                 weighted_by_musts = []
                 shoulds.extend(musts)
-                minimum_should_match = len(shoulds)
-                if minimum_should_match > 0:
-                    for x in range(0, len(shoulds)):
+                if len(shoulds) > 0:
+                    extra_minimum_should_match = 0
+                    if len(shoulds) >= 3 and "boost_shoulds"\
+                            in self.elasticsearch_compiler_options:
+                        extra_minimum_should_match = 1
+                    for x in range(0, len(shoulds) - extra_minimum_should_match):
                         weighted_q = Bool(
-                              should=shoulds,
-                              filter=filters,
-                              must_not=must_nots,
-                              boost=boost,
-                              minimum_should_match=minimum_should_match - x)
+                            should=shoulds,
+                            filter=filters,
+                            must_not=must_nots,
+                            boost=boost,
+                            minimum_should_match=len(shoulds) - x)
                         weighted_by_musts.append(weighted_q)
                         boost = boost / 2
-                    weighted_must = Bool(should=weighted_by_musts, disable_coord=True)
+                    weighted_must = Bool(should=weighted_by_musts,
+                                         disable_coord=True)
                     q = weighted_must
         else:
             shoulds.extend(musts)
-            q = Bool(
-                 should=shoulds,
-                 filter=filters,
-                 must_not=must_nots)
+            q = Bool(should=shoulds,
+                     filter=filters,
+                     must_not=must_nots)
 
         s = Search()
         s.query = q
