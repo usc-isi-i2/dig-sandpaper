@@ -494,7 +494,7 @@ class ElasticsearchQueryCompiler(object):
                 shoulds.extend(musts)
                 if len(shoulds) > 0:
                     extra_minimum_should_match = 0
-                    if len(shoulds) >= 3 and "boost_shoulds"\
+                    if len(shoulds) >= 2 and "boost_shoulds"\
                             in self.elasticsearch_compiler_options:
                         extra_minimum_should_match = 1
                     for x in range(0, len(shoulds) - extra_minimum_should_match):
