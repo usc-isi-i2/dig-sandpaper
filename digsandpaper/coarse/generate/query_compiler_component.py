@@ -256,15 +256,18 @@ class ElasticsearchQueryCompiler(object):
         s = self.generate_source_fields(s, source_fields)
 
         limit = 20
-        if "group-by" in query["SPARQL"]:
-            if "limit" in query["SPARQL"]["group-by"]:
-                limit = int(query["SPARQL"]["group-by"]["limit"])
-                s = s.extra(size=limit)
+        if query.get("type", "Point Fact") == "Aggregation":
+            s = s.extra(size=0)
+        else:
+            if "group-by" in query["SPARQL"]:
+                if "limit" in query["SPARQL"]["group-by"]:
+                    limit = int(query["SPARQL"]["group-by"]["limit"])
+                    s = s.extra(size=limit)
 
-            if "offset" in query["SPARQL"]["group-by"]:
-                s = s.extra(from_=int(query["SPARQL"]["group-by"]["offset"]))
-            else:
-                s = s.extra(from_=0)
+                if "offset" in query["SPARQL"]["group-by"]:
+                    s = s.extra(from_=int(query["SPARQL"]["group-by"]["offset"]))
+                else:
+                    s = s.extra(from_=0)
 
         highlight_fields = dict((source_field, {}) for source_field in list(source_fields))
 
