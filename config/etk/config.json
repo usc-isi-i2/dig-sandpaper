@@ -15,11 +15,6 @@
         },
         {
           "type": "ConstraintExpansion",
-          "name": "DictConstraintExpander",
-          "dict_constraint_mappings": "config/etk/dict_constraint_mappings.json"
-        },
-        {
-          "type": "ConstraintExpansion",
           "name": "HeightConstraintExpander"
         },
         {
