@@ -54,7 +54,6 @@ class SearchServerTestCaseCoarse(unittest.TestCase):
     def test_coarse_6(self):
         results_6 = self.helper_test_coarse(6)
         self.assertEquals(len(results_6), 1)
-        self.assertEquals(len(results_6[0]["result"]["hits"]["hits"]), 1)
         self.assertEquals(results_6[0]["result"]["aggregations"]["?ethnicity"]["buckets"][0]["doc_count"], 1)
 
 if __name__ == '__main__':
