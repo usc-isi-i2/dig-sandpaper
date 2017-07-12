@@ -8,7 +8,8 @@
     "url",
     "knowledge_graph.*",
     "content_extraction.content_strict.text",
-    "content_extraction.title.text"
+    "content_extraction.title.text",
+    "objects.*"
   ],
   "excluded_source_fields": [
     "content_extraction.content_relaxed.text",
@@ -23,7 +24,8 @@
     "*.provenance.source.context.tokens_left",
     "*.provenance.source.context.tokens_right",
     "*.provenance.source.context.input",
-    "*.confidence"
+    "*.confidence",
+    "objects.response_headers.*"
   ],
   "highlight": {
     "fields": {
