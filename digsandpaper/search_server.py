@@ -308,7 +308,7 @@ def config():
         predicate_type_mapping[field_name] = field_name.lower()
         type_group_field_mapping[field_name] = "indexed.{}.high_confidence_keys".format(field_name)
         fields = list()
-        if "email" not in field_name and "website" not in field_name and "tld" not in field_name:
+        if "email" not in field_name and "website" not in field_name and "tld" not in field_name and "date" not in field_name:
             fields.extend(type_field_mapping["owl:Thing"])
         for method in methods:
             for segment in segments:
