@@ -269,7 +269,7 @@ class ElasticsearchQueryCompiler(object):
                 else:
                     s = s.extra(from_=0)
 
-        highlight_fields = dict((source_field, {}) for source_field in list(source_fields))
+        highlight_fields = dict((source_field, {}) for source_field in list(source_fields) if source_field != "raw_content")
 
         if "highlight" in self.elasticsearch_compiler_options:
             highlight = self.elasticsearch_compiler_options["highlight"]
