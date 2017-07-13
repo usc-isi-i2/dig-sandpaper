@@ -140,6 +140,9 @@
         "response_headers" : {
           "enabled": false
         },
+        "objects": {
+          "enabled": false
+        },
         "tld": {
           "type": "string",
             "fields" : {
