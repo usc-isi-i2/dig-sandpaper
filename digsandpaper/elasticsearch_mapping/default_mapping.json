@@ -137,6 +137,9 @@
           "type" : "date",
           "format" : "strict_date_optional_time||epoch_millis"
         },
+        "response_headers" : {
+          "enabled": false
+        },
         "tld": {
           "type": "string",
             "fields" : {
