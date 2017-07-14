@@ -100,16 +100,17 @@ def get_project_config(url, project):
     project_config = response.json()
     return project_config
 
-def call_generate_mapping(url, project, project_config=None):
+def call_generate_mapping(url, project, project_config=None, shards=5):
     if not project_config:
         project_config = get_project_config(url, project)
-    return generate_from_project_config(project_config)
+    return generate_from_project_config(project_config, shards=shards)
 
 @app.route("/mapping/generate", methods=['GET'])
 def generate_mapping():
     url = request.args.get('url', None)
     project = request.args.get('project', None)
-    m = call_generate_mapping(url, project)
+    shards = request.args.get('shards', 5)
+    m = call_generate_mapping(url, project, shards=shards)
     return json.dumps(m)
 
 @app.route("/mapping", methods=['PUT','POST'])
@@ -117,7 +118,8 @@ def add_mapping():
     url = request.args.get('url', None)
     project = request.args.get('project', None)
     project_config = get_project_config(url, project)
-    m = call_generate_mapping(url, project, project_config)
+    shards = request.args.get('shards', 5)
+    m = call_generate_mapping(url, project, project_config, shards=shards)
     index = request.args.get('index', project_config["index"]["full"])
     endpoint = request.args.get('endpoint', get_default_es_endpoint())
     if not isinstance(endpoint, basestring):
