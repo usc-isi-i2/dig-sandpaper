@@ -162,6 +162,10 @@
             }
           },
           "analyzer" : "url_component_analyzer"
+        },
+        "version": {
+          "type": "string",
+          "index": "not_analyzed"
         }
       }
     }
