@@ -261,21 +261,19 @@ def set_default_es_endpoint(d):
     global default_es_endpoint
     default_es_endpoint = d
 
-
-@app.route("/config", methods=['POST'])
-def config():
-    url = request.args.get('url', None)
-    project = request.args.get('project', None)
+def apply_config_from_project(url, project, endpoint, index=None,
+                              default_config=None, sample=False):
+    project_config = get_project_config(url, project)
     global current_project
     current_project = project
-    project_config = get_project_config(url, project)
-    endpoint = request.args.get('endpoint', get_default_es_endpoint())
-    index = request.args.get('index', project_config["index"]["full"])
-    if not request.data:
-        default_c = load_project_json_file("default_config.json")
-    else:
-        default_c = json.loads(request.data)
-    c = default_c
+    if not index:
+        if not sample:
+            index = project_config["index"]["full"]
+        else:
+            index = project_config["index"]["sample"]
+    if not default_config:
+        default_config = load_project_json_file("default_config.json")
+    c = default_config
     execute_component = c["coarse"]["execute"]["components"][0]
     execute_component.pop("host", None)
     execute_component.pop("port", None)
@@ -318,10 +316,22 @@ def config():
                 if "email" in field_name:
                     fields.append("indexed.{}.{}.{}.key".format(field_name, method, segment))
         type_field_mapping[field_name] = fields
-    
-    #add field weight mapping
 
     set_engine(Engine(c))
+
+@app.route("/config", methods=['POST'])
+def config():
+    url = request.args.get('url', None)
+    project = request.args.get('project', None)
+    endpoint = request.args.get('endpoint', get_default_es_endpoint())
+    index = request.args.get('index', None)
+    sample = request.args.get('sample', False)
+    if request.data and len(request.data) > 0:
+        default_config = json.loads(request.data)
+    else:
+        default_config = None
+    apply_config_from_project(url, project, endpoint, index, default_config, sample)
+
     return "Applied config for project {}\n".format(project)
 
 
