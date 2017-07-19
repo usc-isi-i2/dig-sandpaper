@@ -1,0 +1,25 @@
+version: '3'
+services:
+  sandpaper:
+    image: "digsandpaper/digsandpaper"
+    ports: 
+      - "9876:9876"
+    volumes: 
+      - ./config:/etc/sandpaper/config
+    links:
+      - elasticsearch
+    entrypoint:
+      - bin/start.sh
+      - --host
+      - 0.0.0.0
+      - --endpoint
+      - http://elasticsearch:9200
+      - --config 
+      - config/sandpaper.json
+  elasticsearch:
+    image: "elasticsearch:2.4.1"
+    ports: 
+     - 9200:9200
+    environment:
+     - "http.host=0.0.0.0"
+     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
