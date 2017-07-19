@@ -1,0 +1,22 @@
+FROM debian:jessie
+
+RUN apt-get update && apt-get install -y \
+    wget \
+    python \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget https://bootstrap.pypa.io/get-pip.py && \
+    python get-pip.py
+
+
+RUN mkdir /etc/sandpaper
+WORKDIR /etc/sandpaper
+RUN git clone https://github.com/usc-isi-i2/dig-sandpaper.git .
+RUN pip install --no-cache-dir -e /etc/sandpaper
+
+EXPOSE 9876
+
+VOLUME /etc/sandpaper/config
+
+CMD ["bin/start.sh", "--config", "config/sandpaper.json", "--host", "0.0.0.0"]
