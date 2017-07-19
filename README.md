@@ -93,19 +93,19 @@ If you need to work with sandpaper from the command line outside of the myDIG in
 First tell dig-sandpaper to create a mapping for a given `project` at the myDIG `url` and use it to create an `index` at an elasticsearch `endpoint`
 
 ```
-curl -XPUT "http://localhost:9876/mapping?url=http%3A%2F%2FUSER%3APASSWORD%40myDIG%3A9879&project=myproject&index= myindex&endpoint=http%3A//elasticsearch%3A9200"
+curl -XPUT "http://localhost:9876/mapping?url=http%3A%2F%2FUSER%3APASSWORD%40myDIG%3A9879&project=myproject&index=myindex&endpoint=http%3A//elasticsearch%3A9200"
 ```
 
 Second, send some jsonlines documents out put by ETK of `type` ads to dig-sandpaper to add at the appropriate `index` and `endpoint`
 
 ```
-curl  -H "Content-Type: application/json"  -XPOST --data-binary @project_etk_output.jl "localhost:9876/indexing?index= myindex&endpoint=http%3A//elasticsearch%3A9200&type=ads" 
+curl  -H "Content-Type: application/json"  -XPOST --data-binary @project_etk_output.jl "localhost:9876/indexing?index=myindex&endpoint=http%3A//elasticsearch%3A9200&type=ads" 
 ```
 
 Third, tell dig-sandpaper to reconfigure itself using the `project` at the myDIG `url` and use the `index` at the elasticsearch `endpoint`
 
 ```
-curl -XPOST "localhost:9876/config?url=http%3A%2F%2FUSER%3APASSWORD%40mydig%3A9879&project= myproject&index=myindex&endpoint=http%3A//elasticsearch%3A9200&type=ads" 
+curl -XPOST "localhost:9876/config?url=http%3A%2F%2FUSER%3APASSWORD%40mydig%3A9879&project=myproject&index=myindex&endpoint=http%3A//elasticsearch%3A9200&type=ads" 
 ```
 
 You should now be able to issue a query using the `bin/query.sh` script.
