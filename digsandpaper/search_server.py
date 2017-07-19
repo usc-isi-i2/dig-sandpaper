@@ -306,16 +306,16 @@ def apply_config_from_project(url, project, endpoint, index=None,
         
     for field_name, spec in project_config["fields"].iteritems():
         predicate_type_mapping[field_name] = field_name.lower()
-        type_group_field_mapping[field_name] = "indexed.{}.high_confidence_keys".format(field_name)
+        type_group_field_mapping[field_name.lower()] = "indexed.{}.high_confidence_keys".format(field_name)
         fields = list()
-        if "email" not in field_name and "website" not in field_name and "tld" not in field_name and "date" not in field_name:
+        if "email" not in field_name.lower() and "website" not in field_name.lower() and "tld" not in field_name.lower() and "date" not in field_name.lower():
             fields.extend(type_field_mapping["owl:Thing"])
         for method in methods:
             for segment in segments:
                 fields.append("indexed.{}.{}.{}.value".format(field_name, method, segment))
-                if "email" in field_name:
+                if "email" in field_name.lower():
                     fields.append("indexed.{}.{}.{}.key".format(field_name, method, segment))
-        type_field_mapping[field_name] = fields
+        type_field_mapping[field_name.lower()] = fields
 
     set_engine(Engine(c))
 
