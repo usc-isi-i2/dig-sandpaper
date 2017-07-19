@@ -515,8 +515,7 @@
               "indexed.website.other_method.title.key",
               "indexed.website.other_method.other_segment.value",
               "indexed.website.other_method.other_segment.key",
-              "content_extraction.title.text",
-              "raw_content"
+              "content_extraction.title.text"
             ]
           }
         },
