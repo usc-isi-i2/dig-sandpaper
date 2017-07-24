@@ -7,11 +7,13 @@ import json
 import requests
 import StringIO
 import codecs
+from math import log
 from engine import Engine
 from elasticsearch_mapping.generate import generate_from_project_config
 from elasticsearch_indexing.index_knowledge_graph import index_knowledge_graph_fields
 from urllib import unquote
 from urlparse import urlparse
+from copy import deepcopy
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -261,6 +263,13 @@ def set_default_es_endpoint(d):
     global default_es_endpoint
     default_es_endpoint = d
 
+def multiply_values(w, multiplier):
+    for k, v in w.iteritems():
+        if isinstance(v, (int, float, long, complex)):
+            w[k] = v * multiplier
+        elif isinstance(v, dict):
+            multiply_values(v, multiplier)
+
 def apply_config_from_project(url, project, endpoint, index=None,
                               default_config=None, sample=False):
     project_config = get_project_config(url, project)
@@ -302,21 +311,34 @@ def apply_config_from_project(url, project, endpoint, index=None,
             field_weight_mapping = gc["field_weight_mappings"]
     for pc in preprocess_components:
         if pc["name"] == "PredicateDictConstraintTypeMapper":
-           predicate_type_mapping = pc["predicate_range_mappings"]
-        
+            predicate_type_mapping = pc["predicate_range_mappings"]
+
     for field_name, spec in project_config["fields"].iteritems():
         predicate_type_mapping[field_name] = field_name.lower()
         type_group_field_mapping[field_name.lower()] = "indexed.{}.high_confidence_keys".format(field_name)
         fields = list()
-        if "email" not in field_name.lower() and "website" not in field_name.lower() and "tld" not in field_name.lower() and "date" not in field_name.lower():
+        if spec.get("type", "string") == "string" and\
+            ("email" not in field_name.lower() and
+             "website" not in field_name.lower() and
+             "tld" not in field_name.lower() and
+             "date" not in field_name.lower()):
             fields.extend(type_field_mapping["owl:Thing"])
+        if "search_importance" in spec:
+            search_importance = spec["search_importance"]
+            if search_importance > 1:
+                multiplier = log(search_importance, 4)
+            else:
+                multiplier = 1
+            weights = deepcopy(field_weight_mapping["indexed"]["*"])
+            field_weight_mapping["indexed"][field_name] = weights
+            multiply_values(weights, multiplier)
+
         for method in methods:
             for segment in segments:
                 fields.append("indexed.{}.{}.{}.value".format(field_name, method, segment))
-                if "email" in field_name.lower():
+                if spec.get("type", "string") == "email" or "email" in field_name.lower():
                     fields.append("indexed.{}.{}.{}.key".format(field_name, method, segment))
         type_field_mapping[field_name.lower()] = fields
-
     set_engine(Engine(c))
 
 @app.route("/config", methods=['POST'])
