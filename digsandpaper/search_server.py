@@ -184,7 +184,7 @@ def index():
     if log_requests:
         with open(os.path.join(log_requests, "indexing.{}.jl".format(index)), "a") as myfile:
             for jl in jls:
-                myfile.write(jl)
+                myfile.write(jl + '\n')
     url = "{}/{}/{}/_bulk".format(endpoint, index, t)
     counter = 0
     after_filtering = len(jls)
@@ -236,7 +236,7 @@ def coarse():
     log_requests =  get_engine().config.get("coarse",{}).get("log_requests", None)
     if log_requests:
         with open(os.path.join(log_requests, "coarse.{}.jl".format(current_project)), "a") as myfile:
-            myfile.write(json.dumps(query))
+            myfile.write(json.dumps(query) + '\n')
     (qs, rs) = get_engine().execute_coarse(query)
     qs_with_rs = [{"query": q, "result": coarse_results_to_dict(r)} for q, r in zip(qs, rs)]
     return json.dumps(qs_with_rs)
