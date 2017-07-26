@@ -273,7 +273,8 @@ def multiply_values(w, multiplier):
             multiply_values(v, multiplier)
 
 def apply_config_from_project(url, project, endpoint, index=None,
-                              default_config=None, sample=False):
+                              default_config=None, sample=False,
+                              search_importance_enabled=False):
     project_config = get_project_config(url, project)
     global current_project
     current_project = project
@@ -325,12 +326,12 @@ def apply_config_from_project(url, project, endpoint, index=None,
              "tld" not in field_name.lower() and
              "date" not in field_name.lower()):
             fields.extend(type_field_mapping["owl:Thing"])
-        if "search_importance" in spec:
+        if "search_importance" in spec and search_importance_enabled:
             search_importance = spec["search_importance"]
             if search_importance > 1:
                 multiplier = log(search_importance, 4)
             else:
-                multiplier = 1
+                multiplier = 0.25
             weights = deepcopy(field_weight_mapping["indexed"]["*"])
             field_weight_mapping["indexed"][field_name] = weights
             multiply_values(weights, multiplier)
@@ -341,6 +342,7 @@ def apply_config_from_project(url, project, endpoint, index=None,
                 if spec.get("type", "string") == "email" or "email" in field_name.lower():
                     fields.append("indexed.{}.{}.{}.key".format(field_name, method, segment))
         type_field_mapping[field_name.lower()] = fields
+    print(json.dumps(c, indent=4, sort_keys=True))
     set_engine(Engine(c))
 
 @app.route("/config", methods=['POST'])
@@ -350,11 +352,15 @@ def config():
     endpoint = request.args.get('endpoint', get_default_es_endpoint())
     index = request.args.get('index', None)
     sample = request.args.get('sample', False)
+    search_importance_enabled = request.args.get('searchimportanceenabled',
+                                                 False)
     if request.data and len(request.data) > 0:
         default_config = json.loads(request.data)
     else:
         default_config = None
-    apply_config_from_project(url, project, endpoint, index, default_config, sample)
+    apply_config_from_project(url, project, endpoint, index,
+                              default_config, sample,
+                              search_importance_enabled)
 
     return "Applied config for project {}\n".format(project)
 
