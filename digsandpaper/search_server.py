@@ -100,6 +100,7 @@ def get_project_config(url, project):
         return "Please provide either a url and/or a project as url params to retrieve fields to generate an elasticserach mapping\n", status.HTTP_400_BAD_REQUEST
 
     project_config = response.json()
+    response.raise_for_status()
     return project_config
 
 def call_generate_mapping(url, project, project_config=None, shards=5):
@@ -126,8 +127,9 @@ def add_mapping():
     endpoint = request.args.get('endpoint', get_default_es_endpoint())
     if not isinstance(endpoint, basestring):
         endpoint = endpoint[0]
-    put_url('{}/{}'.format(endpoint, index),
+    response = put_url('{}/{}'.format(endpoint, index),
             data=json.dumps(m))
+    response.raise_for_status()
     return "index {} added for project {}\n".format(index, project)
 
 def jl_file_iterator(file):
