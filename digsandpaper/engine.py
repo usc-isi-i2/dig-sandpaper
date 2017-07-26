@@ -23,3 +23,6 @@ class Engine(object):
 
     def execute_fine(self, expanded_queries, coarse_results):
         return self.fine.execute(expanded_queries, coarse_results)
+
+    def teardown(self):
+        self.coarse.teardown()

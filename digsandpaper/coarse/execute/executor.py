@@ -16,3 +16,7 @@ class Executor(object):
         for component in self.components:
             results = component.execute(query)
         return results
+
+    def teardown(self):
+        for component in self.components:
+            component.teardown()

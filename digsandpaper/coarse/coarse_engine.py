@@ -25,7 +25,7 @@ class CoarseEngine(object):
         # generate
         generated_queries = [self.generator.generate(q)
                              for q in parameterized_queries]
-        
+
         return generated_queries
 
     def execute(self, query):
@@ -35,3 +35,6 @@ class CoarseEngine(object):
         results = [self.executor.execute(q) for q in generated_queries]
 
         return (generated_queries, results)
+
+    def teardown(self):
+        self.executor.teardown()

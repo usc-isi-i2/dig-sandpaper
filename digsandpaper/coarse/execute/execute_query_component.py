@@ -1,5 +1,6 @@
 import json
 import codecs
+import uuid
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 
@@ -28,20 +29,25 @@ class ExecuteElasticsearchQuery(object):
             self.host = self.config["host"]
             self.port = self.config["port"]
             self.endpoints = ["{}:{}".format(self.host, self.port)]
+        self.alias = uuid.uuid4().hex
         connections.create_connection(hosts=self.endpoints,
-                                      timeout=self.config.get("timeout",15),
+                                      timeout=self.config.get("timeout", 15),
                                       retry_on_timeout=True,
-                                      maxsize=25)
-
+                                      maxsize=25,
+                                      alias=self.alias)
         return
+
+    def teardown(self):
+        print "tearing down connection"
+        connections.remove_connection(self.alias)
 
     def replace_range_operator(self, v, op, new_value):
         if op in v:
             if v[op].startswith("__placeholder__"):
-                 v[op] = v[op].replace("__placeholder__", new_value.split()[0])         
+                v[op] = v[op].replace("__placeholder__", new_value.split()[0])
 
     def replace_value(self, doc, clause_id, new_value):
-        for (k,v) in doc.iteritems():
+        for (k, v) in doc.iteritems():
             if isinstance(v, list):
                 for e in v:
                     if isinstance(e, dict):
@@ -119,8 +125,9 @@ class ExecuteElasticsearchQuery(object):
 
     def execute_search(self, query):
         s = Search().from_dict(query["search"])\
-                        .index(query["index"])\
-                        .doc_type(query["doc_type"])
+                    .index(query["index"])\
+                    .doc_type(query["doc_type"])\
+                    .using(self.alias)
         return s.execute()
 
     def execute(self, query):
