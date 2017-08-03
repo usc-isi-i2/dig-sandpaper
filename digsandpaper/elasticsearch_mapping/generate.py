@@ -160,7 +160,7 @@ if __name__ == "__main__":
     segments.append("other_segment")
 
     if default_mapping_file:
-        default_mapping = load_json_file(default_mapping)
+        default_mapping = load_json_file(default_mapping_file)
     else:
         default_mapping = load_project_json_file("default_mapping.json")
 
