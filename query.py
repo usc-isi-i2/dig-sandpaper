@@ -23,6 +23,8 @@ def main(args):
                       type="string", dest="query")
     parser.add_option("-g", "--generate", action="store_true",
                       dest="is_generate", default=False)
+    parser.add_option("-j", "--project", action="store",
+                      type="string", dest="project")
     parser.add_option("-c", action="store_true", dest="is_coarse", default=False)
     (c_options, args) = parser.parse_args()
 
@@ -32,6 +34,7 @@ def main(args):
     endpoint = c_options.endpoint
     is_coarse = c_options.is_coarse
     is_generate = c_options.is_generate
+    project = c_options.project
 
     if not query_file:
         parser.error('Query file not specified.  Use -q or --query')
@@ -44,6 +47,8 @@ def main(args):
         endpoint = "{}/coarse".format(endpoint)
         if is_generate:
             endpoint = "{}/generate".format(endpoint)
+    if project:
+        endpoint = "{}?project={}".format(endpoint, project)
 
     query_file_json = load_json_file(query_file)
     if isinstance(query_file_json, list):
