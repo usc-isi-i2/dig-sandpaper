@@ -154,7 +154,7 @@ class HeightConstraintExpander(LambdaConstraintExpander):
             if isinstance(clause["constraint"], int) or self.safe_parse_int(clause["constraint"]):
                 height = int(clause["constraint"])
                 if height < 100:
-                    return [int(height * 2.54), "{}'{}\"".format(height//12, height%12)]
+                    return [int(round(height * 2.54)), "{}'{}\"".format(height//12, height%12)]
                 else:
                     height_in_cm = height
                     height_in_inches = height // 2.54
