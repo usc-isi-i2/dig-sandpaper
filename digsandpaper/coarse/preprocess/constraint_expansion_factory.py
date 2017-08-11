@@ -143,10 +143,16 @@ class HeightConstraintExpander(LambdaConstraintExpander):
         LambdaConstraintExpander.__init__(self, config)
         self._configure()
 
+    def safe_parse_int(self, height):
+        try:
+            return int(height)
+        except ValueError:
+            return None
+
     def height_conversion(self, clause):
         if "height" in clause["type"].lower():
-            if isinstance(clause["constraint"], int):
-                height = clause["constraint"]
+            if isinstance(clause["constraint"], int) or self.safe_parse_int(clause["constraint"]):
+                height = int(clause["constraint"])
                 if height < 100:
                     return [int(height * 2.54), "{}'{}\"".format(height//12, height%12)]
                 else:
