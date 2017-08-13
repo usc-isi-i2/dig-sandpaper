@@ -46,21 +46,32 @@ class TestCoarseParameterizing(unittest.TestCase):
         query = load_json_file("3_query.json")
         parameterizer = Parameterizer(config)
 
-        result = parameterizer.parameterize(query)
+        results = parameterizer.parameterize(query)
+        self.assertEqual(len(results), 1)
 
     def test_basic_coarse_parameterizing_with_date_filter(self):
         config = load_json_file("4_config.json")
         query = load_json_file("4_query.json")
         parameterizer = Parameterizer(config)
 
-        result = parameterizer.parameterize(query)
+        results = parameterizer.parameterize(query)
+        self.assertEqual(len(results), 1)
 
     def test_basic_coarse_parameterizing_group_by(self):
         config = load_json_file("6_config.json")
         query = load_json_file("6_query.json")
         parameterizer = Parameterizer(config)
 
-        result = parameterizer.parameterize(query)
+        results = parameterizer.parameterize(query)
+        self.assertEqual(len(results), 1)
+
+    def test_basic_coarse_parameterizing_union_and_not_exists(self):
+        config = load_json_file("7_config.json")
+        query = load_json_file("7_query.json")
+        parameterizer = Parameterizer(config)
+
+        results = parameterizer.parameterize(query)
+        self.assertEqual(len(results), 1)
 
 
 if __name__ == '__main__':

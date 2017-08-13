@@ -110,6 +110,18 @@ class TestCoarsePreprocessing(unittest.TestCase):
         g = result["SPARQL"]["group-by"]
         self.assertEqual(g["variables"][0]["type"], "Ethnicity")
 
+    def test_union_and_not_exists(self):
+        config = load_json_file("7_config.json")
+        query = load_json_file("7_query.json")
+        preprocessor = Preprocessor(config)
+
+        result = preprocessor.preprocess(query)
+        c = result["SPARQL"]["where"]["clauses"]
+        self.assertEqual(c[0]["clauses"][0]["type"], "Location")
+        self.assertEqual(c[0]["clauses"][1]["type"], "Location")
+        fs = result["SPARQL"]["where"]["filters"]
+        self.assertEqual(fs[0]["clauses"][0]["type"], "Title")
+
 
 if __name__ == '__main__':
     unittest.main()

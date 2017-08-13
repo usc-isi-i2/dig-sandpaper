@@ -49,8 +49,12 @@ class PredicateDictConstraintTypeMapper(object):
             elif isinstance(f["clauses"], dict):
                 self.preprocess_filter(f["clauses"])
         else:
-            f["type"] = clause_variable_to_type.get(f["variable"],
-                                                    "owl:Thing")
+            if "predicate" in f:
+                f["type"] = self.predicate_range_mappings.get(f["predicate"],
+                                                              "owl:Thing")
+            else:
+                f["type"] = clause_variable_to_type.get(f["variable"],
+                                                        "owl:Thing")
 
     def preprocess_clause(self, clause, clause_variable_to_type):
         if "clauses" in clause:

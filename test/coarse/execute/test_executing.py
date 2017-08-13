@@ -126,6 +126,23 @@ class TestCoarseExecuting(unittest.TestCase):
 
         test.test_utils.reset_elasticsearch(config["components"][0])   
 
+    def test_basic_coarse_executing_union_and_not_exists(self):
+        config = load_json_file("7_config.json")
+        queries = load_json_file("7_query.json")
+        document = load_json_file("7_document.json")
+        document2 = load_json_file("7_document_2.json")
+
+        test.test_utils.initialize_elasticsearch([document, document2],
+                                                 config["components"][0])
+
+        executor = Executor(config)
+
+        for query in queries:
+            result = executor.execute(query)
+            self.assertEquals(len(result.hits), 1)
+
+        test.test_utils.reset_elasticsearch(config["components"][0])
+
 
 if __name__ == '__main__':
     unittest.main()

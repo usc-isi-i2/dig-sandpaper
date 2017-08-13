@@ -148,7 +148,7 @@ class ElasticsearchQueryCompiler(object):
         return query
 
     # have to return source_fields because set union operation produces a new set
-    def generate_filter(self, f, filters, source_fields):
+    def generate_filter(self, f, filters, must_nots, source_fields):
         if "operator" not in f:
             return source_fields
 
@@ -156,11 +156,14 @@ class ElasticsearchQueryCompiler(object):
         if isinstance(operator, list) and len(operator) == 1:
             operator = operator[0]
         compound_filter = operator == "and" or operator == "or"
-        if "fields" not in f and not compound_filter:
+        exists_filter = operator and "exists" in operator
+        if "fields" not in f and not compound_filter and not exists_filter:
+            print "not a valid filter"
             return source_fields
         if compound_filter:
             clauses = f["clauses"]
             sub_filters = []
+            sub_must_nots = []
 
             if operator == "and" and len(clauses) > 1:
                 clauses_by_variable = {}
@@ -177,6 +180,7 @@ class ElasticsearchQueryCompiler(object):
                     if len(clauses) == 1:
                         source_fields = self.generate_filter(clauses[0],
                                                              sub_filters,
+                                                             sub_must_nots,
                                                              source_fields)
                     else:
                         ops = []
@@ -194,23 +198,37 @@ class ElasticsearchQueryCompiler(object):
                         new_clause["fields"] = clauses[0]["fields"]
                         source_fields = self.generate_filter(new_clause,
                                                              sub_filters,
+                                                             sub_must_nots,
                                                              source_fields)
                 for clause in compound_clauses:
                     source_fields = self.generate_filter(clause,
                                                          sub_filters,
+                                                         sub_must_nots,
                                                          source_fields)
-                q = Bool(filter=sub_filters)
+                q = Bool(filter=sub_filters,
+                         must_nots=sub_must_nots)
             else:
                 for clause in clauses:
                     source_fields = self.generate_filter(clause,
                                                          sub_filters,
+                                                         sub_must_nots,
                                                          source_fields)
                 if operator == "or":
                     q = Bool(should=[ConstantScore(filter=sf)
-                             for sf in sub_filters])
+                             for sf in sub_filters],
+                             must_nots=sub_must_nots)
                 else:
                     q = sub_filters[0]
             filters.append(q)
+        elif exists_filter:
+            if "not" not in operator:
+                return source_fields
+            sub_filters = []
+            for clause in f["clauses"]:
+                fields = clause["fields"]
+                source_fields |= set([field["name"] for field in fields])
+                es_clause = self.translate_clause_helper(clause, fields, True)
+                must_nots.append(es_clause)
         else:
             source_fields |= set([field["name"] for field in f["fields"]])
             if len(f["fields"]) == 1:
@@ -363,6 +381,19 @@ class ElasticsearchQueryCompiler(object):
                 q = weighted_must
         return q
 
+    def generate_where_union_helper(self, clause, musts, source_fields):
+        union_shoulds = []
+        for uc in clause["clauses"]:
+            fields = uc["fields"]
+            source_fields |= set([field["name"] for field in fields])
+            if "constraint" in uc:
+                es_clause = self.translate_clause_helper(uc, fields, True)
+                union_shoulds.append(es_clause)
+        if union_shoulds:
+            union_q = Bool(should=union_shoulds)
+            musts.append(union_q)
+        return source_fields
+
     def generate_where(self, query, where, is_root=False):
 
         where_clauses = where["clauses"]
@@ -380,7 +411,15 @@ class ElasticsearchQueryCompiler(object):
 
         for clause in where_clauses:
             if "operator" in clause:
-                continue
+                # currently unions only suport a single clause
+                # and object must be bound
+                if "union" == clause["operator"].lower():
+                    source_fields = self.generate_where_union_helper(clause,
+                                                                     musts,
+                                                                     source_fields)
+                    continue
+                else:
+                    continue
             if "fields" in clause:
                 fields = clause["fields"]
                 source_fields |= set([field["name"] for field in fields])
@@ -462,7 +501,7 @@ class ElasticsearchQueryCompiler(object):
                             variable_to_clause_id.append(uc["_id"])
                             union_shoulds.append(uc_es_clause)
                         union_q = Bool(should=union_shoulds)
-                        # must or filter?
+                        # filter for performance reasons
                         filters.append(union_q)
 
                 elif "constraint" not in clause and "clauses" not in clause:
@@ -475,7 +514,7 @@ class ElasticsearchQueryCompiler(object):
                             sub_query["variable_to_clause_id"][clause["variable"]] = []
                         variable_to_clause_id = sub_query["variable_to_clause_id"][clause["variable"]]
                         variable_to_clause_id.append(clause["_id"])
-                        # must or filter?
+                        # filter for performance reasons
                         filters.append(es_clause)
 
         for key, value in shoulds_by_predicate.iteritems():
@@ -487,7 +526,8 @@ class ElasticsearchQueryCompiler(object):
         if "filters" in where:
             filter_clauses = where["filters"]
             for f in filter_clauses:
-                source_fields = self.generate_filter(f, filters, source_fields)
+                source_fields = self.generate_filter(f, filters,
+                                                     must_nots, source_fields)
 
         if self.elasticsearch_compiler_options.get("convert_text_filters_to_shoulds", False):
             valid_filters = list()

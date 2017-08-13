@@ -11,20 +11,29 @@ class SearchServerTestCaseCoarse(unittest.TestCase):
         search_server.app.config['TESTING'] = True
         self.app = search_server.app.test_client()
 
-    def helper_setup(self, i):
+    def helper_setup(self, i, additional_documents_suffixes=[]):
         config = test_utils.load_engine_configuration(i)
         engine = Engine(config)
         query = test_utils.load_sub_configuration("coarse", "preprocess",
                                        i, "_query.json")
+        documents = []
         document = test_utils.load_sub_configuration("coarse", "execute",
                                           i, "_document.json")
+        documents.append(document)
+        if additional_documents_suffixes:
+            for a in additional_documents_suffixes:
+                documents.append(test_utils.load_sub_configuration("coarse",
+                                 "execute", i, 
+                                 "_document_{}.json".format(a)))
+
         es_config = config["coarse"]["execute"]["components"][0]
-        test_utils.initialize_elasticsearch([document], es_config)
+        test_utils.initialize_elasticsearch(documents, es_config)
         search_server.set_engine(engine)
         return (query, es_config)
 
-    def helper_test_coarse(self, i):
-        (query, es_config) = self.helper_setup(i)
+    def helper_test_coarse(self, i, additional_documents_suffixes=[]):
+        (query, es_config) = self.helper_setup(i,
+                                               additional_documents_suffixes)
         response = self.app.post('/search/coarse', data=json.dumps(query))
         self.assertEquals(200, response.status_code)
         results = json.loads(response.data)
@@ -54,7 +63,15 @@ class SearchServerTestCaseCoarse(unittest.TestCase):
     def test_coarse_6(self):
         results_6 = self.helper_test_coarse(6)
         self.assertEquals(len(results_6), 1)
-        self.assertEquals(results_6[0]["result"]["aggregations"]["?ethnicity"]["buckets"][0]["doc_count"], 1)
+        self.assertEquals(results_6[0]["result"]["aggregations"]
+                                      ["?ethnicity"]["buckets"]
+                                      [0]["doc_count"], 1)
+
+    def test_coarse_7(self):
+        results_7 = self.helper_test_coarse(7, ["2"])
+        self.assertEquals(len(results_7), 1)
+        self.assertEquals(len(results_7[0]["result"]["hits"]["hits"]), 1)
+
 
 if __name__ == '__main__':
     unittest.main()
