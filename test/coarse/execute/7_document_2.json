@@ -1,0 +1,31 @@
+{
+	"doc_id": "QPONMLKJIHGFEDCBA",
+	"extractors": {
+		"content_strict":{
+			"data_extractors":{
+				"city": {"result":{"value": "Quebec"}},
+				"country": {"result":{"value": "Canada"}},
+				"hair-color": {"result":{"value": "blonde"}},
+				"local-phone": {"result":{"value": "4567890"}},
+				"phone": {"result":{"value": "1234567890"}},
+				"ethnicity": {"result":{"value": "caucasian", "name": "caucasian"}},
+				"nationality": {"result":{"value": "caucasian"}},
+				"title": {"result":{"value": "la maîtresse enchanteresse"}}
+			},
+			"text": {"result":{"value": "Je suis la maîtresse enchanteresse en Quebec Canada. 1234567890.  Je suis blonde et Québécoise."}}
+		},
+		"content_relaxed":{
+			"data_extractors":{
+				"city": {"result":{"value": "Quebec"}},
+				"country": {"result":{"value": "Canada"}},
+				"hair-color": {"result":{"value": "blonde"}},
+				"local-phone": {"result":{"value": "4567890"}},
+				"phone": {"result":{"value": "1234567890"}},
+				"ethnicity": {"result":{"value": "Québécoise"}},
+				"nationality": {"result":{"value": "Québécoise"}},
+				"title": {"result":{"value": "la maîtresse enchanteresse"}}
+			},
+			"text": {"result":{"value": "Je suis la maîtresse enchanteresse en Quebec Canada. 1234567890.  Je suis blonde et Québécoise."}}
+		}
+	}
+}

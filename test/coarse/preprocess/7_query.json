@@ -1,0 +1,68 @@
+{
+        "SPARQL": {
+            "group-by": {
+                "limit": 500
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "simple", 
+                        "variable": "?ad"
+                    }, 
+                    {
+                        "type": "simple", 
+                        "variable": "?ethnicity"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [ 
+                    { 
+                        "operator": "union",
+                        "clauses": [
+                            {
+                                "constraint": "Toronto, Ontario", 
+                                "isOptional": false, 
+                                "predicate": "location"
+                            },
+                            {
+                                "constraint": "Ottawa, Quebec", 
+                                "isOptional": false, 
+                                "predicate": "location"
+                            }
+
+                        ]
+                    }, 
+                    {
+                        "isOptional": false, 
+                        "predicate": "ethnicity", 
+                        "variable": "?ethnicity"
+                    }, 
+                    {
+                        "isOptional": false, 
+                        "predicate": "title", 
+                        "variable": "?title"
+                    },
+                    {
+                        "isOptional": false,
+                        "predicate": "hairColor",
+                        "constraint": "blonde"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "operator": "not exists",
+                        "clauses": [
+                            {
+                                "constraint": "the enchanting mistress", 
+                                "predicate": "title"
+                            }
+                        ]
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "type": "Point Fact"
+    }

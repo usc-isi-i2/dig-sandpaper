@@ -1,0 +1,158 @@
+[
+    {
+        "SPARQL": {
+            "group-by": {
+                "limit": 500
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "owl:Thing", 
+                        "variable": "?ad"
+                    }, 
+                    {
+                        "type": "Ethnicity", 
+                        "variable": "?ethnicity"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "_id": "beda7baa39b04f0690c0ba36de623111", 
+                        "clauses": [
+                            {
+                                "_id": "f77f72ca0dfa4872a7e25189da426489", 
+                                "constraint": "Toronto, Ontario", 
+                                "fields": [
+                                    {
+                                        "name": "extractors.content_strict.data_extractors.city.result.value"
+                                    }, 
+                                    {
+                                        "name": "extractors.content_relaxed.data_extractors.city.result.value"
+                                    }, 
+                                    {
+                                        "name": "extractors.content_strict.data_extractors.country.result.value"
+                                    }, 
+                                    {
+                                        "name": "extractors.content_relaxed.data_extractors.country.result.value"
+                                    }
+                                ], 
+                                "isOptional": false, 
+                                "predicate": "location", 
+                                "type": "Location"
+                            }, 
+                            {
+                                "_id": "a7d08c96a01f4a0caed88bce8ed94103", 
+                                "constraint": "Ottawa, Quebec", 
+                                "fields": [
+                                    {
+                                        "name": "extractors.content_strict.data_extractors.city.result.value"
+                                    }, 
+                                    {
+                                        "name": "extractors.content_relaxed.data_extractors.city.result.value"
+                                    }, 
+                                    {
+                                        "name": "extractors.content_strict.data_extractors.country.result.value"
+                                    }, 
+                                    {
+                                        "name": "extractors.content_relaxed.data_extractors.country.result.value"
+                                    }
+                                ], 
+                                "isOptional": false, 
+                                "predicate": "location", 
+                                "type": "Location"
+                            }
+                        ], 
+                        "operator": "union"
+                    }, 
+                    {
+                        "_id": "c1635fc037ee43c689b41a3ec01dee24", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.ethnicity.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.ethnicity.result.value", 
+                                "weight": 0.5
+                            }, 
+                            {
+                                "name": "extractors.content_strict.data_extractors.nationality.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.nationality.result.value", 
+                                "weight": 0.5
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "ethnicity", 
+                        "type": "Ethnicity", 
+                        "variable": "?ethnicity"
+                    }, 
+                    {
+                        "_id": "ea81e4f9b52441019c535e2922889df1", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.title.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.data_extractors.title.result.value", 
+                                "weight": 0.5
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "title", 
+                        "type": "Title", 
+                        "variable": "?title"
+                    }, 
+                    {
+                        "_id": "be68dff63186482db63c63698bc462e4", 
+                        "constraint": "blonde", 
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.hair-color.result.value"
+                            }, 
+                            {
+                                "name": "extractors.content_strict.text.result.value", 
+                                "weight": 0.1
+                            }, 
+                            {
+                                "name": "extractors.content_relaxed.text.result.value", 
+                                "weight": 0.1
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "hairColor", 
+                        "type": "HairColor"
+                    }
+                ], 
+                "filters": [
+                    {
+                        "clauses": [
+                            {
+                                "_id": "a30c656734594b84bd8213dede693e6f", 
+                                "constraint": "the enchanting mistress", 
+                                "fields": [
+                                    {
+                                        "name": "extractors.content_strict.data_extractors.title.result.value"
+                                    }, 
+                                    {
+                                        "name": "extractors.content_relaxed.data_extractors.title.result.value", 
+                                        "weight": 0.5
+                                    }
+                                ], 
+                                "predicate": "title", 
+                                "type": "Title"
+                            }
+                        ], 
+                        "operator": "not exists"
+                    }
+                ], 
+                "type": "Ad", 
+                "variable": "?ad"
+            }
+        }, 
+        "field_count": 1, 
+        "type": "Point Fact"
+    }
+]

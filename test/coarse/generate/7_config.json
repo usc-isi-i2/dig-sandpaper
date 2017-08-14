@@ -1,0 +1,19 @@
+{
+    "components": [
+    {
+        "type": "TypeFieldMapping",
+        "name": "TypeFieldMapping",
+        "type_field_mappings": "test/coarse/generate/1_type_field_mappings.json"
+    },
+    {
+        "type": "TypeFieldMapping",
+        "name": "TypeFieldGroupByMapping",
+        "type_field_mappings": "test/coarse/generate/6_type_field_group_by_mappings.json"
+    },
+    {
+        "type": "FieldWeightMapping",
+        "name": "FieldWeightMapping",
+        "field_weight_mappings": "test/coarse/generate/1_field_weights.json"
+    }
+    ]
+}
