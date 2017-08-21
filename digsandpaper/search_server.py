@@ -10,6 +10,7 @@ import codecs
 from math import log
 from engine import Engine
 from elasticsearch_mapping.generate import generate_from_project_config
+from elasticsearch_mapping.generate import generate_from_etk_config
 from elasticsearch_indexing.index_knowledge_graph import index_knowledge_graph_fields
 from urllib import unquote
 from urlparse import urlparse
@@ -110,10 +111,24 @@ def get_project_config(url, project):
     response.raise_for_status()
     return project_config
 
+
 def call_generate_mapping(url, project, project_config=None, shards=5):
     if not project_config:
         project_config = get_project_config(url, project)
     return generate_from_project_config(project_config, shards=shards)
+
+
+def call_generate_mapping_from_etk_config(etk_config, shards=5):
+    return generate_from_etk_config(etk_config, shards=shards)
+
+
+@app.route("/mapping/generate/etk", methods=['POST'])
+def generate_mapping_from_etk():
+    shards = request.args.get('shards', 5)
+    etk_config = json.loads(request.data)
+    m = call_generate_mapping_from_etk_config(etk_config, shards=shards)
+    return json.dumps(m)
+
 
 @app.route("/mapping/generate", methods=['GET'])
 def generate_mapping():
@@ -123,28 +138,42 @@ def generate_mapping():
     m = call_generate_mapping(url, project, shards=shards)
     return json.dumps(m)
 
-@app.route("/mapping", methods=['PUT','POST'])
+
+@app.route("/mapping", methods=['PUT', 'POST'])
 def add_mapping():
+    shards = request.args.get('shards', 5)
     url = request.args.get('url', None)
     project = request.args.get('project', None)
-    project_config = get_project_config(url, project)
-    shards = request.args.get('shards', 5)
-    m = call_generate_mapping(url, project, project_config, shards=shards)
-    index = request.args.get('index', project_config["index"]["full"])
+    etk = request.args.get('etk', False)
+    if etk:
+        etk_config = json.loads(request.data)
+        m = call_generate_mapping_from_etk_config(etk_config, shards=shards)
+        index = request.args.get('index', None)
+        if not index:
+            return "Please provide an index to create for the mapping \n",\
+                   status.HTTP_400_BAD_REQUEST
+    else:
+        if request.data:
+            project_config = json.loads(request.data)
+        else:
+            project_config = get_project_config(url, project)
+        m = call_generate_mapping(url, project, project_config, shards=shards)
+        index = request.args.get('index', project_config["index"]["full"])
     if 'endpoint' in request.args:
-         endpoint = request.args.get('endpoint')
+        endpoint = request.args.get('endpoint')
     else:
         get_default_es_endpoint(project)
     if not isinstance(endpoint, basestring):
         endpoint = endpoint[0]
     response = put_url('{}/{}'.format(endpoint, index),
-            data=json.dumps(m))
+                       data=json.dumps(m))
     response.raise_for_status()
     return "index {} added for project {}\n".format(index, project)
 
+
 def jl_file_iterator(file):
     line = file.readline()
-    while line :
+    while line:
         document = json.loads(line)
         yield document
         line = file.readline()
