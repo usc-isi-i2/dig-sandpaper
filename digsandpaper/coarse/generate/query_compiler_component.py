@@ -381,6 +381,47 @@ class ElasticsearchQueryCompiler(object):
                 q = weighted_must
         return q
 
+    def generate_subquery(self, query, where, clause):
+        sub_query = self.generate_where(query, clause, False)
+        sub_query["clause_fields"] = []
+        sub_query["unbound_subquery_variables"] = []
+        # if sub_query contains variable of parent query
+        #  create clause that filters on variable of parent query
+
+        for c in clause["clauses"]:
+            if "variable" in c:
+                if c["variable"] != where["variable"]:
+                    sub_query["unbound_subquery_variables"].append(c["variable"])
+                    for f in c["fields"]:
+                        if not f["name"].startswith("content") and not f["name"] == "raw_content":
+                            sub_query["clause_fields"].append({"name": f["name"], 
+                                                           "variable": c["variable"]})
+
+        return sub_query
+
+    def generate_placeholder_for_subquery_values(self, clause,
+                                                 where, sub_query):
+        contains_parent_variable = False
+        for c in clause["clauses"]:
+            if "variable" in c:
+                if c["variable"] == where["variable"]:
+                    contains_parent_variable = True
+        if contains_parent_variable:
+            sub_query_clause = {}
+            sub_query_clause["constraint"] = "__placeholder__"
+            sub_query_clause["isOptional"] = False
+            sub_query_clause["fields"] = where["fields"]
+            # source_fields |= set([field["name"] for field in where["fields"]])
+            sub_query_clause["_id"] = clause["_id"]
+            es_clause = self.translate_clause_helper(sub_query_clause,
+                                                     where["fields"],
+                                                     True)
+            sub_query["clause_fields"] = where["fields"]
+            sub_query["clause_id"] = clause["_id"]
+        else:
+            es_clause = None
+        return es_clause
+
     def generate_where_union_helper(self, clause, musts, source_fields):
         union_shoulds = []
         for uc in clause["clauses"]:
@@ -407,7 +448,6 @@ class ElasticsearchQueryCompiler(object):
         sub_queries = []
 
         shoulds_by_predicate = {}
-        unbound_subquery_variables = set()
 
         for clause in where_clauses:
             if "operator" in clause:
@@ -426,45 +466,13 @@ class ElasticsearchQueryCompiler(object):
             if("constraint" in clause):
                 es_clause = self.translate_clause_helper(clause, fields, True)
             elif "clauses" in clause:
-                sub_query = self.generate_where(query, clause, False)
-                sub_query["clause_fields"] = []
-                # if sub_query contains variable of parent query
-                #  create clause that filters on variable of parent query
-                contains_parent_variable = False
-                for c in clause["clauses"]:
-                    if "variable" in c:
-                        if c["variable"] == where["variable"]:
-                            contains_parent_variable = True
-                        else:
-                            unbound_subquery_variables.add(c["variable"])
-                            for f in c["fields"]:
-                                if not f["name"].startswith("content") and not f["name"] == "raw_content":
-                                    sub_query["clause_fields"].append({"name": f["name"], 
-                                                                   "variable": c["variable"]})
-
-                if contains_parent_variable:
-                    sub_query_clause = {}
-                    sub_query_clause["constraint"] = "__placeholder__"
-                    sub_query_clause["isOptional"] = False
-                    sub_query_clause["fields"] = where["fields"]
-                    source_fields |= set([field["name"] for field in where["fields"]])
-                    sub_query_clause["_id"] = clause["_id"]
-                    es_clause = self.translate_clause_helper(sub_query_clause,
-                                                             where["fields"],
-                                                             True)
-                    sub_query["clause_fields"] = where["fields"]
-                    sub_query["clause_id"] = clause["_id"]
-                else:
-                    es_clause = None
-
-                #sub_query["clause_fields"] = where["fields"]
-
+                sub_query = self.generate_subquery(query,
+                                                   where,
+                                                   clause)
+                es_clause = self.generate_placeholder_for_subquery_values(clause,
+                                                                          where,
+                                                                          sub_query)
                 sub_queries.append(sub_query)
-                # else 
-                #   create clause that's constrained on variable of clause
-                #clause["constraint"] = "__placeholder__"
-                #es_clause = self.translate_clause_helper(clause, fields, True)
-                #sub_query["clause_name"] = es_clause["_name"]
             else:
                 # this is a we need an answer for this clause
                 if not is_root or "filter_for_fields_of_unbound_variables" \
@@ -482,8 +490,10 @@ class ElasticsearchQueryCompiler(object):
                 else:
                     musts.append(es_clause)
 
-        if unbound_subquery_variables:
-            sub_query = sub_queries[-1]
+        for sub_query in sub_queries:
+            if not sub_query["unbound_subquery_variables"]:
+                continue
+            unbound_subquery_variables = sub_query["unbound_subquery_variables"]
             sub_query["variable_to_clause_id"] = {}
             for clause in where_clauses:
                 if "operator" in clause:
