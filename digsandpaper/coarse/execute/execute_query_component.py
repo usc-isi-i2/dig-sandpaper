@@ -99,6 +99,18 @@ class ExecuteElasticsearchQuery(object):
         if field_element in doc:
             results.add(doc[field_element])
 
+    def get_previous_results_from_aggs(self, previous_query, previous_results):
+        to_insert_by_variable = {}
+        if "unbound_subquery_variables" not in previous_query:
+            return to_insert_by_variable
+        for variable in previous_query["unbound_subquery_variables"]:
+            if variable in previous_results["aggregations"]:
+                to_insert = to_insert_by_variable.get(variable, [])
+                for bucket in previous_results["aggregations"][variable]["buckets"]:
+                    to_insert.append(bucket["key"])
+                to_insert_by_variable[variable] = to_insert
+        return to_insert_by_variable
+
     def get_previous_results(self, previous_query, previous_results):
         fields = previous_query["clause_fields"]
         if "variable_to_clause_id" in previous_query:
@@ -141,11 +153,13 @@ class ExecuteElasticsearchQuery(object):
                 if "clause_fields" not in query:
                     if previous_results and previous_query:
                         previous_results_dict = previous_results.to_dict()
-                        to_insert = self.get_previous_results(previous_query, previous_results_dict)
+                        to_insert = self.get_previous_results_from_aggs(previous_query, previous_results_dict)
+                        if not to_insert or len(to_insert) == 0:
+                             to_insert = self.get_previous_results(previous_query, previous_results_dict)
+
                         if isinstance(to_insert, dict):
                             for var, clause_ids in previous_query["variable_to_clause_id"].iteritems():
                                 for clause_id in clause_ids:
-                                    print "replacing {}".format(clause_id)
                                     self.replace_value(query, clause_id, " ".join(to_insert[var]))
                         else:
                             clause_id = previous_query["clause_id"]

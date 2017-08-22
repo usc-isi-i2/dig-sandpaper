@@ -385,6 +385,7 @@ class ElasticsearchQueryCompiler(object):
         sub_query = self.generate_where(query, clause, False)
         sub_query["clause_fields"] = []
         sub_query["unbound_subquery_variables"] = []
+        sub_query["variable_to_agg_field"] = {}
         # if sub_query contains variable of parent query
         #  create clause that filters on variable of parent query
 
@@ -392,11 +393,19 @@ class ElasticsearchQueryCompiler(object):
             if "variable" in c:
                 if c["variable"] != where["variable"]:
                     sub_query["unbound_subquery_variables"].append(c["variable"])
+                    sub_query["variable_to_agg_field"][c["variable"]] = c["agg_fields"][0]["name"]
                     for f in c["fields"]:
                         if not f["name"].startswith("content") and not f["name"] == "raw_content":
-                            sub_query["clause_fields"].append({"name": f["name"], 
+                            sub_query["clause_fields"].append({"name": f["name"],
                                                            "variable": c["variable"]})
+        s = Search().from_dict(sub_query["search"])
 
+        for unbound_variable in sub_query["unbound_subquery_variables"]:
+            a = A('significant_terms', field=sub_query["variable_to_agg_field"]
+                                    [unbound_variable], size=5)
+            s.aggs.bucket(unbound_variable, a)
+
+        sub_query["search"] = self.clean_dismax(s.to_dict())
         return sub_query
 
     def generate_placeholder_for_subquery_values(self, clause,

@@ -25,6 +25,21 @@ class TypeFieldGroupByMapping(object):
         else:
             self.type_field_mapping = load_json_file(file)
 
+    def generate_where(self, where, is_root):
+        where_clauses = where["clauses"]
+
+        for clause in where_clauses:
+            if "clauses" in clause:
+                self.generate_where(clause, False)
+            else:
+                if not is_root and "constraint" not in clause:
+                    clause["agg_fields"] = []
+                    if "type" in clause:
+                        t = clause["type"]
+                        if t in self.type_field_mapping:
+                            for field in self.type_field_mapping[t]:
+                                clause["agg_fields"].append({"name": field})
+
     def generate(self, query):
         select = query["SPARQL"]["select"]
         groupby = query["SPARQL"]["group-by"]
@@ -53,7 +68,10 @@ class TypeFieldGroupByMapping(object):
                         for field in self.type_field_mapping[t]:
                             s["fields"].append({"name": field})
 
+        where = query["SPARQL"]["where"]
+        self.generate_where(where, True)
         return query
+
 
 class TypeFieldMapping(object):
 
@@ -84,7 +102,7 @@ class TypeFieldMapping(object):
 
     def generate_where(self, where):
         where_clauses = where["clauses"]
-        
+
         if "type" in where:
             t = where["type"]
             if t in self.type_field_mapping:
@@ -110,7 +128,7 @@ class TypeFieldMapping(object):
 
     def generate(self, query):
         where = query["SPARQL"]["where"]
-        self.generate_where(where)        
+        self.generate_where(where)
         return query
 
 
