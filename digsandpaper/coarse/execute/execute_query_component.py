@@ -161,6 +161,7 @@ class ExecuteElasticsearchQuery(object):
                              to_insert = self.get_previous_results(previous_query, previous_results_dict)
 
                         if isinstance(to_insert, dict):
+                            previous_query["variable_to_expanded_values"] = to_insert
                             for var, clause_ids in previous_query["variable_to_clause_id"].iteritems():
                                 for clause_id in clause_ids:
                                     self.replace_value(query, clause_id, " ".join(to_insert[var]))
