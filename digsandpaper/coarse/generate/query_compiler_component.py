@@ -158,7 +158,6 @@ class ElasticsearchQueryCompiler(object):
         compound_filter = operator == "and" or operator == "or"
         exists_filter = operator and "exists" in operator
         if "fields" not in f and not compound_filter and not exists_filter:
-            print "not a valid filter"
             return source_fields
         if compound_filter:
             clauses = f["clauses"]
@@ -533,7 +532,7 @@ class ElasticsearchQueryCompiler(object):
                             union_shoulds.append(uc_es_clause)
                         union_q = Bool(should=union_shoulds)
                         # filter for performance reasons
-                        filters.append(union_q)
+                        musts.append(union_q)
 
                 elif "constraint" not in clause and "clauses" not in clause:
                     if "variable" in clause and clause["variable"] in unbound_subquery_variables:
@@ -546,7 +545,7 @@ class ElasticsearchQueryCompiler(object):
                         variable_to_clause_id = sub_query["variable_to_clause_id"][clause["variable"]]
                         variable_to_clause_id.append(clause["_id"])
                         # filter for performance reasons
-                        filters.append(es_clause)
+                        musts.append(es_clause)
 
         for key, value in shoulds_by_predicate.iteritems():
             if len(value) > 1:
