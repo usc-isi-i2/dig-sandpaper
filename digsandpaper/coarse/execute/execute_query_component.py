@@ -107,7 +107,10 @@ class ExecuteElasticsearchQuery(object):
             if variable in previous_results["aggregations"]:
                 to_insert = to_insert_by_variable.get(variable, [])
                 for bucket in previous_results["aggregations"][variable]["buckets"]:
-                    to_insert.append(bucket["key"])
+                    value = bucket["key"]
+                    if ":" in value:
+                        value = value[0:value.index(":")]
+                    to_insert.append(value)
                 to_insert_by_variable[variable] = to_insert
         return to_insert_by_variable
 
