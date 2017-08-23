@@ -344,6 +344,13 @@ class ElasticsearchQueryCompiler(object):
                ("boost_musts" in self.elasticsearch_compiler_options and
                 len(musts) > 0)
 
+    def should_contains_filter(self, should):
+        if isinstance(should, Bool) and len(should.should) > 0:
+            filter_count = len([clause for clause in should.should if isinstance(clause, Exists)])
+            return filter_count > 0
+        return False
+
+
     def boost_musts_and_shoulds(self, q, musts, shoulds, filters, must_nots):
         if "boost_musts" in self.elasticsearch_compiler_options\
                 and len(musts) == 1:
@@ -359,14 +366,19 @@ class ElasticsearchQueryCompiler(object):
                 shoulds.extend(musts)
                 musts_temp = []
 
-            if len(shoulds) > 0:
-                extra_minimum_should_match = 0
+            filter_count = len([should for should in shoulds if self.should_contains_filter(should)])
+
+            if len(shoulds) > 0 and len(shoulds) != filter_count:
+                extra_minimum_should_match = filter_count
+
                 if len(shoulds) >= 2 and "boost_shoulds"\
                         in self.elasticsearch_compiler_options:
-                    extra_minimum_should_match = self.elasticsearch_compiler_options\
+                    extra_minimum_should_match = extra_minimum_should_match +\
+                                                   self.elasticsearch_compiler_options\
                                                      .get("extra_minimum_should_match", 1)
                 for x in range(0,
-                               len(shoulds) - extra_minimum_should_match):
+                               max(1,
+                                   len(shoulds) - extra_minimum_should_match)):
                     weighted_q = Bool(
                         must=musts_temp,
                         should=shoulds,
