@@ -525,14 +525,15 @@ class ElasticsearchQueryCompiler(object):
                             uc_es_clause = self.translate_clause_helper(uc,
                                                                         uc["fields"],
                                                                         True)
-                            if uc["variable"] not in sub_queries[-1]["variable_to_clause_id"]:
-                                sub_query["variable_to_clause_id"][uc["variable"]] = []
-                            variable_to_clause_id = sub_query["variable_to_clause_id"][uc["variable"]]
-                            variable_to_clause_id.append(uc["_id"])
-                            union_shoulds.append(uc_es_clause)
-                        union_q = Bool(should=union_shoulds)
-                        # filter for performance reasons
-                        musts.append(union_q)
+                            if "variable" in uc:
+                                if uc["variable"] not in sub_queries[-1]["variable_to_clause_id"]:
+                                    sub_query["variable_to_clause_id"][uc["variable"]] = []
+                                variable_to_clause_id = sub_query["variable_to_clause_id"][uc["variable"]]
+                                variable_to_clause_id.append(uc["_id"])
+                                union_shoulds.append(uc_es_clause)
+                        if union_shoulds:
+                            union_q = Bool(should=union_shoulds)
+                            musts.append(union_q)
 
                 elif "constraint" not in clause and "clauses" not in clause:
                     if "variable" in clause and clause["variable"] in unbound_subquery_variables:
