@@ -175,6 +175,7 @@
         {
           "elasticsearch_compiler_options": {
             "convert_text_filters_to_shoulds": true,
+            "extra_minimum_should_match": 0,
             "boost_shoulds": true,
             "filter_for_fields_of_unbound_variables": false,
             "default_source_fields": [
