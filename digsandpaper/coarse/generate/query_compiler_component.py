@@ -370,6 +370,10 @@ class ElasticsearchQueryCompiler(object):
 
             if len(shoulds) > 0 and len(shoulds) != filter_count:
                 extra_minimum_should_match = filter_count
+                if len(musts_temp) > 0:
+                    shoulds_are_all_optional = 1
+                else:
+                    shoulds_are_all_optional = 0
 
                 if len(shoulds) >= 2 and "boost_shoulds"\
                         in self.elasticsearch_compiler_options:
@@ -377,7 +381,7 @@ class ElasticsearchQueryCompiler(object):
                                                    self.elasticsearch_compiler_options\
                                                      .get("extra_minimum_should_match", 1)
                 for x in range(0,
-                               max(1,
+                               shoulds_are_all_optional+max(1,
                                    len(shoulds) - extra_minimum_should_match)):
                     weighted_q = Bool(
                         must=musts_temp,
