@@ -347,7 +347,7 @@ def apply_config_from_project(url, project, endpoint, index=None,
     if not default_config:
         default_config = load_project_json_file("default_config.json")
     c = default_config
-    update_endpoint(c)
+    update_endpoint(c, endpoint)
 
     generate_components = c["coarse"]["generate"]["components"]
     preprocess_components = c["coarse"]["preprocess"]["components"]
