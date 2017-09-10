@@ -22,8 +22,8 @@ class UUIDClauseIdMapper(object):
 
     def preprocess(self, query):
         where = query["SPARQL"]["where"]
-        clauses = where.get("clauses",[])
-        filters = where.get("filters",[])
+        clauses = where.get("clauses", [])
+        filters = where.get("filters", [])
         for clause in clauses:
             clause["_id"] = uuid.uuid4().hex
             if "clauses" in clause:

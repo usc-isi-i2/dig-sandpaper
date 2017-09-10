@@ -51,13 +51,12 @@ class ZoneFieldMapping(object):
 
     def generate(self, query):
         where = query["SPARQL"]["where"]
-        
         zones = query["zone"]
 
         self.generate_clauses(where, zones)
 
         if "filters" in where:
-            filters = where["filters"]    
+            filters = where["filters"]
             for f in filters:
                 self.generate_filter(f, zones)
 

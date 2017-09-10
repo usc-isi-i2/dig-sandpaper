@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import json
 import codecs
 import copy
@@ -48,9 +49,8 @@ class LambdaConstraintExpander(object):
 
     def preprocess_clauses(self, where):
         where_clauses = where["clauses"]
-        
         new_where_clauses = list()
-        
+
         for clause in where_clauses:
             if "constraint" not in clause:
                 if "clauses" in clause:
@@ -70,7 +70,7 @@ class LambdaConstraintExpander(object):
 
         if "clauses" in where:
             self.preprocess_clauses(where)
-        
+
         if "filters" in where:
             filters = where["filters"]
             where["filters"] = [self.preprocess_filter(f) for f in filters]

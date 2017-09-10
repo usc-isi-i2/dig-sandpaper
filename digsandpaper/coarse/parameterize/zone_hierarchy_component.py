@@ -31,7 +31,7 @@ class MultipleZoneHierarchy(object):
         queries = list()
         for x in range(1, self.zone_count + 1):
             parameterized_query = copy.deepcopy(query)
-            parameterized_query["zone"] = range(1, x+1)
+            parameterized_query["zone"] = range(1, x + 1)
             queries.append(parameterized_query)
         return queries
 

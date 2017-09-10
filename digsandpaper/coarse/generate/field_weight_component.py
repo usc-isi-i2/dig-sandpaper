@@ -49,13 +49,13 @@ class FieldWeightMapping(object):
                     self.find_weight_for_filter(clause)
         else:
             for field in f["fields"]:
-                weight = self.find_weight(field["name"].split("."), self.field_weight_mapping)
+                weight = self.find_weight(field["name"].split("."),
+                                          self.field_weight_mapping)
                 if weight:
                     field["weight"] = weight
 
     def generate_where(self, where):
         where_clauses = where["clauses"]
-        
 
         for clause in where_clauses:
             if "fields" not in clause:
@@ -64,7 +64,8 @@ class FieldWeightMapping(object):
                 self.generate_where(clause)
             else:
                 for field in clause["fields"]:
-                    weight = self.find_weight(field["name"].split("."), self.field_weight_mapping)
+                    weight = self.find_weight(field["name"].split("."),
+                                              self.field_weight_mapping)
                     if weight:
                         field["weight"] = weight
         if "filters" in where:

@@ -37,7 +37,7 @@ class TypeQueryMapping(object):
 
     def generate_where(self, where):
         where_clauses = where["clauses"]
-        
+
         if "type" in where:
             t = where["type"]
             if t in self.type_query_mapping:
