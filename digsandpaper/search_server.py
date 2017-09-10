@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from flask import Flask
 from flask import request
 from flask_api import status
@@ -28,7 +29,7 @@ _location__ = os.path.realpath(
 
 def load_project_json_file(file_name):
     file = json.load(codecs.open(os.path.join(_location__, file_name),
-                                  'r', 'utf-8'))
+                                 'r', 'utf-8'))
     return file
 
 
