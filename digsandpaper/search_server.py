@@ -162,7 +162,7 @@ def add_mapping():
     if 'endpoint' in request.args:
         endpoint = request.args.get('endpoint')
     else:
-        get_default_es_endpoint(project)
+        endpoint = get_default_es_endpoint(project)
     if not isinstance(endpoint, basestring):
         endpoint = endpoint[0]
     response = put_url('{}/{}'.format(endpoint, index),
@@ -318,6 +318,20 @@ def multiply_values(w, multiplier):
             multiply_values(v, multiplier)
 
 
+def update_endpoint(config, endpoint):
+    if endpoint:
+        execute_component = config["coarse"]["execute"]["components"][0]
+        execute_component.pop("host", None)
+        execute_component.pop("port", None)
+        if isinstance(endpoint, basestring):
+            endpoints = list()
+            endpoints.append(unquote(endpoint))
+        else:
+            endpoints = endpoint
+        execute_component["endpoints"] = endpoints
+        return config
+
+
 def apply_config_from_project(url, project, endpoint, index=None,
                               default_config=None, sample=False,
                               search_importance_enabled=False):
@@ -332,15 +346,8 @@ def apply_config_from_project(url, project, endpoint, index=None,
     if not default_config:
         default_config = load_project_json_file("default_config.json")
     c = default_config
-    execute_component = c["coarse"]["execute"]["components"][0]
-    execute_component.pop("host", None)
-    execute_component.pop("port", None)
-    if isinstance(endpoint, basestring):
-        endpoints = list()
-        endpoints.append(unquote(endpoint))
-    else:
-        endpoints = endpoint
-    execute_component["endpoints"] = endpoints
+    update_endpoint(c)
+
     generate_components = c["coarse"]["generate"]["components"]
     preprocess_components = c["coarse"]["preprocess"]["components"]
     predicate_type_mapping = {}

@@ -5,6 +5,7 @@ import codecs
 from optparse import OptionParser
 from engine import Engine
 import search_server
+from search_server import update_endpoint
 
 
 def load_json_file(file_name):
@@ -51,6 +52,8 @@ def main(args):
         parser.error('Config file not specified.  Use -c or --config')
 
     config = load_json_file(config_file)
+    if endpoint:
+        update_endpoint(config, endpoint)
     engine = Engine(config)
     if server:
         search_server.set_engine(engine)
