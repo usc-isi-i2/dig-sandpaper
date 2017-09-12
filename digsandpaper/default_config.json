@@ -62,15 +62,13 @@
             "owl:Thing": [
               "content_extraction.content_relaxed.text",
               "content_extraction.content_strict.text",
-              "content_extraction.title.text",
-              "raw_content"
+              "content_extraction.title.text"
             ],
             "Ad": ["doc_id"],
             "content": [
               "content_extraction.content_relaxed.text",
               "content_extraction.content_strict.text",
-              "content_extraction.title.text",
-              "raw_content"
+              "content_extraction.title.text"
             ],
             "topleveldomain": [
               "tld.raw",
