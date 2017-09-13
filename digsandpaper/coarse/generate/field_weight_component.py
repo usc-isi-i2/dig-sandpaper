@@ -58,10 +58,10 @@ class FieldWeightMapping(object):
         where_clauses = where["clauses"]
 
         for clause in where_clauses:
-            if "fields" not in clause:
-                continue
             if "clauses" in clause:
                 self.generate_where(clause)
+            elif "fields" not in clause:
+                continue
             else:
                 for field in clause["fields"]:
                     weight = self.find_weight(field["name"].split("."),
