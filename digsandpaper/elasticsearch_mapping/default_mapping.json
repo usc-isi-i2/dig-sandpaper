@@ -186,7 +186,7 @@
             },
             "email_url_stop":{
               "type": "stop",
-              "stopwords": ["com", "gmail", "yahoo", "net", "www", "hotmail"]
+              "stopwords": ["com", "gmail", "yahoo", "net", "www", "hotmail", "org"]
             }
           },
           "analyzer" : {
