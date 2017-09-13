@@ -340,7 +340,7 @@ class ElasticsearchQueryCompiler(object):
         return es_clause
 
     def boosting_musts_and_shoulds_enabled(self, musts):
-        return "boost_shoulds" in self.elasticsearch_compiler_options or\
+        return self.elasticsearch_compiler_options.get("boost_shoulds", False) or\
                ("boost_musts" in self.elasticsearch_compiler_options and
                 len(musts) > 0)
 
@@ -583,10 +583,17 @@ class ElasticsearchQueryCompiler(object):
 
             shoulds.extend(converted_filters)
             filters = valid_filters
+
+        if len(musts) > 0:
+            msm = 0
+        else:
+            msm = 1
+
         q = Bool(must=musts,
                  should=shoulds,
                  filter=filters,
-                 must_not=must_nots)
+                 must_not=must_nots,
+                 minimum_should_match=msm)
         if self.boosting_musts_and_shoulds_enabled(musts):
             q = self.boost_musts_and_shoulds(q, musts, shoulds,
                                              filters, must_nots)
