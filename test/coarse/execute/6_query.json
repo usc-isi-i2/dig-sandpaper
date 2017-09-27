@@ -37,11 +37,10 @@
                             "order": {
                                 "_count": "desc"
                             }, 
-                            "size": 20
+                            "size": 5
                         }
                     }
                 }, 
-                "from": 0, 
                 "highlight": {
                     "fields": {
                         "doc_id": {}, 
@@ -98,6 +97,7 @@
                                 }
                             }
                         ], 
+                        "minimum_should_match": 0, 
                         "must": [
                             {
                                 "dis_max": {
@@ -260,12 +260,14 @@
                             }
                         ]
                     }
-                }
+                }, 
+                "size": 0
             }, 
             "type": "Ad"
         }, 
         "SPARQL": {
             "group-by": {
+                "limit": 5, 
                 "variables": [
                     {
                         "fields": [

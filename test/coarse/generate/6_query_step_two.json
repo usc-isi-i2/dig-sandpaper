@@ -12,7 +12,8 @@
                         "type": "Ethnicity", 
                         "variable": "?ethnicity"
                     }
-                ]
+                ],
+                "limit": 5
             }, 
             "order-by": {
                 "values": [

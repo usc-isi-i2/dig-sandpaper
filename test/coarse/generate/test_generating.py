@@ -150,6 +150,9 @@ class TestCoarseGenerating(unittest.TestCase):
         self.assertIn("aggs", generated_queries[0]["ELASTICSEARCH"]["search"])
         self.assertIn("?ethnicity", generated_queries[0]["ELASTICSEARCH"]
                                                         ["search"]["aggs"])
+        self.assertEqual(5, generated_queries[0]["ELASTICSEARCH"]
+                                                ["search"]["aggs"]
+                                                ["?ethnicity"]["terms"]["size"])
 
     def test_basic_coarse_union_and_not_exists(self):
         config = load_json_file("7_config.json")

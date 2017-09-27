@@ -118,7 +118,8 @@ class TestCoarseExecuting(unittest.TestCase):
         for query in queries:
             result = executor.execute(query)
             result_dict = result.to_dict()
-            self.assertEquals(len(result.hits), 1)
+            # aggregation queries should not return any documents
+            self.assertEquals(len(result.hits), 0)
             self.assertIn("aggregations", result_dict)
             self.assertIn("?ethnicity", result_dict["aggregations"])
             self.assertEquals(1, len(result_dict["aggregations"]["?ethnicity"]["buckets"]))

@@ -7,7 +7,8 @@
                         "type": "Ethnicity", 
                         "variable": "?ethnicity"
                     }
-                ]
+                ],
+                "limit": 5
             }, 
             "select": {
                 "variables": [

@@ -1,7 +1,8 @@
 {
         "SPARQL": {
             "group-by": {
-                "variables": [ {"variable":"?ethnicity"}]
+                "variables": [ {"variable":"?ethnicity"}],
+                "limit": 5
             }, 
             "select": {
                 "variables": [
