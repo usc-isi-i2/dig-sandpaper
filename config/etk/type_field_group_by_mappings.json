@@ -32,6 +32,9 @@
   "Height": [
     "indexed.height.high_confidence_keys"
   ],
+  "Image": [
+    "objects.obj_stored_url"
+  ],
   "Name": [
     "indexed.name.high_confidence_keys"
   ],

@@ -156,6 +156,9 @@
     "indexed.height.other_method.title.value",
     "indexed.height.other_method.other_segment.value"
   ],
+  "Image": [
+    "objects.obj_stored_url"
+  ],
   "Location": [
     "indexed.city.extract_from_landmark.inferlink_description.value",
     "indexed.city.extract_from_landmark.content_strict.value",

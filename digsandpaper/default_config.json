@@ -9,7 +9,8 @@
           "name": "PredicateDictConstraintTypeMapper",
           "predicate_range_mappings": {
             "tld": "topleveldomain",
-            "url": "url"
+            "url": "url",
+            "image": "image"
           }
         },
         {
@@ -78,6 +79,9 @@
               "url",
               "url.raw",
               "tld"
+            ],
+            "image": [
+              "objects.obj_stored_url"
             ]
           }
         },
@@ -93,6 +97,9 @@
             ],
             "url": [
               "url.raw"
+            ],
+            "image": [
+              "objects.obj_stored_url"
             ]
           }
         },

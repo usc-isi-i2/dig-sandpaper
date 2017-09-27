@@ -378,7 +378,8 @@ def apply_config_from_project(url, project, endpoint, index=None,
             ("email" not in field_name.lower() and
              "website" not in field_name.lower() and
              "tld" not in field_name.lower() and
-             "date" not in field_name.lower()):
+             "date" not in field_name.lower() and
+             "image" not in field_name.lower()):
             fields.extend(type_field_mapping["owl:Thing"])
         if "search_importance" in spec and search_importance_enabled:
             search_importance = spec["search_importance"]
