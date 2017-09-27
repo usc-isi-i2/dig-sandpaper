@@ -2,8 +2,7 @@
   "owl:Thing": [
     "content_extraction.content_relaxed.text",
     "content_extraction.content_strict.text",
-    "content_extraction.title.text",
-    "raw_content"
+    "content_extraction.title.text"
   ],
   "Ad": ["doc_id"],
   "Address":[
@@ -75,8 +74,7 @@
   "Content": [
     "content_extraction.content_relaxed.text",
     "content_extraction.content_strict.text",
-    "content_extraction.title.text",
-    "raw_content"
+    "content_extraction.title.text"
   ],
   "Email": [
     "indexed.email.extract_from_landmark.inferlink_description.value",
@@ -94,9 +92,7 @@
     "indexed.email.other_method.title.value",
     "indexed.email.other_method.title.key",
     "indexed.email.other_method.other_segment.value",
-    "indexed.email.other_method.other_segment.key",
-    "content_extraction.title.text",
-    "raw_content"
+    "indexed.email.other_method.other_segment.key"
   ],
   "Ethnicity":[
     "indexed.ethnicity.extract_from_landmark.inferlink_description.value",
@@ -213,8 +209,7 @@
     "indexed.phone.other_method.other_segment.value",
     "content_extraction.content_relaxed.text",
     "content_extraction.content_strict.text",
-    "content_extraction.title.text",
-    "raw_content"
+    "content_extraction.title.text"
   ],
   "PostingDate": [
     "indexed.posting_date.extract_from_landmark.inferlink_description.key",
