@@ -37,8 +37,12 @@ class TypeFieldGroupByMapping(object):
                     if "type" in clause:
                         t = clause["type"]
                         if t in self.type_field_mapping:
-                            for field in self.type_field_mapping[t]:
-                                clause["agg_fields"].append({"name": field})
+                            fields_array_or_str = self.type_field_mapping[t]
+                            if isinstance(fields_array_or_str, basestring):
+                                clause["agg_fields"].append({"name": fields_array_or_str})
+                            else: 
+                                for field in fields_array_or_str:
+                                    clause["agg_fields"].append({"name": field})
 
     def generate(self, query):
         select = query["SPARQL"]["select"]
