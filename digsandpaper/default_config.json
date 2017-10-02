@@ -81,7 +81,7 @@
               "tld"
             ],
             "image": [
-              "objects.obj_stored_url"
+              "objects.img_sha1"
             ]
           }
         },
@@ -99,7 +99,7 @@
               "url.raw"
             ],
             "image": [
-              "objects.obj_stored_url"
+              "objects.img_sha1"
             ]
           }
         },
