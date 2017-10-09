@@ -335,8 +335,10 @@ def update_endpoint(config, endpoint):
 
 def apply_config_from_project(url, project, endpoint, index=None,
                               default_config=None, sample=False,
-                              search_importance_enabled=False):
-    project_config = get_project_config(url, project)
+                              search_importance_enabled=False,
+                              project_config=None):
+    if not project_config:
+        project_config = get_project_config(url, project)
     global current_project
     current_project = project
     if not index:
@@ -409,12 +411,13 @@ def config():
     search_importance_enabled = request.args.get('searchimportanceenabled',
                                                  False)
     if request.data and len(request.data) > 0:
-        default_config = json.loads(request.data)
+        project_config = json.loads(request.data)
     else:
-        default_config = None
+        project_config = None
     apply_config_from_project(url, project, endpoint, index,
-                              default_config, sample,
-                              search_importance_enabled)
+                              None, sample,
+                              search_importance_enabled, 
+                              project_config)
 
     return "Applied config for project {}\n".format(project)
 
