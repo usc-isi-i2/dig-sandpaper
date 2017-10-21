@@ -16,13 +16,11 @@
     "content_extraction.content_relaxed.text",
     "raw_content",
     "*.provenance.extracted_value",
-    "*.provenance.confidence.extraction",
     "*.provenance.source.context.end",
     "*.provenance.source.context.start",
     "*.provenance.source.context.tokens_left",
     "*.provenance.source.context.tokens_right",
     "*.provenance.source.context.input",
-    "*.confidence",
     "objects.response_headers.*"
   ],
   "highlight": {
