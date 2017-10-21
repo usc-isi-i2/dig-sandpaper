@@ -1,5 +1,12 @@
 {
 	"doc_id": "ABCDEFGHIJKLMNOPQ",
+	"fields": {
+		"posting-date":{
+			"strict": {
+				"name": "2017-08-01T00:00:00"
+			}
+		}
+	},
 	"extractors": {
 		"content_strict":{
 			"data_extractors":{

@@ -144,8 +144,12 @@ class ElasticsearchQueryCompiler(object):
                 for key in query:
                     self.clean_dismax(query[key])
         elif isinstance(query, list):
-            for e in query:
+            # need to update in place
+            for i in range(len(query)):
+                e = query[i]
                 self.clean_dismax(e)
+                if isinstance(e, DisMax):
+                    query[i] = e.to_dict()
         return query
 
     # have to return source_fields because set union operation produces a new set
@@ -206,7 +210,7 @@ class ElasticsearchQueryCompiler(object):
                                                          sub_must_nots,
                                                          source_fields)
                 q = Bool(filter=sub_filters,
-                         must_nots=sub_must_nots)
+                         must_not=sub_must_nots)
             else:
                 for clause in clauses:
                     source_fields = self.generate_filter(clause,
@@ -216,7 +220,7 @@ class ElasticsearchQueryCompiler(object):
                 if operator == "or":
                     q = Bool(should=[ConstantScore(filter=sf)
                              for sf in sub_filters],
-                             must_nots=sub_must_nots)
+                             must_not=sub_must_nots)
                 else:
                     q = sub_filters[0]
             filters.append(q)
@@ -232,7 +236,8 @@ class ElasticsearchQueryCompiler(object):
         else:
             source_fields |= set([field["name"] for field in f["fields"]])
             if len(f["fields"]) == 1:
-                filters.append(self.translate_filter(f, field))
+                q = self.translate_filter(f, field)
+                filters.append(q)
             else:
                 sub_filters = []
                 for field in f["fields"]:
@@ -241,7 +246,7 @@ class ElasticsearchQueryCompiler(object):
                     q = Bool(should=sub_filters)
                 else:
                     q = DisMax(queries=sub_filters)
-                filters.append(q)
+            filters.append(q)
         return source_fields
 
     def generate_source_fields(self, s, source_fields):

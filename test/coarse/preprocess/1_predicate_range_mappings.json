@@ -3,5 +3,6 @@
 	"location": "Location",
 	"phone": "Phone",
 	"ethnicity": "Ethnicity",
-	"title": "Title"
+	"title": "Title",
+	"posting_date": "PostingDate"
 }

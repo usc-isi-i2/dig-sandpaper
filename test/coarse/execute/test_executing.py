@@ -132,15 +132,18 @@ class TestCoarseExecuting(unittest.TestCase):
         queries = load_json_file("7_query.json")
         document = load_json_file("7_document.json")
         document2 = load_json_file("7_document_2.json")
+        document3 = load_json_file("7_document_3.json")
 
-        test.test_utils.initialize_elasticsearch([document, document2],
+        test.test_utils.initialize_elasticsearch([document, document2, document3],
                                                  config["components"][0])
 
         executor = Executor(config)
 
         for query in queries:
             result = executor.execute(query)
+            result_dict = result.to_dict()
             self.assertEquals(len(result.hits), 1)
+            self.assertEquals("QPONMLKJIHGFEDCBA", result_dict["hits"]["hits"][0]["_source"]["doc_id"])
 
         test.test_utils.reset_elasticsearch(config["components"][0])
 

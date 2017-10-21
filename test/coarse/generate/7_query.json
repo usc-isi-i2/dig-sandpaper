@@ -19,17 +19,17 @@
             "where": {
                 "clauses": [
                     {
-                        "_id": "beda7baa39b04f0690c0ba36de623111", 
+                        "_id": "8cbc3b86ddd4463ca2dcc82395f6b525", 
                         "clauses": [
                             {
-                                "_id": "f77f72ca0dfa4872a7e25189da426489", 
+                                "_id": "ddd5416b26e9407daa5d90ce1054f71d", 
                                 "constraint": "Toronto, Ontario", 
                                 "isOptional": false, 
                                 "predicate": "location", 
                                 "type": "Location"
                             }, 
                             {
-                                "_id": "a7d08c96a01f4a0caed88bce8ed94103", 
+                                "_id": "1c5eb302c06448a9b44b9c0e9810dae5", 
                                 "constraint": "Ottawa, Quebec", 
                                 "isOptional": false, 
                                 "predicate": "location", 
@@ -39,38 +39,57 @@
                         "operator": "union"
                     }, 
                     {
-                        "_id": "c1635fc037ee43c689b41a3ec01dee24", 
+                        "_id": "8f04c03548b7487fb30c72f46179963e", 
                         "isOptional": false, 
                         "predicate": "ethnicity", 
                         "type": "Ethnicity", 
                         "variable": "?ethnicity"
                     }, 
                     {
-                        "_id": "ea81e4f9b52441019c535e2922889df1", 
+                        "_id": "37f898e4bc3942229d7a9c119c494abf", 
                         "isOptional": false, 
                         "predicate": "title", 
                         "type": "Title", 
                         "variable": "?title"
                     }, 
                     {
-                        "_id": "be68dff63186482db63c63698bc462e4", 
+                        "_id": "5534a751a0fc4c6c8645c415eb003883", 
                         "constraint": "blonde", 
                         "isOptional": false, 
                         "predicate": "hairColor", 
                         "type": "HairColor"
+                    }, 
+                    {
+                        "_id": "607e077d79b5408db996c6ea2ae1c9ef", 
+                        "isOptional": false, 
+                        "predicate": "posting_date", 
+                        "type": "PostingDate", 
+                        "variable": "?posting_date1"
                     }
                 ], 
                 "filters": [
                     {
                         "clauses": [
                             {
-                                "_id": "a30c656734594b84bd8213dede693e6f", 
-                                "constraint": "the enchanting mistress", 
-                                "predicate": "title", 
-                                "type": "Title"
+                                "_id": "5ed3bf8e015d4bf188893570527c4ff2", 
+                                "constraint": "2017-07-01T00:00:00", 
+                                "operator": ">=", 
+                                "type": "PostingDate", 
+                                "variable": "?posting_date1"
+                            }, 
+                            {
+                                "clauses": [
+                                    {
+                                        "_id": "2f1fa0987bc24398b613dcf10546adc0", 
+                                        "constraint": "the enchanting mistress", 
+                                        "type": "Title", 
+                                        "variable": "?title"
+                                    }
+                                ], 
+                                "operator": "not exists"
                             }
                         ], 
-                        "operator": "not exists"
+                        "operator": "and"
                     }
                 ], 
                 "type": "Ad", 

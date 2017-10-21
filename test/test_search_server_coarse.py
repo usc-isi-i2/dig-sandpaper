@@ -68,7 +68,7 @@ class SearchServerTestCaseCoarse(unittest.TestCase):
                                       [0]["doc_count"], 1)
 
     def test_coarse_7(self):
-        results_7 = self.helper_test_coarse(7, ["2"])
+        results_7 = self.helper_test_coarse(7, ["2", "3"])
         self.assertEquals(len(results_7), 1)
         self.assertEquals(len(results_7[0]["result"]["hits"]["hits"]), 1)
 

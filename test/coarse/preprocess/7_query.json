@@ -1,68 +1,83 @@
 {
-        "SPARQL": {
-            "group-by": {
-                "limit": 500
-            }, 
-            "select": {
-                "variables": [
-                    {
-                        "type": "simple", 
-                        "variable": "?ad"
-                    }, 
-                    {
-                        "type": "simple", 
-                        "variable": "?ethnicity"
-                    }
-                ]
-            }, 
-            "where": {
-                "clauses": [ 
-                    { 
-                        "operator": "union",
-                        "clauses": [
-                            {
-                                "constraint": "Toronto, Ontario", 
-                                "isOptional": false, 
-                                "predicate": "location"
-                            },
-                            {
-                                "constraint": "Ottawa, Quebec", 
-                                "isOptional": false, 
-                                "predicate": "location"
-                            }
-
-                        ]
-                    }, 
-                    {
-                        "isOptional": false, 
-                        "predicate": "ethnicity", 
-                        "variable": "?ethnicity"
-                    }, 
-                    {
-                        "isOptional": false, 
-                        "predicate": "title", 
-                        "variable": "?title"
-                    },
-                    {
-                        "isOptional": false,
-                        "predicate": "hairColor",
-                        "constraint": "blonde"
-                    }
-                ], 
-                "filters": [
-                    {
-                        "operator": "not exists",
-                        "clauses": [
-                            {
-                                "constraint": "the enchanting mistress", 
-                                "predicate": "title"
-                            }
-                        ]
-                    }
-                ], 
-                "type": "Ad", 
-                "variable": "?ad"
+  "SPARQL": {
+    "group-by": {
+      "limit": 500
+    },
+    "select": {
+      "variables": [
+        {
+          "type": "simple",
+          "variable": "?ad"
+        },
+        {
+          "type": "simple",
+          "variable": "?ethnicity"
+        }
+      ]
+    },
+    "where": {
+      "clauses": [
+        {
+          "operator": "union",
+          "clauses": [
+            {
+              "constraint": "Toronto, Ontario",
+              "isOptional": false,
+              "predicate": "location"
+            },
+            {
+              "constraint": "Ottawa, Quebec",
+              "isOptional": false,
+              "predicate": "location"
             }
-        }, 
-        "type": "Point Fact"
+          ]
+        },
+        {
+          "isOptional": false,
+          "predicate": "ethnicity",
+          "variable": "?ethnicity"
+        },
+        {
+          "isOptional": false,
+          "predicate": "title",
+          "variable": "?title"
+        },
+        {
+          "isOptional": false,
+          "predicate": "hairColor",
+          "constraint": "blonde"
+        },
+        {
+          "isOptional": false,
+          "predicate": "posting_date",
+          "variable": "?posting_date1"
+        }
+      ],
+      "filters": [
+        {
+          "clauses": [
+            {
+              "constraint": "2017-07-01T00:00:00",
+              "operator": ">=",
+              "variable": "?posting_date1"
+            },
+            {
+              "operator": "not exists",
+              "clauses": [
+                {
+                  "variable": "?title",
+                  "constraint": "the enchanting mistress"
+
+                }
+              ]
+            }
+          ],
+          "operator": "and"
+        }
+      ],
+      "type": "Ad",
+      "variable": "?ad"
     }
+  },
+  "type": "Point Fact"
+}
