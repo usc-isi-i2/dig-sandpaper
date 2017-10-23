@@ -401,25 +401,53 @@ def apply_config_from_project(url, project, endpoint, index=None,
         type_field_mapping[field_name.lower()] = fields
     set_engine(Engine(c), project)
 
-@app.route("/config", methods=['POST'])
-def config():
-    url = request.args.get('url', None)
-    project = request.args.get('project', None)
-    endpoint = request.args.get('endpoint', get_default_es_endpoint())
-    index = request.args.get('index', None)
-    sample = request.args.get('sample', False)
-    search_importance_enabled = request.args.get('searchimportanceenabled',
-                                                 False)
-    if request.data and len(request.data) > 0:
-        project_config = json.loads(request.data)
-    else:
-        project_config = None
-    apply_config_from_project(url, project, endpoint, index,
-                              None, sample,
-                              search_importance_enabled, 
-                              project_config)
 
-    return "Applied config for project {}\n".format(project)
+def dereference_config(config):
+    if isinstance(config, dict):
+        for k, v in config.iteritems():
+            if isinstance(v, basestring):
+                if v.endswith('.json'):
+                    sub_config = load_json_file(v)
+                    config[k] = sub_config
+            elif isinstance(v, list):
+                for e in v:
+                    dereference_config(e)
+            elif isinstance(v, dict):
+                dereference_config(v)
+    return config
+
+
+@app.route("/config", methods=['POST', 'GET'])
+def config():
+    if request.method == "POST":
+        url = request.args.get('url', None)
+        project = request.args.get('project', None)
+        endpoint = request.args.get('endpoint', get_default_es_endpoint())
+        index = request.args.get('index', None)
+        sample = request.args.get('sample', False)
+        search_importance_enabled = request.args.get('searchimportanceenabled',
+                                                     False)
+        if request.data and len(request.data) > 0:
+            project_config = json.loads(request.data)
+        else:
+            project_config = None
+        apply_config_from_project(url, project, endpoint, index,
+                                  None, sample,
+                                  search_importance_enabled,
+                                  project_config)
+
+        return "Applied config for project {}\n".format(project)
+    elif request.method == "GET":
+        project = request.args.get('project', None)
+        config = get_engine(project).config
+        if config:
+            return json.dumps(dereference_config(config))
+        else:
+            return "No project config exists for project {}\n".format(project),\
+                   status.HTTP_400_BAD_REQUEST
+
+
+
 
 
 def load_json_file(file_name):
