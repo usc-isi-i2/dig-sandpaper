@@ -97,3 +97,7 @@ data/*
 *.compiled
 
 *.generate
+
+*.timing
+
+*.csv

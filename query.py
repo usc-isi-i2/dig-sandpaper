@@ -1,3 +1,4 @@
+import time
 import json
 import os
 import codecs
@@ -58,6 +59,7 @@ def main(args):
         separator = ","
         for query in query_file_json:
             i = i + 1
+            start = time.time()
             r =requests.post(endpoint, json.dumps(query))
             if r.status_code == 200:
                 
@@ -68,6 +70,8 @@ def main(args):
                     print "{}{}".format(r.text[1:-1], separator)
                 else:
                     print "{}{}".format(r.text, separator)
+                end = time.time()
+                sys.stderr.write("{},{}\n".format(query.get("id", "unknown"), end-start))
             else: 
                 sys.stderr.write("{} query failed error code: {}\n".format(query.get("id", "unknown"), r.status_code))
         print "]"
