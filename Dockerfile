@@ -19,6 +19,7 @@ WORKDIR /etc/sandpaper
 
 EXPOSE 9876
 ENTRYPOINT ["/etc/sandpaper/docker-entrypoint.sh"]
+CMD ["--config", "config/sandpaper.json", "--host", "0.0.0.0", "--endpoint", "http://elasticsearch:9200"]
 
 RUN /bin/bash -c "source ~/elasticsearch2/bin/activate && ES_MAJOR_VERSION=2 pip install --no-cache-dir digsandpaper"
 RUN /bin/bash -c "source ~/elasticsearch5/bin/activate && ES_MAJOR_VERSION=5 pip install --no-cache-dir digsandpaper"

@@ -8,14 +8,8 @@ services:
       - ./config:/etc/sandpaper/config
     links:
       - elasticsearch
-    entrypoint:
-      - bin/start.sh
-      - --host
-      - 0.0.0.0
-      - --endpoint
-      - http://elasticsearch:9200
-      - --config 
-      - config/sandpaper.json
+    environment:
+      ES_MAJOR_VERSION: 2
   elasticsearch:
     image: "elasticsearch:2.4.1"
     ports: 

@@ -19,6 +19,7 @@ WORKDIR /etc/sandpaper
 
 EXPOSE 9876
 ENTRYPOINT ["/etc/sandpaper/docker-entrypoint.sh"]
+CMD ["--config", "config/sandpaper.json", "--host", "0.0.0.0", "--endpoint", "http://elasticsearch:9200"]
 
 COPY . /etc/sandpaper
 
