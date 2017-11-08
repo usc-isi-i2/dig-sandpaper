@@ -30,4 +30,5 @@ RUN mkdir -p /etc/sandpaper/config
 COPY bin/* /etc/sandpaper/bin/
 COPY start.py /etc/sandpaper/
 COPY config/sandpaper.json /etc/sandpaper/config
+COPY docker-entrypoint.sh /etc/sandpaper/docker-entrypoint.sh
 VOLUME /etc/sandpaper/config
