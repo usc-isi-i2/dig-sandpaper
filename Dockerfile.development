@@ -9,14 +9,19 @@ RUN apt-get update && apt-get install -y \
 RUN wget https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py
 
+RUN pip install --no-cache-dir virtualenv
+
+RUN virtualenv ~/elasticsearch2
+RUN virtualenv ~/elasticsearch5
 
 RUN mkdir /etc/sandpaper
 WORKDIR /etc/sandpaper
-RUN git clone https://github.com/usc-isi-i2/dig-sandpaper.git .
-RUN pip install --no-cache-dir -e /etc/sandpaper
 
 EXPOSE 9876
+ENTRYPOINT ["/etc/sandpaper/docker-entrypoint.sh"]
+
+RUN git clone https://github.com/usc-isi-i2/dig-sandpaper.git .
+RUN /bin/bash -c "source ~/elasticsearch2/bin/activate && ES_MAJOR_VERSION=2 pip install --no-cache-dir -e /etc/sandpaper"
+RUN /bin/bash -c "source ~/elasticsearch5/bin/activate && ES_MAJOR_VERSION=5 pip install --no-cache-dir -e /etc/sandpaper"
 
 VOLUME /etc/sandpaper/config
-
-CMD ["bin/start.sh", "--config", "config/sandpaper.json", "--host", "0.0.0.0"]

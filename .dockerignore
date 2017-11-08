@@ -6,3 +6,9 @@
 .dist
 .test
 *.jl
+ad_hoc_queries
+data
+eval
+digsandpaper.egg-info
+gt
+
