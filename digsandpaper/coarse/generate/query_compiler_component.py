@@ -407,6 +407,8 @@ class ElasticsearchQueryCompiler(object):
         sub_query["clause_fields"] = []
         sub_query["unbound_subquery_variables"] = []
         sub_query["variable_to_agg_field"] = {}
+        sub_query["predicate_to_constraints"] = {}
+        sub_query["variable_to_predicate"] = {}
         # if sub_query contains variable of parent query
         #  create clause that filters on variable of parent query
 
@@ -415,15 +417,28 @@ class ElasticsearchQueryCompiler(object):
                 if c["variable"] != where["variable"]:
                     sub_query["unbound_subquery_variables"].append(c["variable"])
                     sub_query["variable_to_agg_field"][c["variable"]] = c["agg_fields"][0]["name"]
+                    sub_query["variable_to_predicate"][c["variable"]] = c["predicate"]
                     for f in c["fields"]:
                         if not f["name"].startswith("content") and not f["name"] == "raw_content":
                             sub_query["clause_fields"].append({"name": f["name"],
                                                            "variable": c["variable"]})
+            elif "constraint" in c:
+                if c["predicate"] not in sub_query["predicate_to_constraints"]:
+                    sub_query["predicate_to_constraints"][c["predicate"]] = list()
+                sub_query["predicate_to_constraints"][c["predicate"]].append(c["constraint"])
+            elif "operator" in c:
+                if c["operator"] == "union":
+                    for uc in c["clauses"]:
+                        if uc["predicate"] not in sub_query["predicate_to_constraints"]:
+                            sub_query["predicate_to_constraints"][uc["predicate"]] = list()
+                        sub_query["predicate_to_constraints"][uc["predicate"]].append(uc["constraint"])
         s = Search().from_dict(sub_query["search"])
 
         for unbound_variable in sub_query["unbound_subquery_variables"]:
+            exclude = sub_query["predicate_to_constraints"].get(sub_query["variable_to_predicate"][unbound_variable], [])
+            exclude = "|".join([e +("(:.*)?") for e in exclude])
             a = A('significant_terms', field=sub_query["variable_to_agg_field"]
-                                    [unbound_variable], size=5)
+                                    [unbound_variable], size=5, exclude=exclude)
             s.aggs.bucket(unbound_variable, a)
 
         sub_query["search"] = self.clean_dismax(s.to_dict())
