@@ -520,7 +520,7 @@ class ElasticsearchQueryCompiler(object):
                 sub_queries.append(sub_query)
             else:
                 # this is a we need an answer for this clause
-                if not is_root or "filter_for_fields_of_unbound_variables" \
+                if "filter_for_fields_of_unbound_variables" \
                    not in self.elasticsearch_compiler_options or \
                     self.elasticsearch_compiler_options["filter_for_fields_of_unbound_variables"]:
                     es_clause = self.translate_clause_helper(clause, fields, False)
