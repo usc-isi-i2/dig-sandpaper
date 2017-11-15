@@ -4,6 +4,9 @@ RUN apt-get update && apt-get install -y \
     wget \
     python \
     git \
+    vim \
+    curl \
+    jq \
     && rm -rf /var/lib/apt/lists/*
 
 RUN wget https://bootstrap.pypa.io/get-pip.py && \
