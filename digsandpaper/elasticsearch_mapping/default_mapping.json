@@ -172,13 +172,8 @@
   },
   "settings": {
     "index": {
-      "creation_date": "1486591332105",
       "number_of_shards": "5",
       "number_of_replicas": "0",
-      "uuid": "d10DIkVkTpSKpGhxzxQzqg",
-      "version": {
-        "created": "2040199"
-      },
       "analysis" : {
           "filter" : {
             "url_component_filter" : {
