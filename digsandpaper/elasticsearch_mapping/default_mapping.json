@@ -2,6 +2,44 @@
   "mappings": {
     "ads": {
       "properties": {
+        "@execution_profile": {
+            "properties": {
+              "@doc_arrived_time": {
+                "type": "date",
+                "format": "strict_date_optional_time||epoch_millis"
+              },
+              "@doc_length": {
+                "type": "long"
+              },
+              "@doc_processed_time": {
+                "type": "double"
+              },
+              "@doc_sent_time": {
+                "type": "date",
+                "format": "strict_date_optional_time||epoch_millis"
+              },
+              "@doc_wait_time": {
+                "type": "double"
+              },
+              "@etk_end_time": {
+                "type": "date",
+                "format": "strict_date_optional_time||epoch_millis"
+              },
+              "@etk_process_time": {
+                "type": "double"
+              },
+              "@etk_start_time": {
+                "type": "date",
+                "format": "strict_date_optional_time||epoch_millis"
+              },
+              "@run_core_time": {
+                "type": "double"
+              },
+              "@worker_id": {
+                "type": "long"
+              }
+            }
+          },
         "content_extraction": {
           "properties": {
             "content_relaxed" : {
