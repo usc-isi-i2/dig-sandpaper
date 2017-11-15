@@ -3,92 +3,92 @@
     "ads": {
       "properties": {
         "@execution_profile": {
-            "properties": {
-              "@doc_arrived_time": {
-                "type": "date",
-                "format": "strict_date_optional_time||epoch_millis"
-              },
-              "@doc_length": {
-                "type": "long"
-              },
-              "@doc_processed_time": {
-                "type": "double"
-              },
-              "@doc_sent_time": {
-                "type": "date",
-                "format": "strict_date_optional_time||epoch_millis"
-              },
-              "@doc_wait_time": {
-                "type": "double"
-              },
-              "@etk_end_time": {
-                "type": "date",
-                "format": "strict_date_optional_time||epoch_millis"
-              },
-              "@etk_process_time": {
-                "type": "double"
-              },
-              "@etk_start_time": {
-                "type": "date",
-                "format": "strict_date_optional_time||epoch_millis"
-              },
-              "@run_core_time": {
-                "type": "double"
-              },
-              "@worker_id": {
-                "type": "long"
-              }
+          "properties": {
+            "@doc_arrived_time": {
+              "type": "date",
+              "format": "strict_date_optional_time||epoch_millis"
+            },
+            "@doc_length": {
+              "type": "long"
+            },
+            "@doc_processed_time": {
+              "type": "double"
+            },
+            "@doc_sent_time": {
+              "type": "date",
+              "format": "strict_date_optional_time||epoch_millis"
+            },
+            "@doc_wait_time": {
+              "type": "double"
+            },
+            "@etk_end_time": {
+              "type": "date",
+              "format": "strict_date_optional_time||epoch_millis"
+            },
+            "@etk_process_time": {
+              "type": "double"
+            },
+            "@etk_start_time": {
+              "type": "date",
+              "format": "strict_date_optional_time||epoch_millis"
+            },
+            "@run_core_time": {
+              "type": "double"
+            },
+            "@worker_id": {
+              "type": "long"
             }
-          },
+          }
+        },
         "content_extraction": {
           "properties": {
-            "content_relaxed" : {
-              "properties" : {
+            "content_relaxed": {
+              "properties": {
                 "data_extraction": {
-                  "enabled":false
+                  "enabled": false
                 },
-                "simple_tokens" : {
-                  "type" : "string",
-                  "index" : "no"
+                "simple_tokens": {
+                  "type": "string",
+                  "index": "no"
                 },
-                "simple_tokens_original_case" : {
-                  "type" : "string",
-                   "index": "no"
+                "simple_tokens_original_case": {
+                  "type": "string",
+                  "index": "no"
                 },
-                "spacy_extraction" : {
-                  "enabled":false
+                "spacy_extraction": {
+                  "enabled": false
                 },
-                "text" : {
-                  "type" : "string"
+                "text": {
+                  "type": "string"
                 },
-                "tokens" : {
+                "tokens": {
                   "enabled": false
                 }
               }
             },
-            "content_strict" : {
-              "properties" : {
+            "content_strict": {
+              "properties": {
                 "data_extraction": {
-                  "enabled":false
-                },
-                "simple_tokens" : {
-                  "type" : "string",
-                  "index" : "no"
-                },
-                "simple_tokens_original_case" : {
-                  "type" : "string",
-                   "index": "no"
-                },
-                "spacy_extraction" : {
                   "enabled": false
                 },
-                "text" : {
-                  "type" : "string"
+                "simple_tokens": {
+                  "type": "string",
+                  "index": "no"
                 },
-                "tokens" : {
+                "simple_tokens_original_case": {
+                  "type": "string",
+                  "index": "no"
+                },
+                "spacy_extraction": {
                   "enabled": false
                 },
-                "tokens_original_case" : {
+                "text": {
+                  "type": "string"
+                },
+                "tokens": {
+                  "enabled": false
+                },
+                "tokens_original_case": {
                   "enabled": false
                 }
               }
@@ -99,64 +99,64 @@
             "table": {
               "enabled": false
             },
-            "title" : {
-              "properties" : {
+            "title": {
+              "properties": {
                 "data_extraction": {
-                  "enabled":false
-                },
-                "simple_tokens" : {
-                  "type" : "string",
-                  "index" : "no"
-                },
-                "simple_tokens_original_case" : {
-                  "type" : "string",
-                   "index": "no"
-                },
-                "spacy_extraction" : {
                   "enabled": false
                 },
-                "text" : {
-                  "type" : "string"
+                "simple_tokens": {
+                  "type": "string",
+                  "index": "no"
                 },
-                "tokens" : {
+                "simple_tokens_original_case": {
+                  "type": "string",
+                  "index": "no"
+                },
+                "spacy_extraction": {
                   "enabled": false
                 },
-                "tokens_original_case" : {
+                "text": {
+                  "type": "string"
+                },
+                "tokens": {
+                  "enabled": false
+                },
+                "tokens_original_case": {
                   "enabled": false
                 }
               }
             },
-            "url" : {
-              "properties" : {
+            "url": {
+              "properties": {
                 "data_extraction": {
-                  "enabled":false
-                },
-                "simple_tokens" : {
-                  "type" : "string",
-                  "index" : "no"
-                },
-                "simple_tokens_original_case" : {
-                  "type" : "string",
-                   "index": "no"
-                },
-                "spacy_extraction" : {
                   "enabled": false
                 },
-                "text" : {
-                  "type" : "string"
+                "simple_tokens": {
+                  "type": "string",
+                  "index": "no"
                 },
-                "tokens" : {
+                "simple_tokens_original_case": {
+                  "type": "string",
+                  "index": "no"
+                },
+                "spacy_extraction": {
                   "enabled": false
                 },
-                "tokens_original_case" : {
+                "text": {
+                  "type": "string"
+                },
+                "tokens": {
+                  "enabled": false
+                },
+                "tokens_original_case": {
                   "enabled": false
                 }
               }
             }
           }
         },
-        "crawl_data":{
-            "enabled": false
+        "crawl_data": {
+          "enabled": false
         },
         "doc_id": {
           "type": "string",
@@ -169,13 +169,13 @@
           "enabled": false
         },
         "indexed": {
-            "enabled": false
+          "enabled": false
         },
-        "timestamp" : {
-          "type" : "date",
-          "format" : "strict_date_optional_time||epoch_millis"
+        "timestamp": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
         },
-        "response_headers" : {
+        "response_headers": {
           "enabled": false
         },
         "objects": {
@@ -183,13 +183,13 @@
         },
         "tld": {
           "type": "string",
-            "fields" : {
-              "raw" : {
-                "type" : "string",
-                "index" : "not_analyzed"
-              }
-            },
-            "analyzer" : "url_component_analyzer"
+          "fields": {
+            "raw": {
+              "type": "string",
+              "index": "not_analyzed"
+            }
+          },
+          "analyzer": "url_component_analyzer"
         },
         "url": {
           "type": "string",
@@ -199,7 +199,7 @@
               "type": "string"
             }
           },
-          "analyzer" : "url_component_analyzer"
+          "analyzer": "url_component_analyzer"
         },
         "version": {
           "type": "string",
@@ -212,33 +212,44 @@
     "index": {
       "number_of_shards": "5",
       "number_of_replicas": "0",
-      "analysis" : {
-          "filter" : {
-            "url_component_filter" : {
-              "type" : "lowercase"
-            },
-            "email_url_stop":{
-              "type": "stop",
-              "stopwords": ["com", "gmail", "yahoo", "net", "www", "hotmail", "org"]
-            }
+      "analysis": {
+        "filter": {
+          "url_component_filter": {
+            "type": "lowercase"
           },
-          "analyzer" : {
-            "url_analyzer" : {
-              "tokenizer" : "uax_url_email"
-            },
-            "url_component_analyzer" : {
-              "filter" : ["url_component_filter", "email_url_stop"],
-              "tokenizer" : "url_component_tokenizer"
-            }
+          "email_url_stop": {
+            "type": "stop",
+            "stopwords": [
+              "com",
+              "gmail",
+              "yahoo",
+              "net",
+              "www",
+              "hotmail",
+              "org"
+            ]
+          }
+        },
+        "analyzer": {
+          "url_analyzer": {
+            "tokenizer": "uax_url_email"
           },
-          "tokenizer" : {
-            "url_component_tokenizer" : {
-              "flags" : "CASE_INSENSITIVE|COMMENTS",
-              "pattern" : "[^A-Za-z0-9]",
-              "type" : "pattern"
-            }
+          "url_component_analyzer": {
+            "filter": [
+              "url_component_filter",
+              "email_url_stop"
+            ],
+            "tokenizer": "url_component_tokenizer"
+          }
+        },
+        "tokenizer": {
+          "url_component_tokenizer": {
+            "flags": "CASE_INSENSITIVE|COMMENTS",
+            "pattern": "[^A-Za-z0-9]",
+            "type": "pattern"
           }
         }
+      }
     }
   }
 }
