@@ -218,9 +218,11 @@
     "indexed.posting_date.extract_from_landmark.inferlink_description.key",
     "indexed.posting_date.extract_from_landmark.content_strict.key",
     "indexed.posting_date.extract_from_landmark.title.key",
+    "indexed.posting_date.extract_from_landmark.other_segment.key",
     "indexed.posting_date.other_method.inferlink_description.key",
     "indexed.posting_date.other_method.content_strict.key",
-    "indexed.posting_date.other_method.title.key"
+    "indexed.posting_date.other_method.title.key",
+    "indexed.posting_date.other_method.other_segment.key"
   ],
   "Price": [
     "indexed.price.extract_from_landmark.inferlink_description.value",
