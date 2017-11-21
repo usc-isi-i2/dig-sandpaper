@@ -3,10 +3,10 @@ import json
 import codecs
 import copy
 import uuid
-from jsonpath_rw_ext import parse
 
 __name__ = "ConstraintExpansion"
 name = __name__
+
 
 def load_json_file(file_name):
     rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
@@ -47,33 +47,33 @@ class LambdaConstraintExpander(object):
             else:
                 return f
 
-    def preprocess_clauses(self, where):
-        where_clauses = where["clauses"]
-        new_where_clauses = list()
+    def preprocess_clauses(self, clause):
+        new_clauses = list()
 
-        for clause in where_clauses:
-            if "constraint" not in clause:
-                if "clauses" in clause:
-                    self.preprocess_clauses(clause)
-                continue
-            expanded_values = self.expand(clause)
-            for expanded_value in expanded_values:
-                new_clause = copy.copy(clause)
-                new_clause["constraint"] = expanded_value
-                new_clause["isOptional"] = True
-                new_clause["_id"] = uuid.uuid4().hex
-                new_where_clauses.append(new_clause)
-        where_clauses.extend(new_where_clauses)
+        # this should become a union
+        if "clauses" in clause:
+            for sub_clause in clause["clauses"]:
+                if "constraint" not in sub_clause:
+                    if "clauses" in sub_clause:
+                        self.preprocess_clauses(sub_clause)
+                    continue
+                expanded_values = self.expand(sub_clause)
+                for expanded_value in expanded_values:
+                    new_clause = copy.copy(sub_clause)
+                    new_clause["constraint"] = expanded_value
+                    new_clause["isOptional"] = True
+                    new_clause["_id"] = uuid.uuid4().hex
+                    new_clauses.append(new_clause)
+            clause["clauses"].extend(new_clauses)
+        if "filters" in clause:
+            filters = clause["filters"]
+            clause["filters"] = [self.preprocess_filter(f) for f in filters]
 
     def preprocess(self, query):
         where = query["SPARQL"]["where"]
 
         if "clauses" in where:
             self.preprocess_clauses(where)
-
-        if "filters" in where:
-            filters = where["filters"]
-            where["filters"] = [self.preprocess_filter(f) for f in filters]
 
         return query
 

@@ -123,6 +123,15 @@ class TestCoarsePreprocessing(unittest.TestCase):
         self.assertEqual(fs[0]["clauses"][0]["type"], "PostingDate")
         self.assertEqual(fs[0]["clauses"][1]["clauses"][0]["type"], "Title")
 
+    def test_network_expansion(self):
+        config = load_json_file("8_config.json")
+        query = load_json_file("8_query.json")
+        preprocessor = Preprocessor(config)
+
+        result = preprocessor.preprocess(query)
+        w = result["SPARQL"]["where"]
+        self.assertEqual(w["clauses"][0]["filters"][0]["type"], "City")
+
 
 if __name__ == '__main__':
     unittest.main()

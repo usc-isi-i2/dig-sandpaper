@@ -73,6 +73,15 @@ class TestCoarseParameterizing(unittest.TestCase):
         results = parameterizer.parameterize(query)
         self.assertEqual(len(results), 1)
 
+    def test_basic_coarse_parameterizing_network_expansion(self):
+        config = load_json_file("8_config.json")
+        query = load_json_file("8_query.json")
+        parameterizer = Parameterizer(config)
+
+        results = parameterizer.parameterize(query)
+
+        self.assertEqual(len(results), 1)
+
 
 if __name__ == '__main__':
     unittest.main()

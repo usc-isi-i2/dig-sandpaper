@@ -15,14 +15,14 @@ def load_json_file(file_name):
 
 
 def initialize_elasticsearch_with_config(es_config={'host': 'localhost',
-                                        'port': 9200}):
+                                        'port': 9200}, mapping={}):
     if "endpoints" in es_config:
         endpoints = es_config["endpoints"]
     else:
         host = es_config["host"]
         port = es_config["port"]
         endpoints = ["http://{}:{}".format(host, port)]
-    requests.put('{}/dig-sandpaper-test'.format(endpoints[0]), data="{}")
+    requests.put('{}/dig-sandpaper-test'.format(endpoints[0]), data=json.dumps(mapping))
     time.sleep(5)
     return endpoints
 
@@ -40,9 +40,10 @@ def initialize_elasticsearch_docs(endpoints, documents, t="ads"):
         time.sleep(5)
 
 def initialize_elasticsearch(documents,
-                             es_config):
+                             es_config, 
+                             mapping={}):
 
-    endpoints = initialize_elasticsearch_with_config(es_config)
+    endpoints = initialize_elasticsearch_with_config(es_config, mapping)
     initialize_elasticsearch_docs(endpoints, documents)
 
 

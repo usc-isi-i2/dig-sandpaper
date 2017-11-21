@@ -1,9 +1,3 @@
-import json
-import codecs
-import copy
-import uuid
-from jsonpath_rw_ext import parse
-
 __name__ = "ConstraintRelaxation"
 name = __name__
 
@@ -16,7 +10,8 @@ class IsOptionalConstraintRelaxer(object):
     def preprocess_filter(self, f):
         if "clauses" in f:
             if isinstance(f["clauses"], list):
-                f["clauses"] = [self.preprocess_filter(c) for c in f["clauses"]]
+                f["clauses"] = [self.preprocess_filter(c)
+                                for c in f["clauses"]]
                 return f
             elif isinstance(f["clauses"], dict):
                 f["clauses"] = self.preprocess_filter(f["clauses"])
@@ -28,28 +23,26 @@ class IsOptionalConstraintRelaxer(object):
                 f["isOptional"] = True
             return f
 
-    def preprocess_clauses(self, where):
-        where_clauses = where["clauses"]
-        
-        new_where_clauses = list()
-        
-        for clause in where_clauses:
-            if "constraint" not in clause:
-                if "clauses" in clause:
-                    self.preprocess_clauses(clause)
-                continue
-            if not clause.get("isOptional", False):
-                clause["isOptional"] = True
+    def preprocess_clauses(self, clause):
+        if "clauses" in clause:
+            sub_clauses = clause["clauses"]
+
+            for sub_clause in sub_clauses:
+                if "constraint" not in sub_clause:
+                    if "clauses" in sub_clause:
+                        self.preprocess_clauses(sub_clause)
+                    continue
+                if not sub_clause.get("isOptional", False):
+                    sub_clause["isOptional"] = True
+
+        if "filters" in clause:
+            filters = clause["filters"]
+            clause["filters"] = [self.preprocess_filter(f) for f in filters]
 
     def preprocess(self, query):
         where = query["SPARQL"]["where"]
 
-        if "clauses" in where:
-            self.preprocess_clauses(where)
-        
-        if "filters" in where:
-            filters = where["filters"]
-            where["filters"] = [self.preprocess_filter(f) for f in filters]
+        self.preprocess_clauses(where)
 
         return query
 

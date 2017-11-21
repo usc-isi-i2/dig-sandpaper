@@ -1,18 +1,14 @@
 import json
 import codecs
-from jsonpath_rw_ext import parse
-import compiler
-from types import ModuleType
-
 
 __name__ = "SparqlReordering"
 name = __name__
 
 
-
 def load_json_file(file_name):
     rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
     return rules
+
 
 class SparqlRootUnnesting(object):
 
@@ -29,9 +25,9 @@ class SparqlRootUnnesting(object):
             self.root_info = file
         else:
             self.root_info = load_json_file(file)
-        self.root_type = self.root_info["root_type"] # "ad"
-        self.root_predicates = self.root_info["root_predicates"] # [price, name, blah]
-        self.inverse_predicates = self.root_info["inverse_predicates"] # {cluster: ad}
+        self.root_type = self.root_info["root_type"]  # "ad"
+        self.root_predicates = self.root_info["root_predicates"]  # [price, name, blah]
+        self.inverse_predicates = self.root_info["inverse_predicates"]  # {cluster: ad}
         return
 
     def preprocess_clause(self, clause):
@@ -41,7 +37,6 @@ class SparqlRootUnnesting(object):
                     self.preprocess_clause(c)
             return
         return
-     
 
     def preprocess(self, query):
         where = query["SPARQL"]["where"]
@@ -55,11 +50,11 @@ class SparqlRootUnnesting(object):
         sub_where = None
         for clause in clauses:
             if clause["predicate"] in self.inverse_predicates[t]:
-                new_where = {"type": self.root_type, 
-                             "variable": clause["variable"], 
+                new_where = {"type": self.root_type,
+                             "variable": clause["variable"],
                              "clauses": [],
-                             "_id": clause["_id"]}                
-                sub_where = {"type": where["type"], 
+                             "_id": clause["_id"]}
+                sub_where = {"type": where["type"],
                              "variable": where["variable"],
                              "clauses": [],
                              "_id": clause["_id"]}

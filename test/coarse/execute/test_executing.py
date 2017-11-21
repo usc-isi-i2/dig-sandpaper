@@ -147,6 +147,35 @@ class TestCoarseExecuting(unittest.TestCase):
 
         test.test_utils.reset_elasticsearch(config["components"][0])
 
+    def test_basic_coarse_executing_network_expansion(self):
+        config = load_json_file("8_config.json")
+        queries = load_json_file("8_query.json")
+        document = load_json_file("8_document.json")
+        document2 = load_json_file("8_document_2.json")
+        document3 = load_json_file("8_document_3.json")
+        document4 = load_json_file("8_document_4.json")
+        document5 = load_json_file("8_document_5.json")
+        document6 = load_json_file("8_document_6.json")
+        mapping = load_json_file("8_mapping.json")
+
+        test.test_utils.initialize_elasticsearch([document, document2, document3, document4, document5, document6],
+                                                 config["components"][0], mapping)
+
+        executor = Executor(config)
+
+        try:
+            for query in queries:
+                results = executor.execute(query)
+                result1 = results[0]
+                result1_dict = result1.to_dict()
+                self.assertEquals(len(result1.hits), 4)
+                result2 = results[1]
+                result2_dict = result2.to_dict()
+                self.assertEquals(len(result2.hits), 5)
+                self.assertEquals("JKLMNOPQABCDEFGHI", result2_dict["hits"]["hits"][4]["_source"]["doc_id"])
+        finally:
+            test.test_utils.reset_elasticsearch(config["components"][0])
+
 
 if __name__ == '__main__':
     unittest.main()

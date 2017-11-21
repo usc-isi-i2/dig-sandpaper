@@ -1,14 +1,11 @@
 import json
 import codecs
-from jsonpath_rw_ext import parse
 import compiler
 from types import ModuleType
 
 
 __name__ = "ConstraintConsistency"
 name = __name__
-
-clause_jsonpath = parse("filters[*]|clauses[*]")
 
 
 def load_json_file(file_name):
@@ -64,12 +61,12 @@ class ConstraintTypeTransformations(object):
             if "constraint" not in f or "type" not in f:
                 return f
             compiled_transformation = self.constraint_type_transformations.get(
-            f.get("type", "owl:Thing"), 
-            self.constraint_type_transformations.get("owl:Thing"))
+                f.get("type", "owl:Thing"),
+                self.constraint_type_transformations.get("owl:Thing"))
             data = {}
             data["value"] = f["constraint"]
             f["constraint"] = eval(
-                compiled_transformation, self.module.__dict__, data)                
+                compiled_transformation, self.module.__dict__, data)
             return f
 
     def preprocess_clause(self, clause):
@@ -77,24 +74,24 @@ class ConstraintTypeTransformations(object):
             if "clauses" in clause:
                 for c in clause["clauses"]:
                     self.preprocess_clause(c)
-            return
 
-        compiled_transformation = self.constraint_type_transformations.get(
-            clause.get("type", "owl:Thing"), 
-            self.constraint_type_transformations.get("owl:Thing"))
-        data = {}
-        data["value"] = clause["constraint"]
-        clause["constraint"] = eval(
-            compiled_transformation, self.module.__dict__, data)                
+        if "constraint" in clause:
+            compiled_transformation = self.constraint_type_transformations.get(
+                clause.get("type", "owl:Thing"),
+                self.constraint_type_transformations.get("owl:Thing"))
+            data = {}
+            data["value"] = clause["constraint"]
+            clause["constraint"] = eval(
+                compiled_transformation, self.module.__dict__, data)
+
+        if "filters" in clause:
+            filters = clause["filters"]
+            clause["filters"] = [self.preprocess_filter(f)
+                                 for f in filters]
 
     def preprocess(self, query):
-        for clause in clause_jsonpath.find(query["SPARQL"]["where"]):
-            self.preprocess_clause(clause.value)
-
-        if "filters" in query["SPARQL"]["where"]:
-            filters = query["SPARQL"]["where"]["filters"]
-            query["SPARQL"]["where"]["filters"] = [self.preprocess_filter(f) for f in filters]
-
+        where = query["SPARQL"]["where"]
+        self.preprocess_clause(where)
         return query
 
 

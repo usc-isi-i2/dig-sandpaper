@@ -86,15 +86,30 @@ class ElasticsearchQueryCompiler(object):
                 m = Match(**match_params)
                 return Bool(must=[m], should=[mp])
             else:
-                terms = len(f.get("constraint").split(" "))
-                if terms > 5:
-                    msm = terms / 2 + 1
+                if op.lower() == "not in":
+                    must_nots = []
+                    terms = f.get("constraint")
+                    for term in terms:
+                        match_params_mn = {}
+                        match_field_params_mn = copy.copy(match_field_params)
+                        match_field_params_mn["query"] = term
+                        match_field_params_mn["_name"] = "{}:{}:{}".format(f.get("_id"),
+                                                                        field.get("name"),
+                                                                        term)
+                        match_params_mn[field["name"]] = match_field_params_mn
+                        must_not = Match(**match_params_mn)
+                        must_nots.append(must_not)
+                    return Bool(must_not=must_nots)
                 else:
-                    msm = max(1, terms / 2)
-                match_field_params["minimum_should_match"] = msm
-                if f.get("type", "owl:Thing") == "owl:Thing":
-                    match_field_params["boost"] = field.get("weight", 1.0) * 2
-                return Match(**match_params)
+                    terms = len(f.get("constraint").split(" "))
+                    if terms > 5:
+                        msm = terms / 2 + 1
+                    else:
+                        msm = max(1, terms / 2)
+                    match_field_params["minimum_should_match"] = msm
+                    if f.get("type", "owl:Thing") == "owl:Thing":
+                        match_field_params["boost"] = field.get("weight", 1.0) * 2
+                    return Match(**match_params)
 
     def translate_clause(self, clause, field):
         if("constraint" in clause):
@@ -237,7 +252,6 @@ class ElasticsearchQueryCompiler(object):
             source_fields |= set([field["name"] for field in f["fields"]])
             if len(f["fields"]) == 1:
                 q = self.translate_filter(f, field)
-                filters.append(q)
             else:
                 sub_filters = []
                 for field in f["fields"]:
@@ -402,6 +416,23 @@ class ElasticsearchQueryCompiler(object):
                 q = weighted_must
         return q
 
+    def filter_contains_clause(self, obj, clause_id):
+        contains_clause = False
+        for (k, v) in obj.iteritems():
+            if isinstance(v, basestring):
+                if v.startswith(clause_id):
+                    return True
+            elif isinstance(v, list):
+                for e in v:
+                    if isinstance(e, dict):
+                        contains_clause |= self.filter_contains_clause(e, clause_id)
+            elif isinstance(v, dict):
+                contains_clause |= self.filter_contains_clause(v, clause_id)
+
+            if contains_clause:
+                return contains_clause
+        return contains_clause
+
     def generate_subquery(self, query, where, clause):
         sub_query = self.generate_where(query, clause, False)
         sub_query["clause_fields"] = []
@@ -432,10 +463,36 @@ class ElasticsearchQueryCompiler(object):
                         if uc["predicate"] not in sub_query["predicate_to_constraints"]:
                             sub_query["predicate_to_constraints"][uc["predicate"]] = list()
                         sub_query["predicate_to_constraints"][uc["predicate"]].append(uc["constraint"])
-        s = Search().from_dict(sub_query["search"])
+        sub_query["search"]
 
+        unbound_subquery_filter_excludes = {}
+        clauses_to_remove = []
+        if "filters" in clause:
+            for f in clause["filters"]:
+                if "variable" in f:
+                    if f["variable"] in sub_query["unbound_subquery_variables"]:
+                        unbound_subquery_filter_excludes[f["variable"]] = f["constraint"]
+                        clauses_to_remove.append(f["_id"])
+            filters_to_remove = []
+            for f in sub_query["search"]["query"]["bool"]["filter"]:
+                for clause_to_remove in clauses_to_remove:
+                    if self.filter_contains_clause(f, clause_to_remove):
+                        filters_to_remove.append(f)
+
+            filters_to_keep = [f for f in sub_query["search"]["query"]["bool"]["filter"] if f not in filters_to_remove ]
+
+            sub_query["search"]["query"]["bool"]["filter"] = filters_to_keep
+
+        s = Search().from_dict(sub_query["search"])
+        # find filters with unbound subquery variables
+        # if filters with unbound subquery variable, remove it from the list of filters
+        # take the terms and add it to the matching unbound subquery variables' aggregation excludes
         for unbound_variable in sub_query["unbound_subquery_variables"]:
-            exclude = sub_query["predicate_to_constraints"].get(sub_query["variable_to_predicate"][unbound_variable], [])
+            if "exclude" in unbound_variable:
+                continue
+            exclude = list()
+            exclude.extend(unbound_subquery_filter_excludes.get(unbound_variable, []))
+            exclude.extend(sub_query["predicate_to_constraints"].get(sub_query["variable_to_predicate"][unbound_variable], []))
             exclude = "|".join([e +("(:.*)?") for e in exclude])
             a = A('significant_terms', field=sub_query["variable_to_agg_field"]
                                     [unbound_variable], size=5, exclude=exclude)

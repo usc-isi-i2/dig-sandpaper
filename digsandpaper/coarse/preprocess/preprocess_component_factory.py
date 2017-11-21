@@ -4,7 +4,7 @@ import constraint_type_mapper_factory
 import clause_id_factory
 import sparql_reordering_factory
 import constraint_relaxation_factory
-from constraint_type_mapper_factory import TopConstraintTypeMapper
+from constraint_type_mapper_factory import PredicateDictConstraintTypeMapper
 from clause_id_factory import UUIDClauseIdMapper
 
 component_order = {constraint_type_mapper_factory.name: 1,
@@ -50,7 +50,7 @@ def get_components(component_configs):
     components = sorted(components, key=get_component_type_order)
 
     if not is_component_type_found(component_configs, "ConstraintTypeMapper"):
-        components.insert(0, TopConstraintTypeMapper())
+        components.insert(0, PredicateDictConstraintTypeMapper({}))
     if not is_component_type_found(component_configs, clause_id_factory.name):
         components.insert(1, UUIDClauseIdMapper())
     return components
