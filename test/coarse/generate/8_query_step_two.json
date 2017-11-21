@@ -1,0 +1,127 @@
+[
+    {
+        "SPARQL": {
+            "group-by": {
+                "limit": 10, 
+                "offset": 0
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "Ad", 
+                        "variable": "?ad2"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "_id": "e72a11336757421980996057943bd407", 
+                        "clauses": [
+                            {
+                                "_id": "db5cf48882b54986aa48b4d136b057cf", 
+                                "constraint": "san jose", 
+                                "fields": [
+                                    {
+                                        "name": "indexed.city.other_method.other_segment.value", 
+                                        "weight": 1
+                                    }
+                                ], 
+                                "isOptional": true, 
+                                "predicate": "city", 
+                                "type": "City"
+                            }, 
+                            {
+                                "_id": "429bcc85cf704e3da3cddfd292a90ac6", 
+                                "agg_fields": [
+                                    {
+                                        "name": "indexed.city.high_confidence_keys"
+                                    }
+                                ], 
+                                "fields": [
+                                    {
+                                        "name": "indexed.city.other_method.other_segment.value", 
+                                        "weight": 1
+                                    }
+                                ], 
+                                "isOptional": false, 
+                                "predicate": "city", 
+                                "type": "City", 
+                                "variable": "?city"
+                            }, 
+                            {
+                                "_id": "59f25ca4f81a4d01b44bdaef5e94065c", 
+                                "agg_fields": [
+                                    {
+                                        "name": "indexed.city.high_confidence_keys"
+                                    }
+                                ], 
+                                "fields": [
+                                    {
+                                        "name": "indexed.city.other_method.other_segment.value", 
+                                        "weight": 1
+                                    }
+                                ], 
+                                "isOptional": false, 
+                                "predicate": "city", 
+                                "type": "City", 
+                                "variable": "?city-exclude1"
+                            }
+                        ], 
+                        "filters": [
+                            {
+                                "_id": "3783cf7a8eaf4ed3a1687ee7feae7e30", 
+                                "constraint": [
+                                    "menlo park", 
+                                    "mountain view"
+                                ], 
+                                "fields": [
+                                    {
+                                        "name": "indexed.city.other_method.other_segment.value", 
+                                        "weight": 1
+                                    }
+                                ], 
+                                "operator": "not in", 
+                                "type": "City", 
+                                "variable": "?city"
+                            }
+                        ], 
+                        "type": "Ad", 
+                        "variable": "?ad1"
+                    }, 
+                    {
+                        "_id": "7b9bae208ac44ed7b54efd541b7785ce", 
+                        "constraint": "san jose", 
+                        "fields": [
+                            {
+                                "name": "indexed.city.other_method.other_segment.value", 
+                                "weight": 1
+                            }
+                        ], 
+                        "isOptional": true, 
+                        "predicate": "city", 
+                        "type": "City"
+                    }, 
+                    {
+                        "_id": "5cd5f146cfec402383f08beaecd0d4cf", 
+                        "fields": [
+                            {
+                                "name": "indexed.city.other_method.other_segment.value", 
+                                "weight": 1
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "city", 
+                        "type": "City", 
+                        "variable": "?city"
+                    }
+                ], 
+                "filters": [], 
+                "type": "Ad", 
+                "variable": "?ad2"
+            }
+        }, 
+        "field_count": 1, 
+        "type": "Point Fact"
+    }
+]

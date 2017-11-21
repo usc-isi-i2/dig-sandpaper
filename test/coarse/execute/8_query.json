@@ -1,0 +1,259 @@
+[
+    {
+        "ELASTICSEARCH": [
+            {
+                "clause_fields": [
+                    {
+                        "name": "indexed.city.other_method.other_segment.value", 
+                        "variable": "?city"
+                    }, 
+                    {
+                        "name": "indexed.city.other_method.other_segment.value", 
+                        "variable": "?city-exclude1"
+                    }
+                ], 
+                "doc_type": "ads", 
+                "index": "dig-sandpaper-test", 
+                "predicate_to_constraints": {
+                    "city": [
+                        "san jose"
+                    ]
+                }, 
+                "search": {
+                    "_source": {
+                        "includes": [
+                            "url", 
+                            "doc_id", 
+                            "fields.*", 
+                            "indexed.city.other_method.other_segment.value", 
+                            "tld"
+                        ]
+                    }, 
+                    "aggs": {
+                        "?city": {
+                            "significant_terms": {
+                                "exclude": "menlo park(:.*)?|mountain view(:.*)?|san jose(:.*)?", 
+                                "field": "indexed.city.high_confidence_keys", 
+                                "size": 5
+                            }
+                        }
+                    }, 
+                    "query": {
+                        "bool": {
+                            "minimum_should_match": 1, 
+                            "should": [
+                                {
+                                    "match": {
+                                        "indexed.city.other_method.other_segment.value": {
+                                            "_name": "db5cf48882b54986aa48b4d136b057cf:indexed.city.other_method.other_segment.value:san jose", 
+                                            "boost": 1, 
+                                            "query": "san jose"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }, 
+                "type": "Ad", 
+                "unbound_subquery_variables": [
+                    "?city", 
+                    "?city-exclude1"
+                ], 
+                "variable_to_agg_field": {
+                    "?city": "indexed.city.high_confidence_keys", 
+                    "?city-exclude1": "indexed.city.high_confidence_keys"
+                }, 
+                "variable_to_clause_id": {
+                    "?city": [
+                        "5cd5f146cfec402383f08beaecd0d4cf"
+                    ]
+                }, 
+                "variable_to_predicate": {
+                    "?city": "city", 
+                    "?city-exclude1": "city"
+                }
+            }, 
+            {
+                "doc_type": "ads", 
+                "index": "dig-sandpaper-test", 
+                "search": {
+                    "_source": {
+                        "includes": [
+                            "url", 
+                            "doc_id", 
+                            "fields.*", 
+                            "indexed.city.other_method.other_segment.value", 
+                            "tld"
+                        ]
+                    }, 
+                    "from": 0, 
+                    "highlight": {
+                        "fields": {
+                            "doc_id": {}, 
+                            "extractors.content_relaxed.text.result.value": {}, 
+                            "extractors.content_strict.text.result.value": {}, 
+                            "fields.*": {}, 
+                            "indexed.city.other_method.other_segment.value": {}, 
+                            "tld": {}, 
+                            "url": {}
+                        }
+                    }, 
+                    "query": {
+                        "bool": {
+                            "minimum_should_match": 0, 
+                            "must": [
+                                {
+                                    "match": {
+                                        "indexed.city.other_method.other_segment.value": {
+                                            "_name": "5cd5f146cfec402383f08beaecd0d4cf:indexed.city.other_method.other_segment.value:__placeholder__", 
+                                            "boost": 1, 
+                                            "query": "__placeholder__"
+                                        }
+                                    }
+                                }
+                            ], 
+                            "should": [
+                                {
+                                    "match": {
+                                        "indexed.city.other_method.other_segment.value": {
+                                            "_name": "7b9bae208ac44ed7b54efd541b7785ce:indexed.city.other_method.other_segment.value:san jose", 
+                                            "boost": 1, 
+                                            "query": "san jose"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }, 
+                    "size": 10
+                }, 
+                "type": "Ad"
+            }
+        ], 
+        "SPARQL": {
+            "group-by": {
+                "limit": 10, 
+                "offset": 0
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "Ad", 
+                        "variable": "?ad2"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "_id": "e72a11336757421980996057943bd407", 
+                        "clauses": [
+                            {
+                                "_id": "db5cf48882b54986aa48b4d136b057cf", 
+                                "constraint": "san jose", 
+                                "fields": [
+                                    {
+                                        "name": "indexed.city.other_method.other_segment.value", 
+                                        "weight": 1
+                                    }
+                                ], 
+                                "isOptional": true, 
+                                "predicate": "city", 
+                                "type": "City"
+                            }, 
+                            {
+                                "_id": "429bcc85cf704e3da3cddfd292a90ac6", 
+                                "agg_fields": [
+                                    {
+                                        "name": "indexed.city.high_confidence_keys"
+                                    }
+                                ], 
+                                "fields": [
+                                    {
+                                        "name": "indexed.city.other_method.other_segment.value", 
+                                        "weight": 1
+                                    }
+                                ], 
+                                "isOptional": false, 
+                                "predicate": "city", 
+                                "type": "City", 
+                                "variable": "?city"
+                            }, 
+                            {
+                                "_id": "59f25ca4f81a4d01b44bdaef5e94065c", 
+                                "agg_fields": [
+                                    {
+                                        "name": "indexed.city.high_confidence_keys"
+                                    }
+                                ], 
+                                "fields": [
+                                    {
+                                        "name": "indexed.city.other_method.other_segment.value", 
+                                        "weight": 1
+                                    }
+                                ], 
+                                "isOptional": false, 
+                                "predicate": "city", 
+                                "type": "City", 
+                                "variable": "?city-exclude1"
+                            }
+                        ], 
+                        "filters": [
+                            {
+                                "_id": "3783cf7a8eaf4ed3a1687ee7feae7e30", 
+                                "constraint": [
+                                    "menlo park", 
+                                    "mountain view"
+                                ], 
+                                "fields": [
+                                    {
+                                        "name": "indexed.city.other_method.other_segment.value", 
+                                        "weight": 1
+                                    }
+                                ], 
+                                "operator": "not in", 
+                                "type": "City", 
+                                "variable": "?city"
+                            }
+                        ], 
+                        "type": "Ad", 
+                        "variable": "?ad1"
+                    }, 
+                    {
+                        "_id": "7b9bae208ac44ed7b54efd541b7785ce", 
+                        "constraint": "san jose", 
+                        "fields": [
+                            {
+                                "name": "indexed.city.other_method.other_segment.value", 
+                                "weight": 1
+                            }
+                        ], 
+                        "isOptional": true, 
+                        "predicate": "city", 
+                        "type": "City"
+                    }, 
+                    {
+                        "_id": "5cd5f146cfec402383f08beaecd0d4cf", 
+                        "constraint": "__placeholder__", 
+                        "fields": [
+                            {
+                                "name": "indexed.city.other_method.other_segment.value", 
+                                "weight": 1
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "city", 
+                        "type": "City", 
+                        "variable": "?city"
+                    }
+                ], 
+                "filters": [], 
+                "type": "Ad", 
+                "variable": "?ad2"
+            }
+        }, 
+        "field_count": 1, 
+        "type": "Point Fact"
+    }
+]

@@ -1,0 +1,10 @@
+{
+	"components": [
+    {
+    	"type": "ExecuteQueryComponent",
+    	"name": "ExecuteElasticsearchQuery",
+    	"host": "localhost",
+    	"port": 9200
+    }
+]
+}

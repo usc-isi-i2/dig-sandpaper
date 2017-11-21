@@ -1,0 +1,30 @@
+{
+  "doc_id": "PQABCDEFGHIJKLMNO",
+  "fields": {
+    "posting-date": {
+      "strict": {
+        "name": "2017-08-01T00:00:00"
+      }
+    }
+  },
+  "indexed": {
+    "city": {
+      "high_confidence_keys": [
+        "san jose",
+        "sunnyvale"
+      ],
+      "other_method": {
+        "other_segment": [
+          {
+            "value": "san jose",
+            "key": "san jose"
+          },
+          {
+            "value": "sunnyvale",
+            "key": "sunnyvale"
+          }
+        ]
+      }
+    }
+  }
+}

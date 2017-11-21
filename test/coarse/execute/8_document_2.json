@@ -1,0 +1,35 @@
+{
+  "doc_id": "DEFGHIJKLMNOPQABCD",
+  "fields": {
+    "posting-date": {
+      "strict": {
+        "name": "2017-08-01T00:00:00"
+      }
+    }
+  },
+  "indexed": {
+    "city": {
+      "high_confidence_keys": [
+        "san jose",
+        "menlo park",
+        "sunnyvale"
+      ],
+      "other_method": {
+        "other_segment": [
+          {
+            "value": "san jose",
+            "key": "san jose"
+          },
+          {
+            "value": "menlo park",
+            "key": "menlo park"
+          },
+          {
+            "value": "sunnyvale",
+            "key": "sunnyvale"
+          }
+        ]
+      }
+    }
+  }
+}

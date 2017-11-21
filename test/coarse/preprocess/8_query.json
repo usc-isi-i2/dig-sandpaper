@@ -1,0 +1,65 @@
+{
+  "SPARQL": {
+    "group-by": {
+      "limit": 10,
+      "offset": 0
+    },
+    "select": {
+      "variables": [
+        {
+          "type": "simple",
+          "variable": "?ad2"
+        }
+      ]
+    },
+    "where": {
+      "clauses": [
+        {
+          "clauses": [
+            {
+              "constraint": "san jose",
+              "isOptional": true,
+              "predicate": "city"
+            },
+            {
+              "isOptional": false,
+              "predicate": "city",
+              "variable": "?city"
+            },
+            {
+              "isOptional": false,
+              "predicate": "city",
+              "variable": "?city-exclude1"
+            }
+          ],
+          "filters": [
+            {
+              "operator": "not in",
+              "variable": "?city",
+              "constraint": [
+                "menlo park",
+                "mountain view"
+              ]
+            }
+          ],
+          "type": "Ad",
+          "variable": "?ad1"
+        },
+        {
+          "constraint": "san jose",
+          "isOptional": true,
+          "predicate": "city"
+        },
+        {
+          "isOptional": false,
+          "predicate": "city",
+          "variable": "?city"
+        }
+      ],
+      "filters": [],
+      "type": "Ad",
+      "variable": "?ad2"
+    }
+  },
+  "type": "Point Fact"
+}

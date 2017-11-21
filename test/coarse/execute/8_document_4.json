@@ -1,0 +1,25 @@
+{
+  "doc_id": "JKLMNOPQABCDEFGHI",
+  "fields": {
+    "posting-date": {
+      "strict": {
+        "name": "2017-08-01T00:00:00"
+      }
+    }
+  },
+  "indexed": {
+    "city": {
+      "high_confidence_keys": [
+        "sunnyvale"
+      ],
+      "other_method": {
+        "other_segment": [
+          {
+            "value": "sunnyvale",
+            "key": "sunnyvale"
+          }
+        ]
+      }
+    }
+  }
+}
