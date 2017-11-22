@@ -416,16 +416,16 @@ class ElasticsearchQueryCompiler(object):
                                shoulds_are_all_optional+max(1,
                                    len(shoulds) - extra_minimum_should_match)):
                     weighted_q = Bool(
-                        must=musts_temp,
                         should=shoulds,
-                        filter=filters,
-                        must_not=must_nots,
                         boost=boost,
                         minimum_should_match=len(shoulds) - x)
                     weighted_by_musts.append(weighted_q)
                     boost = boost / 2
                 weighted_must = Bool(should=weighted_by_musts,
-                                     disable_coord=True)
+                                     disable_coord=True,
+                                     filter=filters,
+                                     must=musts_temp,
+                                     must_not=must_nots)
                 q = weighted_must
         return q
 
