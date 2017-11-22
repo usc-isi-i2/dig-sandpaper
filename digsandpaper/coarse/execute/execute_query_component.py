@@ -68,6 +68,15 @@ class ExecuteElasticsearchQuery(object):
                         if v["query"] == "__placeholder__":
                             v["query"] = new_value
                             v["_name"] = v["_name"].replace("__placeholder__", new_value)
+                            if isinstance(new_value, basestring):
+                                terms = len(new_value.split(" "))
+                                if terms > 5:
+                                    msm = terms / 2 + 1
+                                elif terms > 1:
+                                    msm = 2#max(1, terms / 2)
+                                else:
+                                    msm = 1
+                                v["minimum_should_match"] = msm
                     self.replace_range_operator(v, "lt", new_value)
                     self.replace_range_operator(v, "lte", new_value)
                     self.replace_range_operator(v, "gt", new_value)

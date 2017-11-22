@@ -3,6 +3,7 @@
   "extra_minimum_should_match": 0,
   "boost_shoulds": true,
   "filter_for_fields_of_unbound_variables": false,
+  "terms_minimum_should_match": 2,
   "default_source_fields": [
     "doc_id",
     "tld",

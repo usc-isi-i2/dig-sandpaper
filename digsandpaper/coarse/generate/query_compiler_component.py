@@ -32,6 +32,17 @@ class ElasticsearchQueryCompiler(object):
         else:
             self.elasticsearch_compiler_options = load_json_file(file)
 
+    def compute_minimum_should_match(self, constraint):
+        terms = len(constraint.split(" "))
+        terms_msm = self.elasticsearch_compiler_options.get("terms_minimum_should_match", 1)
+        if terms > 5:
+            msm = terms / 2 + 1
+        elif terms > 1:
+            msm = max(min(terms, terms_msm), terms / 2)
+        else:
+            msm = 1
+        return msm
+
     def translate_filter(self, f, field):
         range_operators = {"<": "lt", "<=": "lte", ">": "gt", ">=": "gte"}
         op = f["operator"]
@@ -67,18 +78,15 @@ class ElasticsearchQueryCompiler(object):
                                                             f.get("constraint"))
             match_params[field["name"]] = match_field_params
             query_type = f.get("query_type", "match")
-            if query_type == "match_phrase":
+            if query_type == "match_phrase" and op.lower() != "not in":
                 match_params_mp = {}
                 match_field_params_mp = copy.copy(match_field_params)
                 match_field_params_mp["boost"] = match_field_params_mp["boost"] * 10
                 match_field_params_mp["_name"] = match_field_params_mp["_name"] + ":match_phrase"
                 match_params_mp[field["name"]] = match_field_params_mp
                 match_field_params_mp["slop"] = 10
-                terms = len(f.get("constraint").split(" "))
-                if terms > 5:
-                    msm = terms / 2 + 1
-                else:
-                    msm = max(1, terms / 2)
+                constraint = f.get("constraint")
+                msm = self.compute_minimum_should_match(constraint)
                 match_field_params["minimum_should_match"] = msm
                 mp = MatchPhrase(**match_params_mp)
                 if f.get("type", "owl:Thing") == "owl:Thing":
@@ -97,15 +105,14 @@ class ElasticsearchQueryCompiler(object):
                                                                         field.get("name"),
                                                                         term)
                         match_params_mn[field["name"]] = match_field_params_mn
+                        msm = self.compute_minimum_should_match(term)
+                        match_field_params_mn["minimum_should_match"] = msm
                         must_not = Match(**match_params_mn)
                         must_nots.append(must_not)
                     return Bool(must_not=must_nots)
                 else:
-                    terms = len(f.get("constraint").split(" "))
-                    if terms > 5:
-                        msm = terms / 2 + 1
-                    else:
-                        msm = max(1, terms / 2)
+                    constraint = f.get("constraint")
+                    msm = self.compute_minimum_should_match(constraint)
                     match_field_params["minimum_should_match"] = msm
                     if f.get("type", "owl:Thing") == "owl:Thing":
                         match_field_params["boost"] = field.get("weight", 1.0) * 2
@@ -145,6 +152,10 @@ class ElasticsearchQueryCompiler(object):
 
                 elif clause.get("type", "owl:Thing") == "owl:Thing":
                     match_field_params["boost"] = field.get("weight", 1.0) * 2
+                terms = len(clause.get("constraint").split(" "))
+                constraint = clause.get("constraint")
+                msm = self.compute_minimum_should_match(constraint)
+                match_field_params["minimum_should_match"] = msm
                 return Match(**match_params)
         else:
             return Exists(field=field["name"])
@@ -386,6 +397,8 @@ class ElasticsearchQueryCompiler(object):
                 musts_temp = []
 
             filter_count = len([should for should in shoulds if self.should_contains_filter(should)])
+            if len(shoulds) == 1 and len(musts) == 0:
+                return q
 
             if len(shoulds) > 0 and len(shoulds) != filter_count:
                 extra_minimum_should_match = filter_count
@@ -651,6 +664,8 @@ class ElasticsearchQueryCompiler(object):
                     is_matches = True
                     for q in f.queries:
                         if isinstance(q, Range):
+                            is_matches = False
+                        if isinstance(q, Bool) and q.must_not:
                             is_matches = False
                         break
                 if is_matches:

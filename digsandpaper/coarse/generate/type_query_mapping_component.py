@@ -47,11 +47,11 @@ class TypeQueryMapping(object):
             if "type" not in clause:
                 continue
             t = clause["type"]
+            
+            if "clauses" in clause:
+                self.generate_where(clause)
             if t in self.type_query_mapping:
-                if "clauses" in clause:
-                    self.generate_where(clause)
-                else:
-                    clause["query_type"] = self.type_query_mapping[t]
+                clause["query_type"] = self.type_query_mapping[t]
 
         if "filters" in where:
             filters = where["filters"]
