@@ -1,0 +1,23 @@
+{
+  "doc_id": "MNOPQABCDEFGHIJKL",
+  "indexed": {
+    "city": {
+      "high_confidence_keys": [
+        "menlo park"
+      ],
+      "other_method": {
+        "other_segment": [
+          {
+            "value": "menlo park",
+            "key": "menlo park"
+          }
+        ]
+      }
+    },
+    "posting_date": {
+      "high_confidence_keys": [
+        "2017-11-01T00:00:00"
+      ]
+    }
+  }
+}

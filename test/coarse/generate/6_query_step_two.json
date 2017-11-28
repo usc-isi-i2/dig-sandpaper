@@ -2,6 +2,7 @@
     {
         "SPARQL": {
             "group-by": {
+                "limit": 5, 
                 "variables": [
                     {
                         "fields": [
@@ -12,18 +13,23 @@
                         "type": "Ethnicity", 
                         "variable": "?ethnicity"
                     }
-                ],
-                "limit": 5
+                ]
             }, 
             "order-by": {
                 "values": [
                     {
-                        "variable": "?ethnicity",
-                        "function": "count",
-                        "order": "desc"
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.ethnicity.result.name"
+                            }
+                        ], 
+                        "function": "count", 
+                        "order": "desc", 
+                        "type": "Ethnicity", 
+                        "variable": "?ethnicity"
                     }
                 ]
-            },
+            }, 
             "select": {
                 "variables": [
                     {

@@ -1,0 +1,54 @@
+{
+    "SPARQL": {
+        "group-by": {
+            "limit": 10, 
+            "offset": 0
+        }, 
+        "order-by": {
+            "values": [
+                {
+                    "order": "desc", 
+                    "type": "PostingDate", 
+                    "variable": "?posting-date1"
+                }
+            ]
+        }, 
+        "select": {
+            "variables": [
+                {
+                    "type": "Ad", 
+                    "variable": "?ad1"
+                }
+            ]
+        }, 
+        "where": {
+            "clauses": [
+                {
+                    "_id": "3f77bfdbd83c4bca8c1a23e107676e6e", 
+                    "constraint": "san jose", 
+                    "isOptional": false, 
+                    "predicate": "city", 
+                    "type": "City"
+                }, 
+                {
+                    "_id": "be0e2008b8194c7b91b110c59d452833", 
+                    "isOptional": false, 
+                    "predicate": "city", 
+                    "type": "City", 
+                    "variable": "?city"
+                }, 
+                {
+                    "_id": "d5f138bea9954920bd032455e833af47", 
+                    "isOptional": false, 
+                    "predicate": "posting_date", 
+                    "type": "PostingDate", 
+                    "variable": "?posting-date1"
+                }
+            ], 
+            "filters": [], 
+            "type": "Ad", 
+            "variable": "?ad1"
+        }
+    }, 
+    "type": "Point Fact"
+}

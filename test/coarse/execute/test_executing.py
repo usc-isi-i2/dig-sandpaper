@@ -176,6 +176,34 @@ class TestCoarseExecuting(unittest.TestCase):
         finally:
             test.test_utils.reset_elasticsearch(config["components"][0])
 
+    def test_basic_coarse_order_by(self):
+        config = load_json_file("9_config.json")
+        queries = load_json_file("9_query.json")
+        document = load_json_file("9_document.json")
+        document2 = load_json_file("9_document_2.json")
+        document3 = load_json_file("9_document_3.json")
+        document4 = load_json_file("9_document_4.json")
+        document5 = load_json_file("9_document_5.json")
+        document6 = load_json_file("9_document_6.json")
+        mapping = load_json_file("9_mapping.json")
+
+        test.test_utils.initialize_elasticsearch([document, document2, document3, document4, document5, document6],
+                                                 config["components"][0], mapping)
+
+        executor = Executor(config)
+
+        try:
+            for query in queries:
+                result = executor.execute(query)
+                result_dict = result.to_dict()
+                self.assertEquals(len(result.hits), 4)
+                self.assertEquals("PQABCDEFGHIJKLMNO", result_dict["hits"]["hits"][0]["_source"]["doc_id"])
+                self.assertEquals("DEFGHIJKLMNOPQABCD", result_dict["hits"]["hits"][1]["_source"]["doc_id"])
+                self.assertEquals("GHIJKLMNOPQABCDEF", result_dict["hits"]["hits"][2]["_source"]["doc_id"])
+                self.assertEquals("ABCDEFGHIJKLMNOPQ", result_dict["hits"]["hits"][3]["_source"]["doc_id"])
+        finally:
+            test.test_utils.reset_elasticsearch(config["components"][0])
+
 
 if __name__ == '__main__':
     unittest.main()

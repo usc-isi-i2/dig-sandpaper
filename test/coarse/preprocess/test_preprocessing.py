@@ -132,6 +132,15 @@ class TestCoarsePreprocessing(unittest.TestCase):
         w = result["SPARQL"]["where"]
         self.assertEqual(w["clauses"][0]["filters"][0]["type"], "City")
 
+    def test_order_by(self):
+        config = load_json_file("9_config.json")
+        query = load_json_file("9_query.json")
+        preprocessor = Preprocessor(config)
+
+        result = preprocessor.preprocess(query)
+        o = result["SPARQL"]["order-by"]
+        self.assertEqual(o["values"][0]["type"], "PostingDate")
+
 
 if __name__ == '__main__':
     unittest.main()

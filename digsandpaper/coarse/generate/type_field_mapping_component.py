@@ -40,9 +40,20 @@ class TypeFieldGroupByMapping(object):
                             fields_array_or_str = self.type_field_mapping[t]
                             if isinstance(fields_array_or_str, basestring):
                                 clause["agg_fields"].append({"name": fields_array_or_str})
-                            else: 
+                            else:
                                 for field in fields_array_or_str:
                                     clause["agg_fields"].append({"name": field})
+
+    def add_fields(self, c):
+        t = c["type"]
+        if t in self.type_field_mapping:
+            c["fields"] = []
+            tfm = self.type_field_mapping[t]
+            if isinstance(tfm, basestring):
+                c["fields"].append({"name": tfm})
+            else:
+                for field in tfm:
+                    c["fields"].append({"name": field})
 
     def generate(self, query):
         select = query["SPARQL"]["select"]
@@ -51,26 +62,16 @@ class TypeFieldGroupByMapping(object):
 
             if "variables" in groupby:
                 for v in groupby["variables"]:
-                    t = v["type"]
-                    if t in self.type_field_mapping:
-                        v["fields"] = []
-                        tfm = self.type_field_mapping[t]
-                        if isinstance(tfm, basestring):
-                            v["fields"].append({"name": tfm})
-                        else:
-                            for field in tfm:
-                                v["fields"].append({"name": field})
+                    self.add_fields(v)
 
             for s in select["variables"]:
-                t = s["type"]
-                if t in self.type_field_mapping:
-                    s["fields"] = []
-                    tfm = self.type_field_mapping[t]
-                    if isinstance(tfm, basestring):
-                        s["fields"].append({"name": tfm})
-                    else:
-                        for field in self.type_field_mapping[t]:
-                            s["fields"].append({"name": field})
+                self.add_fields(s)
+
+        if "order-by" in query["SPARQL"]:
+            orderby = query["SPARQL"]["order-by"]
+            if "values" in orderby:
+                for v in orderby["values"]:
+                    self.add_fields(v)
 
         where = query["SPARQL"]["where"]
         self.generate_where(where, True)

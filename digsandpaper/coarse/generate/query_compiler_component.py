@@ -346,6 +346,24 @@ class ElasticsearchQueryCompiler(object):
                     a = A('terms', field=sv["fields"][0]["name"],
                           size=limit, order=order)
                     s.aggs.bucket(sv["variable"], a)
+        elif query["type"].lower() == "point fact":
+            if "order-by" in query["SPARQL"] and \
+               "values" in query["SPARQL"]["order-by"]:
+                order_by_clauses = []
+                for order_by_value in query["SPARQL"]["order-by"]["values"]:
+                    asc_or_desc = order_by_value.get("order", "asc")
+                    field = order_by_value["fields"][0]["name"]
+                    # our fields can be multi valued.
+                    # the mode argument allows us to pick one of the values.
+                    if asc_or_desc and asc_or_desc == "desc":
+                        order_by_clause = {field: {"order": "desc",
+                                                   "mode": "max"}}
+                    else:
+                        order_by_clause = {field: {"order": "asc",
+                                                   "mode": "min"}}
+                    order_by_clauses.append(order_by_clause)
+                s = s.sort(*order_by_clauses)
+
         return s
 
     def generate(self, query):

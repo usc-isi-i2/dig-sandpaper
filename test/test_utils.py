@@ -37,7 +37,7 @@ def initialize_elasticsearch_docs(endpoints, documents, t="ads"):
         url = '{}/dig-sandpaper-test/{}/{}'.format(endpoints[0], t, i)
         requests.put(url,
                      data=json.dumps(document))
-        time.sleep(5)
+    time.sleep(5)
 
 def initialize_elasticsearch(documents,
                              es_config, 

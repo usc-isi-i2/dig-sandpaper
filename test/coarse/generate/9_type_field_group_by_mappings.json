@@ -1,0 +1,4 @@
+{
+	"City": ["indexed.city.high_confidence_keys"],
+	"PostingDate": ["indexed.posting_date.high_confidence_keys"]
+}

@@ -107,6 +107,7 @@
                                                 "extractors.content_strict.data_extractors.phone.result.value": {
                                                     "_name": "75161e7a6405487ca7a61f0176a6f0dd:extractors.content_strict.data_extractors.phone.result.value:1234567890", 
                                                     "boost": 1.0, 
+                                                    "minimum_should_match": 1, 
                                                     "query": "1234567890"
                                                 }
                                             }
@@ -116,6 +117,7 @@
                                                 "extractors.content_relaxed.data_extractors.phone.result.value": {
                                                     "_name": "75161e7a6405487ca7a61f0176a6f0dd:extractors.content_relaxed.data_extractors.phone.result.value:1234567890", 
                                                     "boost": 0.5, 
+                                                    "minimum_should_match": 1, 
                                                     "query": "1234567890"
                                                 }
                                             }
@@ -125,6 +127,7 @@
                                                 "extractors.content_strict.data_extractors.local-phone.result.value": {
                                                     "_name": "75161e7a6405487ca7a61f0176a6f0dd:extractors.content_strict.data_extractors.local-phone.result.value:1234567890", 
                                                     "boost": 1.0, 
+                                                    "minimum_should_match": 1, 
                                                     "query": "1234567890"
                                                 }
                                             }
@@ -134,6 +137,7 @@
                                                 "extractors.content_relaxed.data_extractors.local-phone.result.value": {
                                                     "_name": "75161e7a6405487ca7a61f0176a6f0dd:extractors.content_relaxed.data_extractors.local-phone.result.value:1234567890", 
                                                     "boost": 0.5, 
+                                                    "minimum_should_match": 1, 
                                                     "query": "1234567890"
                                                 }
                                             }
@@ -149,6 +153,7 @@
                                                 "extractors.content_strict.data_extractors.city.result.value": {
                                                     "_name": "2635497303c64cf18f22686e464cdc78:extractors.content_strict.data_extractors.city.result.value:Toronto, Ontario", 
                                                     "boost": 4, 
+                                                    "minimum_should_match": 1, 
                                                     "query": "Toronto, Ontario"
                                                 }
                                             }
@@ -158,6 +163,7 @@
                                                 "extractors.content_relaxed.data_extractors.city.result.value": {
                                                     "_name": "2635497303c64cf18f22686e464cdc78:extractors.content_relaxed.data_extractors.city.result.value:Toronto, Ontario", 
                                                     "boost": 0.5, 
+                                                    "minimum_should_match": 1, 
                                                     "query": "Toronto, Ontario"
                                                 }
                                             }
@@ -167,6 +173,7 @@
                                                 "extractors.content_strict.data_extractors.country.result.value": {
                                                     "_name": "2635497303c64cf18f22686e464cdc78:extractors.content_strict.data_extractors.country.result.value:Toronto, Ontario", 
                                                     "boost": 1.0, 
+                                                    "minimum_should_match": 1, 
                                                     "query": "Toronto, Ontario"
                                                 }
                                             }
@@ -176,6 +183,7 @@
                                                 "extractors.content_relaxed.data_extractors.country.result.value": {
                                                     "_name": "2635497303c64cf18f22686e464cdc78:extractors.content_relaxed.data_extractors.country.result.value:Toronto, Ontario", 
                                                     "boost": 0.5, 
+                                                    "minimum_should_match": 1, 
                                                     "query": "Toronto, Ontario"
                                                 }
                                             }
@@ -233,6 +241,7 @@
                                                 "extractors.content_strict.data_extractors.hair-color.result.value": {
                                                     "_name": "0b43795fb9d9446d86c94679e345ba76:extractors.content_strict.data_extractors.hair-color.result.value:blonde", 
                                                     "boost": 1.0, 
+                                                    "minimum_should_match": 1, 
                                                     "query": "blonde"
                                                 }
                                             }
@@ -242,6 +251,7 @@
                                                 "extractors.content_strict.text.result.value": {
                                                     "_name": "0b43795fb9d9446d86c94679e345ba76:extractors.content_strict.text.result.value:blonde", 
                                                     "boost": 0.1, 
+                                                    "minimum_should_match": 1, 
                                                     "query": "blonde"
                                                 }
                                             }
@@ -251,6 +261,7 @@
                                                 "extractors.content_relaxed.text.result.value": {
                                                     "_name": "0b43795fb9d9446d86c94679e345ba76:extractors.content_relaxed.text.result.value:blonde", 
                                                     "boost": 0.1, 
+                                                    "minimum_should_match": 1, 
                                                     "query": "blonde"
                                                 }
                                             }
@@ -283,8 +294,14 @@
             "order-by": {
                 "values": [
                     {
+                        "fields": [
+                            {
+                                "name": "extractors.content_strict.data_extractors.ethnicity.result.name"
+                            }
+                        ], 
                         "function": "count", 
                         "order": "desc", 
+                        "type": "Ethnicity", 
                         "variable": "?ethnicity"
                     }
                 ]

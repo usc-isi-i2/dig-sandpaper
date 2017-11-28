@@ -24,7 +24,8 @@
                     {
                         "variable": "?ethnicity",
                         "function": "count",
-                        "order": "desc"
+                        "order": "desc", 
+                        "type": "Ethnicity"
                     }
                 ]
             },
