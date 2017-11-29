@@ -9,6 +9,10 @@ _location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 
+elasticsearch_numeric_types = ["long", "integer", "short", "byte",
+                               "double", "float", "half_float", "scaled_float"]
+
+
 def load_project_json_file(file_name):
     file = json.load(codecs.open(os.path.join(_location__, file_name),
                                  'r', 'utf-8'))
@@ -29,7 +33,8 @@ def jl_file_iterator(file):
 
 def generate(default_mapping, semantic_types,
              methods=["extract_from_landmark", "other_method"],
-             segments=["title", "content_strict", "other_segment"]):
+             segments=["title", "content_strict", "other_segment"],
+             semantic_type_to_data_type={}):
     root = {}
     root_props = {}
     root["indexed"] = {"properties": root_props}
@@ -44,23 +49,30 @@ def generate(default_mapping, semantic_types,
 
     for semantic_type in semantic_types:
         # not copying yet
+        if semantic_type_to_data_type.get(semantic_type, "string") in elasticsearch_numeric_types:
+            data_type = semantic_type_to_data_type[semantic_type]
+        else:
+            data_type = "string"
         knowledge_graph[semantic_type] = kg_to_copy
-        semantic_type_props = {"high_confidence_keys": {"type": "string",
+        semantic_type_props = {"high_confidence_keys": {"type": data_type,
                                                         "index": "not_analyzed"}}
+        if data_type in elasticsearch_numeric_types:
+            semantic_type_props["high_confidence_keys"]["ignore_malformed"] = True
         root_props[semantic_type] = {"properties": semantic_type_props}
         for method in methods:
             method_props = {}
             semantic_type_props[method] = {"properties": method_props}
             for segment in segments:
+
                 segment_props = {"key": {"type": "string",
                                          "index": "not_analyzed"},
-                                 "value": {"type": "string"}
+                                 "value": {"type": data_type}
                                  }
-                if semantic_type == "email":
+                if data_type == "email" or semantic_type == "email":
                     segment_props["value"]["analyzer"] = "url_component_analyzer"
                 if semantic_type == "website":
                     segment_props["value"]["analyzer"] = "url_component_analyzer"
-                if "date" in semantic_type:
+                if data_type == "date" or "date" in semantic_type:
                     segment_props["value"]["type"] = "date"
                     segment_props["value"]["format"] = "strict_date_optional_time||epoch_millis"
                     knowledge_graph[semantic_type] = dict()
@@ -78,7 +90,8 @@ def generate(default_mapping, semantic_types,
                                                                                     }
                                                                                 }
                                                                             }
-
+                if data_type in elasticsearch_numeric_types:
+                    segment_props["value"]["ignore_malformed"] = True
                 method_props[segment] = {"properties": segment_props}
 
     default_mapping["mappings"]["ads"]["properties"]["indexed"] = root["indexed"]
@@ -105,7 +118,10 @@ def generate_from_project_config(project_config, default_mapping=None, shards=5,
     if not default_mapping:
         default_mapping = load_project_json_file("default_mapping.json")
     semantic_types = frozenset(project_config["fields"].keys())
-    mapping = generate(default_mapping, semantic_types, methods, segments)
+    semantic_type_to_data_type = {}
+    for semantic_type in semantic_types:
+        semantic_type_to_data_type[semantic_type] = project_config["fields"][semantic_type].get("type", "string")
+    mapping = generate(default_mapping, semantic_types, methods, segments, semantic_type_to_data_type)
     mapping['settings']['index']['number_of_shards'] = shards
     return mapping
 

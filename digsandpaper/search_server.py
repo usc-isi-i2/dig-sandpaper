@@ -136,7 +136,11 @@ def generate_mapping():
     url = request.args.get('url', None)
     project = request.args.get('project', None)
     shards = request.args.get('shards', 5)
-    m = call_generate_mapping(url, project, shards=shards)
+    if request.data:
+        project_config = json.loads(request.data)
+    else:
+        project_config = get_project_config(url, project)
+    m = call_generate_mapping(url, project, project_config, shards=shards)
     return json.dumps(m)
 
 
