@@ -42,7 +42,7 @@ def generate(default_mapping, semantic_types,
     default_prov_props = {"properties": default_prov_ev_props}
     default_knowledge_graph_props = {"key": {"type": "string", "index": "not_analyzed"},
                                      "provenance": default_prov_props,
-                                     "value": {"type": "string"}}
+                                     "value": {"type": "string"}, "data": {"enabled": False}}
     kg_to_copy = {"properties": default_knowledge_graph_props}
     knowledge_graph = {}
     default_mapping["mappings"]["ads"]["properties"]["knowledge_graph"] = {"properties": knowledge_graph}
