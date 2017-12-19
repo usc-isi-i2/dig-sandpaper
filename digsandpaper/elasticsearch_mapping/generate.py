@@ -8,7 +8,6 @@ from optparse import OptionParser
 _location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-
 elasticsearch_numeric_types = ["long", "integer", "short", "byte",
                                "double", "float", "half_float", "scaled_float"]
 
@@ -38,11 +37,13 @@ def generate(default_mapping, semantic_types,
     root = {}
     root_props = {}
     root["indexed"] = {"properties": root_props}
-    default_prov_ev_props = {"extracted_value": {"type": "string"}}
+    default_prov_ev_props = {"extracted_value": {"type": "string"}, "confidence": {"properties": {"extraction":
+                                                                                                {"type": "double"}}}}
     default_prov_props = {"properties": default_prov_ev_props}
     default_knowledge_graph_props = {"key": {"type": "string", "index": "not_analyzed"},
                                      "provenance": default_prov_props,
-                                     "value": {"type": "string"}, "data": {"enabled": False}}
+                                     "value": {"type": "string"}, "data": {"enabled": False}, "confidence":
+                                                                                                    {"type": "double"}}
     kg_to_copy = {"properties": default_knowledge_graph_props}
     knowledge_graph = {}
     default_mapping["mappings"]["ads"]["properties"]["knowledge_graph"] = {"properties": knowledge_graph}
@@ -79,17 +80,19 @@ def generate(default_mapping, semantic_types,
                     knowledge_graph[semantic_type]["properties"] = dict()
                     knowledge_graph[semantic_type]["properties"]["value"] = dict()
                     knowledge_graph[semantic_type]["properties"]["value"]["type"] = "date"
-                    knowledge_graph[semantic_type]["properties"]["value"]["format"] = "strict_date_optional_time||epoch_millis"
+                    knowledge_graph[semantic_type]["properties"]["value"][
+                        "format"] = "strict_date_optional_time||epoch_millis"
                     knowledge_graph[semantic_type]["properties"]["key"] = dict()
                     knowledge_graph[semantic_type]["properties"]["key"]["type"] = "date"
-                    knowledge_graph[semantic_type]["properties"]["key"]["format"] = "strict_date_optional_time||epoch_millis"
+                    knowledge_graph[semantic_type]["properties"]["key"][
+                        "format"] = "strict_date_optional_time||epoch_millis"
                     knowledge_graph[semantic_type]["properties"]["provenance"] = {
-                                                                            "properties": {
-                                                                                "extracted_value": {
-                                                                                    "type": "string"
-                                                                                    }
-                                                                                }
-                                                                            }
+                        "properties": {
+                            "extracted_value": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 if data_type in elasticsearch_numeric_types:
                     segment_props["value"]["ignore_malformed"] = True
                 method_props[segment] = {"properties": segment_props}
@@ -100,8 +103,8 @@ def generate(default_mapping, semantic_types,
 
 
 def generate_from_etk_config(etk_config, default_mapping=None, shards=5,
-             methods=["extract_from_landmark", "other_method"],
-             segments=["title", "content_strict", "other_segment"]):
+                             methods=["extract_from_landmark", "other_method"],
+                             segments=["title", "content_strict", "other_segment"]):
     if not default_mapping:
         default_mapping = load_project_json_file("default_mapping.json")
     semantic_types = frozenset()
@@ -113,8 +116,8 @@ def generate_from_etk_config(etk_config, default_mapping=None, shards=5,
 
 
 def generate_from_project_config(project_config, default_mapping=None, shards=5,
-             methods=["extract_from_landmark", "other_method"],
-             segments=["title", "content_strict", "other_segment"]):
+                                 methods=["extract_from_landmark", "other_method"],
+                                 segments=["title", "content_strict", "other_segment"]):
     if not default_mapping:
         default_mapping = load_project_json_file("default_mapping.json")
     semantic_types = frozenset(project_config["fields"].keys())
