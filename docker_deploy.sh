@@ -1,5 +1,5 @@
 #!/bin/bash
-docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+docker login -u $DOCKER_USER -p $DOCKER_PASS
 export REPO=digsandpaper/digsandpaper
 export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
 export DOCKERFILE_EXT=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo ".development"; else echo "" ; fi`
