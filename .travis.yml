@@ -7,7 +7,7 @@ services:
 addons:
   apt:
     packages:
-    - oracle-java8-set-default
+    - openjdk-8-jdk
 before_install:
 - curl -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.4.1/elasticsearch-2.4.1.deb
 - sudo dpkg -i --force-confnew elasticsearch-2.4.1.deb
