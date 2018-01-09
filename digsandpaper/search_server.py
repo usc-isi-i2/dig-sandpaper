@@ -251,14 +251,15 @@ def index():
         bulk_response = r.json()
         for doc_response in bulk_response.get("items", []):
             index_response = doc_response.get("index", {})
-            failed = index_response.get("shards", {}).get("failed", 0)
-            succeeded = index_response.get("shards", {}).get("succeeded", 0)
+            failed = index_response.get("_shards", {}).get("failed", 0)
+            successful = index_response.get("_shards", {}).get("successful", 0)
         log_responses =  get_engine(project).config.get("indexing",{}).get("log_responses", None)
         if log_responses:
             with open(os.path.join(log_responses, "indexing.{}.responses.jl".format(index)), "a") as myfile:
                 myfile.write(json.dumps(bulk_response))
+                myfile.write("\n")
 
-    return "Posted {} documents. {} succeeded. {} 0 failed.\n".format(counter, succeeded, failed)
+    return "Posted {} documents. {} successful. {} failed.\n".format(counter, successful, failed)
 
 @app.route("/search", methods=['POST'])
 def search():
