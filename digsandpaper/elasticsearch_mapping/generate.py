@@ -90,6 +90,13 @@ def generate(default_mapping, semantic_types,
                         "properties": {
                             "extracted_value": {
                                 "type": "string"
+                            },
+                            "confidence": {
+                                "properties": {
+                                    "extraction": {
+                                        "type": "double"
+                                    }
+                                }
                             }
                         }
                     }
