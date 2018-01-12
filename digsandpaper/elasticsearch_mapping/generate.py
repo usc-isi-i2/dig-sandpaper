@@ -52,6 +52,8 @@ def generate(default_mapping, semantic_types,
         # not copying yet
         if semantic_type_to_data_type.get(semantic_type, "string") in elasticsearch_numeric_types:
             data_type = semantic_type_to_data_type[semantic_type]
+        elif semantic_type_to_data_type.get(semantic_type, "string").lower() == "number":
+            data_type = "double"
         else:
             data_type = "string"
         knowledge_graph[semantic_type] = kg_to_copy
