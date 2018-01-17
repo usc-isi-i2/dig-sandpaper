@@ -10,7 +10,8 @@
           "predicate_range_mappings": {
             "tld": "topleveldomain",
             "url": "url",
-            "image": "image"
+            "image": "image",
+            "timestamp_crawl": "timestampcrawl"
           }
         },
         {
@@ -82,6 +83,9 @@
             ],
             "image": [
               "objects.img_sha1"
+            ],
+            "timestampcrawl": [
+              "timestamp_crawl"
             ]
           }
         },
@@ -100,6 +104,9 @@
             ],
             "image": [
               "objects.img_sha1"
+            ],
+            "timestampcrawl": [
+              "timestamp_crawl"
             ]
           }
         },
