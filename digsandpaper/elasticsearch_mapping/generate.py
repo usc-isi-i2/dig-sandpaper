@@ -2,6 +2,7 @@ import codecs
 import json
 import os
 import requests
+import copy
 from urlparse import urlparse
 from optparse import OptionParser
 
@@ -56,16 +57,26 @@ def generate(default_mapping, semantic_types,
             data_type = "double"
         else:
             data_type = "string"
-        knowledge_graph[semantic_type] = kg_to_copy
+        knowledge_graph[semantic_type] = copy.deepcopy(kg_to_copy)
         semantic_type_props = {"high_confidence_keys": {"type": data_type,
-                                                        "index": "not_analyzed"},
-                                "key_count": {"index": "no", 
-                                              "type": "long"},
-                                "provenance_count": {"index": "no", 
-                                                     "type": "long"},
-                                }
+                                                        "index": "not_analyzed"
+                                                        },
+                               "key_count": {"index": "no",
+                                             "type": "long"},
+                               "provenance_count": {"index": "no",
+                                                    "type": "long"},
+                               }
         if data_type in elasticsearch_numeric_types:
+            knowledge_graph[semantic_type]["properties"]["key"]["type"] = data_type
+            knowledge_graph[semantic_type]["properties"]["value"]["type"] = data_type
             semantic_type_props["high_confidence_keys"]["ignore_malformed"] = True
+        if data_type == "date" or "date" in semantic_type:
+            knowledge_graph[semantic_type]["properties"]["value"]["type"] = "date"
+            knowledge_graph[semantic_type]["properties"]["value"][
+                "format"] = "strict_date_optional_time||epoch_millis"
+            knowledge_graph[semantic_type]["properties"]["key"]["type"] = "date"
+            knowledge_graph[semantic_type]["properties"]["key"][
+                "format"] = "strict_date_optional_time||epoch_millis"
         root_props[semantic_type] = {"properties": semantic_type_props}
         for method in methods:
             method_props = {}
@@ -83,30 +94,6 @@ def generate(default_mapping, semantic_types,
                 if data_type == "date" or "date" in semantic_type:
                     segment_props["value"]["type"] = "date"
                     segment_props["value"]["format"] = "strict_date_optional_time||epoch_millis"
-                    knowledge_graph[semantic_type] = dict()
-                    knowledge_graph[semantic_type]["properties"] = dict()
-                    knowledge_graph[semantic_type]["properties"]["value"] = dict()
-                    knowledge_graph[semantic_type]["properties"]["value"]["type"] = "date"
-                    knowledge_graph[semantic_type]["properties"]["value"][
-                        "format"] = "strict_date_optional_time||epoch_millis"
-                    knowledge_graph[semantic_type]["properties"]["key"] = dict()
-                    knowledge_graph[semantic_type]["properties"]["key"]["type"] = "date"
-                    knowledge_graph[semantic_type]["properties"]["key"][
-                        "format"] = "strict_date_optional_time||epoch_millis"
-                    knowledge_graph[semantic_type]["properties"]["provenance"] = {
-                        "properties": {
-                            "extracted_value": {
-                                "type": "string"
-                            },
-                            "confidence": {
-                                "properties": {
-                                    "extraction": {
-                                        "type": "double"
-                                    }
-                                }
-                            }
-                        }
-                    }
                 if data_type in elasticsearch_numeric_types:
                     segment_props["value"]["ignore_malformed"] = True
                 method_props[segment] = {"properties": segment_props}
