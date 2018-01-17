@@ -301,6 +301,9 @@
     "indexed.weight.other_method.title.value",
     "indexed.weight.other_method.other_segment.value"
   ],
+  "TimestampCrawl": [
+    "timestamp_crawl"
+  ],
   "TopLevelDomain": [
     "tld.raw",
     "tld"

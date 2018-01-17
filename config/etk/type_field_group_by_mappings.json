@@ -62,6 +62,9 @@
   "Weight": [
     "indexed.weight.high_confidence_keys"
   ],
+  "TimestampCrawl": [
+    "timestamp_crawl"
+  ],
   "TopLevelDomain": [
     "tld.raw"
   ],
