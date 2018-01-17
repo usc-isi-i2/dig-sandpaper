@@ -58,7 +58,12 @@ def generate(default_mapping, semantic_types,
             data_type = "string"
         knowledge_graph[semantic_type] = kg_to_copy
         semantic_type_props = {"high_confidence_keys": {"type": data_type,
-                                                        "index": "not_analyzed"}}
+                                                        "index": "not_analyzed"},
+                                "key_count": {"index": "no", 
+                                              "type": "long"},
+                                "provenance_count": {"index": "no", 
+                                                     "type": "long"},
+                                }
         if data_type in elasticsearch_numeric_types:
             semantic_type_props["high_confidence_keys"]["ignore_malformed"] = True
         root_props[semantic_type] = {"properties": semantic_type_props}
