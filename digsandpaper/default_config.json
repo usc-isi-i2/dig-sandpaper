@@ -11,6 +11,7 @@
             "tld": "topleveldomain",
             "url": "url",
             "image": "image",
+            "timestamp": "timestamp",
             "timestamp_crawl": "timestampcrawl"
           }
         },
@@ -84,6 +85,9 @@
             "image": [
               "objects.img_sha1"
             ],
+            "timestamp": [
+              "timestamp"
+            ],
             "timestampcrawl": [
               "timestamp_crawl"
             ]
@@ -104,6 +108,9 @@
             ],
             "image": [
               "objects.img_sha1"
+            ],
+            "timestamp": [
+              "timestamp"
             ],
             "timestampcrawl": [
               "timestamp_crawl"

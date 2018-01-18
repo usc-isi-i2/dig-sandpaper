@@ -26,6 +26,7 @@
   "street_address": "Address",
   "title": "Title",
   "weight": "Weight",
+  "timestamp": "Timestamp",
   "timestamp_crawl": "TimestampCrawl",
   "tld": "TopLevelDomain",
   "url": "URL",
