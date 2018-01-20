@@ -4,6 +4,7 @@
       "_all": {
         "enabled": false 
       },
+      "dynamic":false,
       "properties": {
         "@execution_profile": {
           "properties": {
