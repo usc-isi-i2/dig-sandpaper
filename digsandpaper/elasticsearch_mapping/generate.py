@@ -37,17 +37,21 @@ def generate(default_mapping, semantic_types,
              semantic_type_to_data_type={}):
     root = {}
     root_props = {}
-    root["indexed"] = {"properties": root_props}
-    default_prov_ev_props = {"extracted_value": {"type": "string"}, "confidence": {"properties": {"extraction":
-                                                                                                {"type": "double"}}}}
+    root["indexed"] = {"properties": root_props,
+                       "dynamic": "true"}
+    default_prov_ev_props = {"extracted_value": {"type": "string"},
+                             "confidence": {"properties": {"extraction": {"type": "double"}}}}
     default_prov_props = {"properties": default_prov_ev_props}
-    default_knowledge_graph_props = {"key": {"type": "string", "index": "not_analyzed"},
+    default_knowledge_graph_props = {"key": {"type": "string",
+                                             "index": "not_analyzed"},
                                      "provenance": default_prov_props,
-                                     "value": {"type": "string"}, "data": {"enabled": False}, "confidence":
-                                                                                                    {"type": "double"}}
+                                     "value": {"type": "string"},
+                                     "data": {"enabled": False},
+                                     "confidence": {"type": "double"}}
     kg_to_copy = {"properties": default_knowledge_graph_props}
     knowledge_graph = {}
-    default_mapping["mappings"]["ads"]["properties"]["knowledge_graph"] = {"properties": knowledge_graph}
+    default_mapping["mappings"]["ads"]["properties"]["knowledge_graph"] = {"properties": knowledge_graph, 
+                                                                           "dynamic": "true"}
 
     for semantic_type in semantic_types:
         # not copying yet
