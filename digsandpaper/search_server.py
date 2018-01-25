@@ -60,7 +60,7 @@ def get_default_es_endpoint(project=None):
     if "endpoints" in execute_component:
         default_es_endpoint = execute_component["endpoints"]
     if "host" in execute_component and "port" in execute_component:
-        default_es_endpoint = ["{}:{}".format(execute_component["host"], execute_component["port"])]
+        default_es_endpoint = ["http://{}:{}".format(execute_component["host"], execute_component["port"])]
     return default_es_endpoint
 
 
