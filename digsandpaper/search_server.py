@@ -106,7 +106,7 @@ def get_project_config(url, project):
     elif not url and project:
         response = get_url('{}/projects/{}'.format(default_project_url, project))
     else:
-        return "Please provide either a url and/or a project as url params to retrieve fields to generate an elasticserach mapping\n", status.HTTP_400_BAD_REQUEST
+        return "Please provide either a url or mydig url and project as query params to retrieve fields to generate an elasticserach mapping\n", status.HTTP_400_BAD_REQUEST
 
     project_config = response.json()
     response.raise_for_status()
@@ -184,6 +184,13 @@ def jl_file_iterator(file):
         line = file.readline()
 
 
+def _is_acceptable_content_type(request):
+    return ('Content-Type' in request.headers and
+            request.headers['Content-Type'] == 'application/x-gzip' or
+            request.headers['Content-Type'] == 'application/json' or
+            request.headers['Content-Type'] == 'application/x-jsonlines')
+
+
 def _index_fields(request):
     if (request.headers['Content-Type'] == 'application/x-gzip'):
         gz_data_as_file = StringIO.StringIO(request.data)
@@ -193,7 +200,7 @@ def _index_fields(request):
           request.headers['Content-Type'] == 'application/x-jsonlines'):
         jls = request.data
     else:
-        return "Only supported content types are application/x-gzip, application/json and application/x-jsonlines", status.HTTP_400_BAD_REQUEST
+        return ""
     reader = codecs.getreader('utf-8')
     jls_as_file = reader(StringIO.StringIO(jls))
     jls = [json.dumps(jl) for jl in [index_knowledge_graph_fields(jl) for jl in jl_file_iterator(jls_as_file)] if jl is not None]
@@ -201,6 +208,9 @@ def _index_fields(request):
 
 @app.route("/indexing/fields", methods=['POST'])
 def index_fields():
+    if not _is_acceptable_content_type(request):
+        return "Only supported content types are application/x-gzip, application/json and application/x-jsonlines", status.HTTP_400_BAD_REQUEST
+
     jls = _index_fields(request)
     indexed_jls = "\n".join(jls)
     if (request.headers['Content-Type'] == 'application/x-gzip'):
@@ -224,6 +234,9 @@ def index():
         endpoint = endpoint[0]
     index = request.args.get('index', None)
     t = request.args.get('type', "ads")
+    if not _is_acceptable_content_type(request):
+        return "Only supported content types are application/x-gzip, application/json and application/x-jsonlines", status.HTTP_400_BAD_REQUEST
+
     jls = _index_fields(request)
     log_requests =  get_engine(project).config.get("indexing",{}).get("log_requests", None)
     if log_requests:
