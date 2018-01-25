@@ -88,3 +88,7 @@ def load_engine_configuration(test_case_number):
     config["coarse"] = coarse_config
     config["fine"] = {}
     return config
+
+
+def load_mydig_configuration(test_case_number, suffix):
+    return load_json_file("mydig/{}{}".format(test_case_number, suffix))
