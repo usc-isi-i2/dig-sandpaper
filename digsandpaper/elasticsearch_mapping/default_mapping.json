@@ -169,6 +169,9 @@
         "crawl_data": {
           "enabled": false
         },
+        "created_by": {
+          "type": "string"
+        },
         "doc_id": {
           "type": "string",
           "index": "not_analyzed"
