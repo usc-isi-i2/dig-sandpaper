@@ -12,7 +12,7 @@ ES_DSL_VERSION = 'elasticsearch-dsl>={}.0.0,<{}.0.0'.format(ES_MAJOR_VERSION,
 
 setup(
     name='digsandpaper',
-    version='0.1.4-r063',
+    version='0.1.4-r064',
     description='digsandpaper',
     author='Jason Slepicka',
     author_email='jasonslepicka@gmail.com',
