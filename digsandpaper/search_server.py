@@ -351,6 +351,19 @@ def update_endpoint(config, endpoint):
         return config
 
 
+def invert_subproperty_relationships(prop,
+                                     subproperty_relationships,
+                                     inverted, supers=list()):
+    if subproperty_relationships:
+        new_supers = list()
+        new_supers.extend(supers)
+        new_supers.append(prop)
+        for subproperty, subsubproperty_relationships in subproperty_relationships.iteritems():
+            invert_subproperty_relationships(subproperty, subsubproperty_relationships, inverted, new_supers)
+    else:
+        inverted[prop] = supers
+
+
 def apply_config_from_project(url, project, endpoint, index=None,
                               default_config=None, sample=False,
                               search_importance_enabled=False,
@@ -390,17 +403,15 @@ def apply_config_from_project(url, project, endpoint, index=None,
         if pc["name"] == "PredicateDictConstraintTypeMapper":
             predicate_type_mapping = pc["predicate_range_mappings"]
 
+    pinpoint_config = project_config.get("pinpoint", {})
+    if "custom_field_mappings" in pinpoint_config:
+        for t, fields in pinpoint_config["custom_field_mappings"].iteritems():
+            type_field_mapping[t] = fields
+
     for field_name, spec in project_config["fields"].iteritems():
         predicate_type_mapping[field_name] = field_name.lower()
         type_group_field_mapping[field_name.lower()] = "indexed.{}.high_confidence_keys".format(field_name)
-        fields = list()
-        if spec.get("type", "string") == "string" and\
-            ("email" not in field_name.lower() and
-             "website" not in field_name.lower() and
-             "tld" not in field_name.lower() and
-             "date" not in field_name.lower() and
-             "image" not in field_name.lower()):
-            fields.extend(type_field_mapping["owl:Thing"])
+
         if "search_importance" in spec and search_importance_enabled:
             search_importance = spec["search_importance"]
             if search_importance > 1:
@@ -411,12 +422,34 @@ def apply_config_from_project(url, project, endpoint, index=None,
             field_weight_mapping["indexed"][field_name] = weights
             multiply_values(weights, multiplier)
 
+        fields = list()
         for method in methods:
             for segment in segments:
                 fields.append("indexed.{}.{}.{}.value".format(field_name, method, segment))
                 if spec.get("type", "string") == "email" or "email" in field_name.lower():
                     fields.append("indexed.{}.{}.{}.key".format(field_name, method, segment))
         type_field_mapping[field_name.lower()] = fields
+
+    subproperty_relationships = pinpoint_config.get("subproperty_relationships", {})
+    inverted_relationships = {}
+    if subproperty_relationships:
+        for prop, sp_r in subproperty_relationships.iteritems():
+            invert_subproperty_relationships(prop, sp_r,
+                                             inverted_relationships)
+    for field_name, spec in project_config["fields"].iteritems():
+        fields = type_field_mapping[field_name.lower()]
+        if not subproperty_relationships:
+            if spec.get("type", "string") == "string" and\
+                ("email" not in field_name.lower() and
+                 "website" not in field_name.lower() and
+                 "tld" not in field_name.lower() and
+                 "date" not in field_name.lower() and
+                 "image" not in field_name.lower()):
+                fields.extend(type_field_mapping["owl:Thing"])
+        else:
+            supers = inverted_relationships.get(field_name.lower(), list())
+            for super in supers:
+                fields.extend(type_field_mapping[super])
     set_engine(Engine(c), project)
 
 

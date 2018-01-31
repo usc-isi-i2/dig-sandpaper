@@ -4,15 +4,6 @@
             "limit": 10, 
             "offset": 0
         }, 
-        "order-by": {
-            "values": [
-                {
-                    "order": "desc", 
-                    "type": "PostingDate", 
-                    "variable": "?posting-date1"
-                }
-            ]
-        }, 
         "select": {
             "variables": [
                 {
@@ -30,13 +21,13 @@
                 }, 
                 {
                     "isOptional": false, 
-                    "predicate": "city",
-                    "variable": "?city"
+                    "predicate": "description",  
+                    "constraint": "important"
                 }, 
                 {
                     "isOptional": false, 
-                    "predicate": "posting_date", 
-                    "variable": "?posting-date1"
+                    "predicate": "title",
+                    "constraint": "everything"
                 }
             ], 
             "filters": [], 

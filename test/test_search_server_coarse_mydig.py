@@ -72,6 +72,12 @@ class SearchServerTestCase(unittest.TestCase):
         self.assertEquals(len(results_1), 1)
         self.assertEquals(len(results_1[0]["result"]["hits"]["hits"]), 1)
 
+    def test_search_2(self):
+        document = test_utils.load_mydig_configuration(2, "_document.json")
+        results_2 = self.helper_test(2, {"ads": [document]})
+        self.assertEquals(len(results_2), 1)
+        self.assertEquals(len(results_2[0]["result"]["hits"]["hits"]), 1)
+
 
 if __name__ == '__main__':
     unittest.main()
