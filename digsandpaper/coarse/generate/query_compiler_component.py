@@ -695,7 +695,7 @@ class ElasticsearchQueryCompiler(object):
             shoulds.extend(converted_filters)
             filters = valid_filters
 
-        if len(musts) > 0:
+        if len(musts) > 0 or not shoulds:
             msm = 0
         else:
             msm = 1
