@@ -1,31 +1,165 @@
 {
-	"doc_id": "ABCDEFGHIJKLMNOPQ",
-	"extractors": {
-		"content_strict":{
-			"data_extractors":{
-				"city": {"result":{"value": "Toronto"}},
-				"country": {"result":{"value": "Canada"}},
-				"hair-color": {"result":{"value": "blonde"}},
-				"local-phone": {"result":{"value": "4567890"}},
-				"phone": {"result":{"value": "1234567890"}},
-				"ethnicity": {"result":{"value": "caucasian", "name": "caucasian"}},
-				"nationality": {"result":{"value": "caucasian"}},
-				"title": {"result":{"value": "the enchanting mistress"}}
-			},
-			"text": {"result":{"value": "I am the enchanting mistress available in Toronto Canada at 1234567890.  I am a blonde caucasian."}}
-		},
-		"content_relaxed":{
-			"data_extractors":{
-				"city": {"result":{"value": "Toronto"}},
-				"country": {"result":{"value": "Canada"}},
-				"hair-color": {"result":{"value": "blonde"}},
-				"local-phone": {"result":{"value": "4567890"}},
-				"phone": {"result":{"value": "1234567890"}},
-				"ethnicity": {"result":{"value": "caucasian"}},
-				"nationality": {"result":{"value": "caucasian"}},
-				"title": {"result":{"value": "the enchanting mistress"}}
-			},
-			"text": {"result":{"value": "I am the enchanting mistress available in Toronto Canada at 1234567890.  I am a blonde caucasian."}}
-		}
-	}
+  "doc_id": "ABCDEFGHIJKLMNOPQ",
+  "content_extraction": {
+    "content_strict": {
+      "text": "I am the enchanting mistress available in Toronto Canada at 1234567890.  I am a blonde caucasian."
+    },
+    "content_relaxed": {
+      "text": "I am the enchanting mistress available in Toronto Canada at 1234567890.  I am a blonde caucasian."
+    }
+  },
+  "indexed": {
+    "city": {
+      "high_confidence_keys": [
+        "Toronto"
+      ],
+      "other_method": {
+        "content_strict": [
+          {
+            "value": "Toronto",
+            "key": "Toronto"
+          }
+        ],
+        "content_relaxed": [
+          {
+            "value": "Toronto",
+            "key": "Toronto"
+          }
+        ]
+      }
+    },
+    "country": {
+      "high_confidence_keys": [
+        "Canada"
+      ],
+      "other_method": {
+        "content_strict": [
+          {
+            "value": "Canada",
+            "key": "Canada"
+          }
+        ],
+        "content_relaxed": [
+          {
+            "value": "Canada",
+            "key": "Canada"
+          }
+        ]
+      }
+    },
+    "hair-color": {
+      "high_confidence_keys": [
+        "blonde"
+      ],
+      "other_method": {
+        "content_strict": [
+          {
+            "value": "blonde",
+            "key": "blonde"
+          }
+        ],
+        "content_relaxed": [
+          {
+            "value": "blonde",
+            "key": "blonde"
+          }
+        ]
+      }
+    },
+    "local-phone": {
+      "high_confidence_keys": [
+        "4567890"
+      ],
+      "other_method": {
+        "content_strict": [
+          {
+            "value": "4567890",
+            "key": "4567890"
+          }
+        ],
+        "content_relaxed": [
+          {
+            "value": "4567890",
+            "key": "4567890"
+          }
+        ]
+      }
+    },
+    "phone": {
+      "high_confidence_keys": [
+        "1234567890"
+      ],
+      "other_method": {
+        "content_strict": [
+          {
+            "value": "1234567890",
+            "key": "1234567890"
+          }
+        ],
+        "content_relaxed": [
+          {
+            "value": "1234567890",
+            "key": "1234567890"
+          }
+        ]
+      }
+    },
+    "ethnicity": {
+      "high_confidence_keys": [
+        "caucasian"
+      ],
+      "other_method": {
+        "content_strict": [
+          {
+            "value": "caucasian",
+            "key": "caucasian"
+          }
+        ],
+        "content_relaxed": [
+          {
+            "value": "caucasian",
+            "key": "caucasian"
+          }
+        ]
+      }
+    },
+    "nationality": {
+      "high_confidence_keys": [
+        "caucasian"
+      ],
+      "other_method": {
+        "content_strict": [
+          {
+            "value": "caucasian",
+            "key": "caucasian"
+          }
+        ],
+        "content_relaxed": [
+          {
+            "value": "caucasian",
+            "key": "caucasian"
+          }
+        ]
+      }
+    },
+    "title": {
+      "high_confidence_keys": [
+        "the enchanting mistress"
+      ],
+      "other_method": {
+        "content_strict": [
+          {
+            "value": "the enchanting mistress",
+            "key": "the enchanting mistress"
+          }
+        ],
+        "content_relaxed": [
+          {
+            "value": "the enchanting mistress",
+            "key": "the enchanting mistress"
+          }
+        ]
+      }
+    }
+  }
 }

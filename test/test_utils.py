@@ -35,8 +35,9 @@ def initialize_elasticsearch_doc_types(documents_by_type,
 def initialize_elasticsearch_docs(endpoints, documents, t="ads"):
     for i, document in enumerate(documents):
         url = '{}/dig-sandpaper-test/{}/{}'.format(endpoints[0], t, i)
-        requests.put(url,
+        response = requests.put(url,
                      data=json.dumps(document))
+        response.raise_for_status()
     time.sleep(5)
 
 def initialize_elasticsearch(documents,

@@ -70,7 +70,7 @@ class SearchServerTestCaseCoarse(unittest.TestCase):
         self.assertEquals(len(results_4[0]["result"]["hits"]["hits"]), 1)
 
     def test_coarse_6(self):
-        results_6 = self.helper_test_coarse(6)
+        results_6 = self.helper_test_coarse(6, has_mapping=True)
         self.assertEquals(len(results_6), 1)
         self.assertEquals(results_6[0]["result"]["aggregations"]
                                       ["?ethnicity"]["buckets"]

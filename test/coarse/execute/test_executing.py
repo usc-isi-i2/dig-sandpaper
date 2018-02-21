@@ -109,9 +109,11 @@ class TestCoarseExecuting(unittest.TestCase):
         config = load_json_file("6_config.json")
         queries = load_json_file("6_query.json")
         document = load_json_file("6_document.json")
+        mapping = load_json_file("6_mapping.json")
 
         test.test_utils.initialize_elasticsearch([document],
-                                                 config["components"][0])
+                                                 config["components"][0],
+                                                 mapping)
 
         executor = Executor(config)
 

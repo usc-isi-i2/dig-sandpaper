@@ -130,7 +130,7 @@ class TestCoarseGenerating(unittest.TestCase):
         self.assertEqual(len(generated_queries), 1)
 
 
-    def test_basic_aggregation(self):
+    def test_basic_coarse_aggregation(self):
         config = load_json_file("6_config.json")
         parameterized_queries = load_json_file("6_query.json")
         generator = Generator(config)

@@ -1,457 +1,403 @@
 [
-    {
-        "ELASTICSEARCH": {
-            "doc_type": "ads", 
-            "index": "dig-sandpaper-test", 
-            "search": {
-                "_source": {
-                    "includes": [
-                        "fields.*", 
-                        "extractors.content_relaxed.data_extractors.city.result.value", 
-                        "extractors.content_strict.data_extractors.phone.result.value", 
-                        "extractors.content_relaxed.data_extractors.country.result.value", 
-                        "extractors.content_strict.data_extractors.ethnicity.result.name", 
-                        "extractors.content_relaxed.data_extractors.title.result.value", 
-                        "extractors.content_strict.data_extractors.hair-color.result.value", 
-                        "extractors.content_strict.data_extractors.nationality.result.value", 
-                        "extractors.content_relaxed.data_extractors.ethnicity.result.value", 
-                        "extractors.content_relaxed.data_extractors.nationality.result.value", 
-                        "tld", 
-                        "extractors.content_strict.data_extractors.local-phone.result.value", 
-                        "extractors.content_relaxed.text.result.value", 
-                        "extractors.content_strict.data_extractors.country.result.value", 
-                        "extractors.content_relaxed.data_extractors.phone.result.value", 
-                        "url", 
-                        "extractors.content_strict.data_extractors.title.result.value", 
-                        "extractors.content_relaxed.data_extractors.local-phone.result.value", 
-                        "extractors.content_strict.data_extractors.city.result.value", 
-                        "extractors.content_strict.data_extractors.ethnicity.result.value", 
-                        "extractors.content_strict.text.result.value", 
-                        "doc_id"
-                    ]
-                }, 
-                "aggs": {
-                    "?ethnicity": {
-                        "terms": {
-                            "field": "extractors.content_strict.data_extractors.ethnicity.result.name", 
-                            "order": {
-                                "_count": "desc"
-                            }, 
-                            "size": 5
-                        }
-                    }
-                }, 
-                "highlight": {
-                    "fields": {
-                        "doc_id": {}, 
-                        "extractors.content_relaxed.data_extractors.city.result.value": {}, 
-                        "extractors.content_relaxed.data_extractors.country.result.value": {}, 
-                        "extractors.content_relaxed.data_extractors.ethnicity.result.value": {}, 
-                        "extractors.content_relaxed.data_extractors.local-phone.result.value": {}, 
-                        "extractors.content_relaxed.data_extractors.nationality.result.value": {}, 
-                        "extractors.content_relaxed.data_extractors.phone.result.value": {}, 
-                        "extractors.content_relaxed.data_extractors.title.result.value": {}, 
-                        "extractors.content_relaxed.text.result.value": {}, 
-                        "extractors.content_strict.data_extractors.city.result.value": {}, 
-                        "extractors.content_strict.data_extractors.country.result.value": {}, 
-                        "extractors.content_strict.data_extractors.ethnicity.result.name": {}, 
-                        "extractors.content_strict.data_extractors.ethnicity.result.value": {}, 
-                        "extractors.content_strict.data_extractors.hair-color.result.value": {}, 
-                        "extractors.content_strict.data_extractors.local-phone.result.value": {}, 
-                        "extractors.content_strict.data_extractors.nationality.result.value": {}, 
-                        "extractors.content_strict.data_extractors.phone.result.value": {}, 
-                        "extractors.content_strict.data_extractors.title.result.value": {}, 
-                        "extractors.content_strict.text.result.value": {}, 
-                        "fields.*": {}, 
-                        "tld": {}, 
-                        "url": {}
-                    }
-                }, 
-                "query": {
-                    "bool": {
-                        "filter": [
-                            {
-                                "dis_max": {
-                                    "queries": [
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.title.result.value": {
-                                                    "_name": "3f1332dc781a4ed5941c4f17264ce21d:extractors.content_strict.data_extractors.title.result.value:the enchanting mistress", 
-                                                    "boost": 5.0, 
-                                                    "minimum_should_match": 1, 
-                                                    "query": "the enchanting mistress"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_relaxed.data_extractors.title.result.value": {
-                                                    "_name": "3f1332dc781a4ed5941c4f17264ce21d:extractors.content_relaxed.data_extractors.title.result.value:the enchanting mistress", 
-                                                    "boost": 2.5, 
-                                                    "minimum_should_match": 1, 
-                                                    "query": "the enchanting mistress"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ], 
-                        "minimum_should_match": 0, 
-                        "must": [
-                            {
-                                "dis_max": {
-                                    "queries": [
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.phone.result.value": {
-                                                    "_name": "75161e7a6405487ca7a61f0176a6f0dd:extractors.content_strict.data_extractors.phone.result.value:1234567890", 
-                                                    "boost": 1.0, 
-                                                    "minimum_should_match": 1, 
-                                                    "query": "1234567890"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_relaxed.data_extractors.phone.result.value": {
-                                                    "_name": "75161e7a6405487ca7a61f0176a6f0dd:extractors.content_relaxed.data_extractors.phone.result.value:1234567890", 
-                                                    "boost": 0.5, 
-                                                    "minimum_should_match": 1, 
-                                                    "query": "1234567890"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.local-phone.result.value": {
-                                                    "_name": "75161e7a6405487ca7a61f0176a6f0dd:extractors.content_strict.data_extractors.local-phone.result.value:1234567890", 
-                                                    "boost": 1.0, 
-                                                    "minimum_should_match": 1, 
-                                                    "query": "1234567890"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_relaxed.data_extractors.local-phone.result.value": {
-                                                    "_name": "75161e7a6405487ca7a61f0176a6f0dd:extractors.content_relaxed.data_extractors.local-phone.result.value:1234567890", 
-                                                    "boost": 0.5, 
-                                                    "minimum_should_match": 1, 
-                                                    "query": "1234567890"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }, 
-                            {
-                                "dis_max": {
-                                    "queries": [
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.city.result.value": {
-                                                    "_name": "2635497303c64cf18f22686e464cdc78:extractors.content_strict.data_extractors.city.result.value:Toronto, Ontario", 
-                                                    "boost": 4, 
-                                                    "minimum_should_match": 1, 
-                                                    "query": "Toronto, Ontario"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_relaxed.data_extractors.city.result.value": {
-                                                    "_name": "2635497303c64cf18f22686e464cdc78:extractors.content_relaxed.data_extractors.city.result.value:Toronto, Ontario", 
-                                                    "boost": 0.5, 
-                                                    "minimum_should_match": 1, 
-                                                    "query": "Toronto, Ontario"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.country.result.value": {
-                                                    "_name": "2635497303c64cf18f22686e464cdc78:extractors.content_strict.data_extractors.country.result.value:Toronto, Ontario", 
-                                                    "boost": 1.0, 
-                                                    "minimum_should_match": 1, 
-                                                    "query": "Toronto, Ontario"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_relaxed.data_extractors.country.result.value": {
-                                                    "_name": "2635497303c64cf18f22686e464cdc78:extractors.content_relaxed.data_extractors.country.result.value:Toronto, Ontario", 
-                                                    "boost": 0.5, 
-                                                    "minimum_should_match": 1, 
-                                                    "query": "Toronto, Ontario"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }, 
-                            {
-                                "bool": {
-                                    "should": [
-                                        {
-                                            "exists": {
-                                                "field": "extractors.content_strict.data_extractors.ethnicity.result.value"
-                                            }
-                                        }, 
-                                        {
-                                            "exists": {
-                                                "field": "extractors.content_relaxed.data_extractors.ethnicity.result.value"
-                                            }
-                                        }, 
-                                        {
-                                            "exists": {
-                                                "field": "extractors.content_strict.data_extractors.nationality.result.value"
-                                            }
-                                        }, 
-                                        {
-                                            "exists": {
-                                                "field": "extractors.content_relaxed.data_extractors.nationality.result.value"
-                                            }
-                                        }
-                                    ]
-                                }
-                            }, 
-                            {
-                                "bool": {
-                                    "should": [
-                                        {
-                                            "exists": {
-                                                "field": "extractors.content_strict.data_extractors.title.result.value"
-                                            }
-                                        }, 
-                                        {
-                                            "exists": {
-                                                "field": "extractors.content_relaxed.data_extractors.title.result.value"
-                                            }
-                                        }
-                                    ]
-                                }
-                            }, 
-                            {
-                                "dis_max": {
-                                    "queries": [
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.data_extractors.hair-color.result.value": {
-                                                    "_name": "0b43795fb9d9446d86c94679e345ba76:extractors.content_strict.data_extractors.hair-color.result.value:blonde", 
-                                                    "boost": 1.0, 
-                                                    "minimum_should_match": 1, 
-                                                    "query": "blonde"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_strict.text.result.value": {
-                                                    "_name": "0b43795fb9d9446d86c94679e345ba76:extractors.content_strict.text.result.value:blonde", 
-                                                    "boost": 0.1, 
-                                                    "minimum_should_match": 1, 
-                                                    "query": "blonde"
-                                                }
-                                            }
-                                        }, 
-                                        {
-                                            "match": {
-                                                "extractors.content_relaxed.text.result.value": {
-                                                    "_name": "0b43795fb9d9446d86c94679e345ba76:extractors.content_relaxed.text.result.value:blonde", 
-                                                    "boost": 0.1, 
-                                                    "minimum_should_match": 1, 
-                                                    "query": "blonde"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ]
-                    }
-                }, 
-                "size": 0
-            }, 
-            "type": "Ad"
-        }, 
-        "SPARQL": {
-            "group-by": {
-                "limit": 5, 
-                "variables": [
-                    {
-                        "fields": [
-                            {
-                                "name": "extractors.content_strict.data_extractors.ethnicity.result.name"
-                            }
-                        ], 
-                        "type": "Ethnicity", 
-                        "variable": "?ethnicity"
-                    }
-                ]
-            }, 
-            "order-by": {
-                "values": [
-                    {
-                        "fields": [
-                            {
-                                "name": "extractors.content_strict.data_extractors.ethnicity.result.name"
-                            }
-                        ], 
-                        "function": "count", 
-                        "order": "desc", 
-                        "type": "Ethnicity", 
-                        "variable": "?ethnicity"
-                    }
-                ]
-            }, 
-            "select": {
-                "variables": [
-                    {
-                        "fields": [
-                            {
-                                "name": "extractors.content_strict.data_extractors.ethnicity.result.name"
-                            }
-                        ], 
-                        "function": "count", 
-                        "type": "Ethnicity", 
-                        "variable": "?ethnicity"
-                    }
-                ]
-            }, 
-            "where": {
-                "clauses": [
-                    {
-                        "_id": "75161e7a6405487ca7a61f0176a6f0dd", 
-                        "constraint": "1234567890", 
-                        "fields": [
-                            {
-                                "name": "extractors.content_strict.data_extractors.phone.result.value"
-                            }, 
-                            {
-                                "name": "extractors.content_relaxed.data_extractors.phone.result.value", 
-                                "weight": 0.5
-                            }, 
-                            {
-                                "name": "extractors.content_strict.data_extractors.local-phone.result.value"
-                            }, 
-                            {
-                                "name": "extractors.content_relaxed.data_extractors.local-phone.result.value", 
-                                "weight": 0.5
-                            }
-                        ], 
-                        "isOptional": false, 
-                        "predicate": "phone", 
-                        "type": "Phone"
-                    }, 
-                    {
-                        "_id": "2635497303c64cf18f22686e464cdc78", 
-                        "constraint": "Toronto, Ontario", 
-                        "fields": [
-                            {
-                                "name": "extractors.content_strict.data_extractors.city.result.value", 
-                                "weight": 4
-                            }, 
-                            {
-                                "name": "extractors.content_relaxed.data_extractors.city.result.value", 
-                                "weight": 0.5
-                            }, 
-                            {
-                                "name": "extractors.content_strict.data_extractors.country.result.value"
-                            }, 
-                            {
-                                "name": "extractors.content_relaxed.data_extractors.country.result.value", 
-                                "weight": 0.5
-                            }
-                        ], 
-                        "isOptional": false, 
-                        "predicate": "location", 
-                        "type": "Location"
-                    }, 
-                    {
-                        "_id": "5cb1a9f193bb446aafea196e943832e2", 
-                        "fields": [
-                            {
-                                "name": "extractors.content_strict.data_extractors.ethnicity.result.value"
-                            }, 
-                            {
-                                "name": "extractors.content_relaxed.data_extractors.ethnicity.result.value", 
-                                "weight": 0.5
-                            }, 
-                            {
-                                "name": "extractors.content_strict.data_extractors.nationality.result.value"
-                            }, 
-                            {
-                                "name": "extractors.content_relaxed.data_extractors.nationality.result.value", 
-                                "weight": 0.5
-                            }
-                        ], 
-                        "isOptional": false, 
-                        "predicate": "ethnicity", 
-                        "type": "Ethnicity", 
-                        "variable": "?ethnicity"
-                    }, 
-                    {
-                        "_id": "ff24c511c6654fe6a8d9547f87475e12", 
-                        "fields": [
-                            {
-                                "name": "extractors.content_strict.data_extractors.title.result.value"
-                            }, 
-                            {
-                                "name": "extractors.content_relaxed.data_extractors.title.result.value", 
-                                "weight": 0.5
-                            }
-                        ], 
-                        "isOptional": false, 
-                        "predicate": "title", 
-                        "type": "Title", 
-                        "variable": "?title"
-                    }, 
-                    {
-                        "_id": "0b43795fb9d9446d86c94679e345ba76", 
-                        "constraint": "blonde", 
-                        "fields": [
-                            {
-                                "name": "extractors.content_strict.data_extractors.hair-color.result.value"
-                            }, 
-                            {
-                                "name": "extractors.content_strict.text.result.value", 
-                                "weight": 0.1
-                            }, 
-                            {
-                                "name": "extractors.content_relaxed.text.result.value", 
-                                "weight": 0.1
-                            }
-                        ], 
-                        "isOptional": false, 
-                        "predicate": "hairColor", 
-                        "type": "HairColor"
-                    }
-                ], 
-                "filters": [
-                    {
-                        "_id": "3f1332dc781a4ed5941c4f17264ce21d", 
-                        "constraint": "the enchanting mistress", 
-                        "fields": [
-                            {
-                                "name": "extractors.content_strict.data_extractors.title.result.value"
-                            }, 
-                            {
-                                "name": "extractors.content_relaxed.data_extractors.title.result.value", 
-                                "weight": 0.5
-                            }
-                        ], 
-                        "operator": "=", 
-                        "type": "Title", 
-                        "variable": "?title"
-                    }
-                ], 
-                "type": "Ad", 
-                "variable": "?ad"
+  {
+    "ELASTICSEARCH": {
+      "doc_type": "ads",
+      "index": "dig-sandpaper-test",
+      "search": {
+        "_source": {
+          "includes": [
+            "indexed.ethnicity.high_confidence_keys",
+            "fields.*",
+            "indexed.city.other_method.content_relaxed.value",
+            "indexed.ethnicity.other_method.content_relaxed.value",
+            "indexed.phone.other_method.content_relaxed.value",
+            "url",
+            "indexed.title.other_method.content_relaxed.value",
+            "indexed.ethnicity.other_method.content_strict.value",
+            "indexed.country.content_relaxed.other_segment.value",
+            "indexed.country.other_method.content_strict.value",
+            "indexed.hair-color.other_method.content_relaxed.value",
+            "indexed.phone.other_method.content_strict.value",
+            "indexed.title.other_method.content_strict.value",
+            "tld",
+            "indexed.hair-color.other_method.content_strict.value",
+            "indexed.nationality.other_method.content_strict.value",
+            "doc_id",
+            "indexed.city.other_method.content_strict.value",
+            "indexed.nationality.other_method.content_relaxed.value"
+          ]
+        },
+        "aggs": {
+          "?ethnicity": {
+            "terms": {
+              "field": "indexed.ethnicity.high_confidence_keys",
+              "order": {
+                "_count": "desc"
+              },
+              "size": 5
             }
-        }, 
-        "field_count": 1, 
-        "type": "Aggregation"
-    }
+          }
+        },
+        "highlight": {
+          "fields": {
+            "doc_id": {},
+            "extractors.content_relaxed.text.result.value": {},
+            "extractors.content_strict.text.result.value": {},
+            "fields.*": {},
+            "indexed.city.other_method.content_relaxed.value": {},
+            "indexed.city.other_method.content_strict.value": {},
+            "indexed.country.content_relaxed.other_segment.value": {},
+            "indexed.country.other_method.content_strict.value": {},
+            "indexed.ethnicity.high_confidence_keys": {},
+            "indexed.ethnicity.other_method.content_relaxed.value": {},
+            "indexed.ethnicity.other_method.content_strict.value": {},
+            "indexed.hair-color.other_method.content_relaxed.value": {},
+            "indexed.hair-color.other_method.content_strict.value": {},
+            "indexed.nationality.other_method.content_relaxed.value": {},
+            "indexed.nationality.other_method.content_strict.value": {},
+            "indexed.phone.other_method.content_relaxed.value": {},
+            "indexed.phone.other_method.content_strict.value": {},
+            "indexed.title.other_method.content_relaxed.value": {},
+            "indexed.title.other_method.content_strict.value": {},
+            "tld": {},
+            "url": {}
+          }
+        },
+        "query": {
+          "bool": {
+            "filter": [
+              {
+                "dis_max": {
+                  "queries": [
+                    {
+                      "match": {
+                        "indexed.title.other_method.content_strict.value": {
+                          "_name": "3f1332dc781a4ed5941c4f17264ce21d:indexed.title.other_method.content_strict.value:the enchanting mistress",
+                          "boost": 5.0,
+                          "minimum_should_match": 1,
+                          "query": "the enchanting mistress"
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "indexed.title.other_method.content_relaxed.value": {
+                          "_name": "3f1332dc781a4ed5941c4f17264ce21d:indexed.title.other_method.content_relaxed.value:the enchanting mistress",
+                          "boost": 5.0,
+                          "minimum_should_match": 1,
+                          "query": "the enchanting mistress"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "minimum_should_match": 0,
+            "must": [
+              {
+                "dis_max": {
+                  "queries": [
+                    {
+                      "match": {
+                        "indexed.phone.other_method.content_strict.value": {
+                          "_name": "75161e7a6405487ca7a61f0176a6f0dd:indexed.phone.other_method.content_strict.value:1234567890",
+                          "boost": 1.0,
+                          "minimum_should_match": 1,
+                          "query": "1234567890"
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "indexed.phone.other_method.content_relaxed.value": {
+                          "_name": "75161e7a6405487ca7a61f0176a6f0dd:indexed.phone.other_method.content_relaxed.value:1234567890",
+                          "boost": 1.0,
+                          "minimum_should_match": 1,
+                          "query": "1234567890"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "dis_max": {
+                  "queries": [
+                    {
+                      "match": {
+                        "indexed.city.other_method.content_strict.value": {
+                          "_name": "2635497303c64cf18f22686e464cdc78:indexed.city.other_method.content_strict.value:Toronto, Ontario",
+                          "boost": 1.0,
+                          "minimum_should_match": 1,
+                          "query": "Toronto, Ontario"
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "indexed.city.other_method.content_relaxed.value": {
+                          "_name": "2635497303c64cf18f22686e464cdc78:indexed.city.other_method.content_relaxed.value:Toronto, Ontario",
+                          "boost": 1.0,
+                          "minimum_should_match": 1,
+                          "query": "Toronto, Ontario"
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "indexed.country.other_method.content_strict.value": {
+                          "_name": "2635497303c64cf18f22686e464cdc78:indexed.country.other_method.content_strict.value:Toronto, Ontario",
+                          "boost": 1.0,
+                          "minimum_should_match": 1,
+                          "query": "Toronto, Ontario"
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "indexed.country.content_relaxed.other_segment.value": {
+                          "_name": "2635497303c64cf18f22686e464cdc78:indexed.country.content_relaxed.other_segment.value:Toronto, Ontario",
+                          "boost": 1.0,
+                          "minimum_should_match": 1,
+                          "query": "Toronto, Ontario"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "bool": {
+                  "should": [
+                    {
+                      "exists": {
+                        "field": "indexed.ethnicity.other_method.content_strict.value"
+                      }
+                    },
+                    {
+                      "exists": {
+                        "field": "indexed.ethnicity.other_method.content_relaxed.value"
+                      }
+                    },
+                    {
+                      "exists": {
+                        "field": "indexed.nationality.other_method.content_strict.value"
+                      }
+                    },
+                    {
+                      "exists": {
+                        "field": "indexed.nationality.other_method.content_relaxed.value"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "bool": {
+                  "should": [
+                    {
+                      "exists": {
+                        "field": "indexed.title.other_method.content_strict.value"
+                      }
+                    },
+                    {
+                      "exists": {
+                        "field": "indexed.title.other_method.content_relaxed.value"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "dis_max": {
+                  "queries": [
+                    {
+                      "match": {
+                        "indexed.hair-color.other_method.content_strict.value": {
+                          "_name": "0b43795fb9d9446d86c94679e345ba76:indexed.hair-color.other_method.content_strict.value:blonde",
+                          "boost": 1.0,
+                          "minimum_should_match": 1,
+                          "query": "blonde"
+                        }
+                      }
+                    },
+                    {
+                      "match": {
+                        "indexed.hair-color.other_method.content_relaxed.value": {
+                          "_name": "0b43795fb9d9446d86c94679e345ba76:indexed.hair-color.other_method.content_relaxed.value:blonde",
+                          "boost": 1.0,
+                          "minimum_should_match": 1,
+                          "query": "blonde"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "size": 0
+      },
+      "type": "Ad"
+    },
+    "SPARQL": {
+      "group-by": {
+        "limit": 5,
+        "variables": [
+          {
+            "fields": [
+              {
+                "name": "indexed.ethnicity.high_confidence_keys"
+              }
+            ],
+            "type": "Ethnicity",
+            "variable": "?ethnicity"
+          }
+        ]
+      },
+      "order-by": {
+        "values": [
+          {
+            "fields": [
+              {
+                "name": "indexed.ethnicity.high_confidence_keys"
+              }
+            ],
+            "function": "count",
+            "order": "desc",
+            "type": "Ethnicity",
+            "variable": "?ethnicity"
+          }
+        ]
+      },
+      "select": {
+        "variables": [
+          {
+            "fields": [
+              {
+                "name": "indexed.ethnicity.high_confidence_keys"
+              }
+            ],
+            "function": "count",
+            "type": "Ethnicity",
+            "variable": "?ethnicity"
+          }
+        ]
+      },
+      "where": {
+        "clauses": [
+          {
+            "_id": "75161e7a6405487ca7a61f0176a6f0dd",
+            "constraint": "1234567890",
+            "fields": [
+              {
+                "name": "indexed.phone.other_method.content_strict.value"
+              },
+              {
+                "name": "indexed.phone.other_method.content_relaxed.value"
+              }
+            ],
+            "isOptional": false,
+            "predicate": "phone",
+            "type": "Phone"
+          },
+          {
+            "_id": "2635497303c64cf18f22686e464cdc78",
+            "constraint": "Toronto, Ontario",
+            "fields": [
+              {
+                "name": "indexed.city.other_method.content_strict.value"
+              },
+              {
+                "name": "indexed.city.other_method.content_relaxed.value"
+              },
+              {
+                "name": "indexed.country.other_method.content_strict.value"
+              },
+              {
+                "name": "indexed.country.content_relaxed.other_segment.value"
+              }
+            ],
+            "isOptional": false,
+            "predicate": "location",
+            "type": "Location"
+          },
+          {
+            "_id": "5cb1a9f193bb446aafea196e943832e2",
+            "fields": [
+              {
+                "name": "indexed.ethnicity.other_method.content_strict.value"
+              },
+              {
+                "name": "indexed.ethnicity.other_method.content_relaxed.value"
+              },
+              {
+                "name": "indexed.nationality.other_method.content_strict.value"
+              },
+              {
+                "name": "indexed.nationality.other_method.content_relaxed.value"
+              }
+            ],
+            "isOptional": false,
+            "predicate": "ethnicity",
+            "type": "Ethnicity",
+            "variable": "?ethnicity"
+          },
+          {
+            "_id": "ff24c511c6654fe6a8d9547f87475e12",
+            "fields": [
+              {
+                "name": "indexed.title.other_method.content_strict.value"
+              },
+              {
+                "name": "indexed.title.other_method.content_relaxed.value"
+              }
+            ],
+            "isOptional": false,
+            "predicate": "title",
+            "type": "Title",
+            "variable": "?title"
+          },
+          {
+            "_id": "0b43795fb9d9446d86c94679e345ba76",
+            "constraint": "blonde",
+            "fields": [
+              {
+                "name": "indexed.hair-color.other_method.content_strict.value"
+              },
+              {
+                "name": "indexed.hair-color.other_method.content_relaxed.value"
+              }
+            ],
+            "isOptional": false,
+            "predicate": "hairColor",
+            "type": "HairColor"
+          }
+        ],
+        "filters": [
+          {
+            "_id": "3f1332dc781a4ed5941c4f17264ce21d",
+            "constraint": "the enchanting mistress",
+            "fields": [
+              {
+                "name": "indexed.title.other_method.content_strict.value"
+              },
+              {
+                "name": "indexed.title.other_method.content_relaxed.value"
+              }
+            ],
+            "operator": "=",
+            "type": "Title",
+            "variable": "?title"
+          }
+        ],
+        "type": "Ad",
+        "variable": "?ad"
+      }
+    },
+    "field_count": 1,
+    "type": "Aggregation"
+  }
 ]

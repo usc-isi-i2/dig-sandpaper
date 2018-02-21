@@ -3,7 +3,7 @@
     {
         "type": "TypeFieldMapping",
         "name": "TypeFieldMapping",
-        "type_field_mappings": "test/coarse/generate/1_type_field_mappings.json"
+        "type_field_mappings": "test/coarse/generate/6_type_field_mappings.json"
     },
     {
         "type": "TypeFieldMapping",
