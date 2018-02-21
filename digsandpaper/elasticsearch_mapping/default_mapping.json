@@ -1,9 +1,6 @@
 {
   "mappings": {
     "ads": {
-      "_all": {
-        "enabled": false 
-      },
       "dynamic":false,
       "properties": {
         "@execution_profile": {
