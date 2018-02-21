@@ -1,0 +1,23 @@
+{
+	"Age": ["indexed.age.other_method.content_strict.value", 
+		"indexed.age.other_method.content_relaxed.value"],
+	"Ethnicity": ["indexed.ethnicity.other_method.content_strict.value",
+		"indexed.ethnicity.other_method.content_relaxed.value",
+		"indexed.nationality.other_method.content_strict.value",
+	"indexed.nationality.other_method.content_relaxed.value"],
+	"HairColor": ["indexed.hair-color.other_method.content_strict.value",
+	"indexed.hair-color.other_method.content_relaxed.value"],
+	"LocalPhone": ["indexed.local-phone.other_method.content_strict.value",
+		"indexed.local-phone.other_method.content_relaxed.value"],
+
+	"Location": ["indexed.city.other_method.content_strict.value",
+		"indexed.city.other_method.content_relaxed.value",
+		"indexed.country.other_method.content_strict.value",
+	"indexed.country.content_relaxed.other_segment.value"],
+	"Phone": ["indexed.phone.other_method.content_strict.value",
+		"indexed.phone.other_method.content_relaxed.value"],
+	"owl:Thing": ["content_extraction.content_strict.text",
+	 "content_extraction.content_relaxed.text"],
+	"Title": ["indexed.title.other_method.content_strict.value", 
+		"indexed.title.other_method.content_relaxed.value"]
+}
