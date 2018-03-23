@@ -71,7 +71,8 @@ class ElasticsearchQueryCompiler(object):
         else:
             match_params = {}
             match_field_params = {}
-            match_field_params["boost"] = field.get("weight", 1.0) * 5
+            if self.elasticsearch_compiler_options.get("boost_text", True):
+                match_field_params["boost"] = field.get("weight", 1.0) * 5
             match_field_params["query"] = f["constraint"]
             match_field_params["_name"] = "{}:{}:{}".format(f.get("_id"),
                                                             field.get("name"),
@@ -81,16 +82,19 @@ class ElasticsearchQueryCompiler(object):
             if query_type == "match_phrase" and op.lower() != "not in":
                 match_params_mp = {}
                 match_field_params_mp = copy.copy(match_field_params)
-                match_field_params_mp["boost"] = match_field_params_mp["boost"] * 10
+                if self.elasticsearch_compiler_options.get("boost_text", True):
+                    match_field_params_mp["boost"] = match_field_params_mp["boost"] * 10
                 match_field_params_mp["_name"] = match_field_params_mp["_name"] + ":match_phrase"
                 match_params_mp[field["name"]] = match_field_params_mp
                 match_field_params_mp["slop"] = 10
                 constraint = f.get("constraint")
-                msm = self.compute_minimum_should_match(constraint)
-                match_field_params["minimum_should_match"] = msm
+                if self.elasticsearch_compiler_options.get("boost_text", True):
+                    msm = self.compute_minimum_should_match(constraint)
+                    match_field_params["minimum_should_match"] = msm
                 mp = MatchPhrase(**match_params_mp)
-                if f.get("type", "owl:Thing") == "owl:Thing":
-                    match_field_params["boost"] = field.get("weight", 1.0) * 2
+                if self.elasticsearch_compiler_options.get("boost_text", True):
+                    if f.get("type", "owl:Thing") == "owl:Thing":
+                        match_field_params["boost"] = field.get("weight", 1.0) * 2
                 m = Match(**match_params)
                 return Bool(must=[m], should=[mp])
             else:
@@ -105,17 +109,19 @@ class ElasticsearchQueryCompiler(object):
                                                                         field.get("name"),
                                                                         term)
                         match_params_mn[field["name"]] = match_field_params_mn
-                        msm = self.compute_minimum_should_match(term)
-                        match_field_params_mn["minimum_should_match"] = msm
+                        if self.elasticsearch_compiler_options.get("boost_text", True):
+                            msm = self.compute_minimum_should_match(term)
+                            match_field_params_mn["minimum_should_match"] = msm
                         must_not = Match(**match_params_mn)
                         must_nots.append(must_not)
                     return Bool(must_not=must_nots)
                 else:
                     constraint = f.get("constraint")
-                    msm = self.compute_minimum_should_match(constraint)
-                    match_field_params["minimum_should_match"] = msm
-                    if f.get("type", "owl:Thing") == "owl:Thing":
-                        match_field_params["boost"] = field.get("weight", 1.0) * 2
+                    if self.elasticsearch_compiler_options.get("boost_text", True):
+                        msm = self.compute_minimum_should_match(constraint)
+                        match_field_params["minimum_should_match"] = msm
+                        if f.get("type", "owl:Thing") == "owl:Thing":
+                            match_field_params["boost"] = field.get("weight", 1.0) * 2
                     return Match(**match_params)
 
     def translate_clause(self, clause, field):
@@ -133,7 +139,8 @@ class ElasticsearchQueryCompiler(object):
             if query_type == "match_phrase":
                 match_params_mp = {}
                 match_field_params_mp = copy.copy(match_field_params)
-                match_field_params_mp["boost"] = match_field_params_mp["boost"] * len(clause.get("constraint").split(" "))
+                if self.elasticsearch_compiler_options.get("boost_text", True):
+                    match_field_params_mp["boost"] = match_field_params_mp["boost"] * len(clause.get("constraint").split(" "))
                 match_field_params_mp["_name"] = match_field_params_mp["_name"] + ":match_phrase"
                 match_params_mp[field["name"]] = match_field_params_mp
                 match_field_params_mp["slop"] = 10
@@ -150,12 +157,14 @@ class ElasticsearchQueryCompiler(object):
                     match_field_params["lt"] =  "{}||+1d/d".format(clause["constraint"])
                     return Range(**match_params)
 
-                elif clause.get("type", "owl:Thing") == "owl:Thing":
-                    match_field_params["boost"] = field.get("weight", 1.0) * 2
+                if self.elasticsearch_compiler_options.get("boost_text", True):
+                    if clause.get("type", "owl:Thing") == "owl:Thing":
+                        match_field_params["boost"] = field.get("weight", 1.0) * 2
                 terms = len(clause.get("constraint").split(" "))
                 constraint = clause.get("constraint")
-                msm = self.compute_minimum_should_match(constraint)
-                match_field_params["minimum_should_match"] = msm
+                if self.elasticsearch_compiler_options.get("boost_text", True):
+                    msm = self.compute_minimum_should_match(constraint)
+                    match_field_params["minimum_should_match"] = msm
                 return Match(**match_params)
         else:
             return Exists(field=field["name"])
