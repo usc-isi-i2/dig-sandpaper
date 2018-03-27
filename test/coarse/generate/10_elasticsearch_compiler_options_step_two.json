@@ -1,0 +1,13 @@
+{
+    "default_source_fields": ["doc_id", "tld", "url", "fields.*"],
+	"highlight": {
+		"fields": {
+			"extractors.content_strict.text.result.value": {},
+		    "extractors.content_relaxed.text.result.value": {}
+		}
+	},
+	"filter_for_fields_of_unbound_variables": false,
+	"predicate_scoring_coefficients": {
+		"rank": 0.8
+	}
+}

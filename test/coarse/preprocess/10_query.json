@@ -1,0 +1,29 @@
+{
+  "SPARQL": {
+    "group-by": {
+      "limit": 10,
+      "offset": 0
+    },
+    "select": {
+      "variables": [
+        {
+          "type": "simple",
+          "variable": "?ad1"
+        }
+      ]
+    },
+    "where": {
+      "clauses": [
+        {
+          "constraint": "san jose",
+          "isOptional": false,
+          "predicate": "city"
+        }
+      ],
+      "filters": [],
+      "type": "Ad",
+      "variable": "?ad1"
+    }
+  },
+  "type": "Point Fact"
+}

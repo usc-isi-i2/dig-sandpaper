@@ -1,0 +1,40 @@
+[
+    {
+        "SPARQL": {
+            "group-by": {
+                "limit": 10, 
+                "offset": 0
+            }, 
+            "select": {
+                "variables": [
+                    {
+                        "type": "Ad", 
+                        "variable": "?ad1"
+                    }
+                ]
+            }, 
+            "where": {
+                "clauses": [
+                    {
+                        "_id": "a664eb5ff5844165a32d2d4dbd23b866", 
+                        "constraint": "san jose", 
+                        "fields": [
+                            {
+                                "name": "indexed.city.other_method.other_segment.value", 
+                                "weight": 1
+                            }
+                        ], 
+                        "isOptional": false, 
+                        "predicate": "city", 
+                        "type": "City"
+                    }
+                ], 
+                "filters": [], 
+                "type": "Ad", 
+                "variable": "?ad1"
+            }
+        }, 
+        "field_count": 1, 
+        "type": "Point Fact"
+    }
+]

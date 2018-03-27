@@ -5,7 +5,7 @@ import copy
 import re
 from elasticsearch_dsl import Search, A
 from elasticsearch_dsl.query import Match, MatchPhrase, DisMax,\
-    Bool, Exists, ConstantScore, Range
+    Bool, Exists, ConstantScore, Range, FunctionScore, SF
 
 __name__ = "QueryCompiler"
 name = __name__
@@ -309,6 +309,18 @@ class ElasticsearchQueryCompiler(object):
 
         s = self.generate_source_fields(s, source_fields)
 
+        if query["type"].lower() == "point fact" and\
+            'predicate_scoring_coefficients' in\
+            self.elasticsearch_compiler_options:
+                psc = self.elasticsearch_compiler_options['predicate_scoring_coefficients']
+                functions = []
+                for key, value in psc.iteritems():
+                    field = "doc['knowledge_graph.{}.key'].value".format(key)
+                    sf = SF('script_score', script="{}*{}".format(value, field))
+                    functions.append(sf)
+                fs = FunctionScore(query = s.query, functions=functions)
+                s.query = fs
+
         limit = 20
         offset = 0
         
@@ -372,7 +384,7 @@ class ElasticsearchQueryCompiler(object):
                                                    "mode": "min"}}
                     order_by_clauses.append(order_by_clause)
                 s = s.sort(*order_by_clauses)
-
+            
         return s
 
     def generate(self, query):

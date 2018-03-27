@@ -186,7 +186,10 @@ class ExecuteElasticsearchQuery(object):
         s = Search().from_dict(query["search"])\
                     .index(query["index"])\
                     .doc_type(query["doc_type"])\
-                    .using(self.alias)
+                    .using(self.alias).index(query["index"])
+        indexes = list()
+        indexes.append(query["index"])
+        s._index = indexes
         return s.execute()
 
     def execute(self, query):

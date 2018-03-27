@@ -17,6 +17,17 @@ def load_json_file(file_name):
 
 class TestCoarseGenerating(unittest.TestCase):
 
+    def _test_helper(self, config_file, queries):
+        config = load_json_file(config_file)
+        parameterized_queries = load_json_file(queries)
+        generator = Generator(config)
+
+        generated_queries = [generator.generate(
+            q) for q in parameterized_queries]
+        self.assertEqual(len(generated_queries), 1)
+        return generated_queries
+
+
     def test_basic_coarse_generating(self):
         config = load_json_file("1_config.json")
         parameterized_queries = load_json_file("1_query.json")
@@ -192,23 +203,23 @@ class TestCoarseGenerating(unittest.TestCase):
         self.assertEqual(len(generated_queries), 1)
 
     def test_basic_coarse_order_by(self):
-        config = load_json_file("9_config.json")
-        parameterized_queries = load_json_file("9_query.json")
-        generator = Generator(config)
+        generated_queries = self._test_helper("9_config.json",
+                                              "9_query.json")
 
-        generated_queries = [generator.generate(
-            q) for q in parameterized_queries]
-        self.assertEqual(len(generated_queries), 1)
 
     def test_basic_coarse_order_by_step_two(self):
-        config = load_json_file("9_config_step_two.json")
-        parameterized_queries = load_json_file("9_query_step_two.json")
-        generator = Generator(config)
+        generated_queries = self._test_helper("9_config_step_two.json",
+                                              "9_query_step_two.json")
 
-        generated_queries = [generator.generate(
-            q) for q in parameterized_queries]
-        self.assertEqual(len(generated_queries), 1)
 
+    def test_basic_coarse_rank_scoring_coefficient(self):
+        generated_queries = self._test_helper("10_config.json",
+                                              "10_query.json")
+
+
+    def test_basic_coarse_rank_scoring_coefficient_step_two(self):
+        generated_queries = self._test_helper("10_config_step_two.json",
+                                              "10_query_step_two.json")
 
 if __name__ == '__main__':
     unittest.main()

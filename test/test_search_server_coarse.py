@@ -97,6 +97,16 @@ class SearchServerTestCaseCoarse(unittest.TestCase):
         self.assertEquals("GHIJKLMNOPQABCDEF", hits[2]["_source"]["doc_id"])
         self.assertEquals("ABCDEFGHIJKLMNOPQ", hits[3]["_source"]["doc_id"])
 
+    def test_coarse_10(self):
+        results_10 = self.helper_test_coarse(10, ["2", "3", "4"], False)
+        self.assertEquals(len(results_10), 1)
+        self.assertEquals(len(results_10[0]["result"]["hits"]["hits"]), 4)
+        hits = results_10[0]["result"]["hits"]["hits"]
+        self.assertEquals("ABCDEFGHIJKLMNOPQ", hits[0]["_source"]["doc_id"])
+        self.assertEquals("DEFGHIJKLMNOPQABCD", hits[1]["_source"]["doc_id"])
+        self.assertEquals("GHIJKLMNOPQABCDEF", hits[2]["_source"]["doc_id"])
+        self.assertEquals("JKLMNOPQABCDEFGHI", hits[3]["_source"]["doc_id"])
+
 
 if __name__ == '__main__':
     unittest.main()

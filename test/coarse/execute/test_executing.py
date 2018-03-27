@@ -207,5 +207,31 @@ class TestCoarseExecuting(unittest.TestCase):
             test.test_utils.reset_elasticsearch(config["components"][0])
 
 
+    def test_basic_coarse_rank_scoring_coefficient(self):
+        config = load_json_file("10_config.json")
+        queries = load_json_file("10_query.json")
+        document = load_json_file("10_document.json")
+        document2 = load_json_file("10_document_2.json")
+        document3 = load_json_file("10_document_3.json")
+        document4 = load_json_file("10_document_4.json")
+
+        test.test_utils.initialize_elasticsearch([document, document2, document3, document4],
+                                                 config["components"][0])
+
+        executor = Executor(config)
+
+        try:
+            for query in queries:
+                result = executor.execute(query)
+                result_dict = result.to_dict()
+                self.assertEquals(len(result.hits), 4)
+                self.assertEquals("ABCDEFGHIJKLMNOPQ", result_dict["hits"]["hits"][0]["_source"]["doc_id"])
+                self.assertEquals("DEFGHIJKLMNOPQABCD", result_dict["hits"]["hits"][1]["_source"]["doc_id"])
+                self.assertEquals("GHIJKLMNOPQABCDEF", result_dict["hits"]["hits"][2]["_source"]["doc_id"])
+                self.assertEquals("JKLMNOPQABCDEFGHI", result_dict["hits"]["hits"][3]["_source"]["doc_id"])
+        finally:
+            test.test_utils.reset_elasticsearch(config["components"][0])
+
+
 if __name__ == '__main__':
     unittest.main()

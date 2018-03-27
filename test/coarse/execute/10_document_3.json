@@ -1,0 +1,28 @@
+{
+  "doc_id": "GHIJKLMNOPQABCDEF",
+    "knowledge_graph": {
+    "rank": [
+      {
+        "key": 0.5,
+        "value": 0.5
+      }
+    ]
+  },
+  "indexed": {
+    "city": {
+      "high_confidence_keys": [
+        "san jose",
+        "menlo park",
+        "sunnyvale"
+      ],
+      "other_method": {
+        "other_segment": [
+          {
+            "value": "san jose",
+            "key": "san jose"
+          }
+        ]
+      }
+    }
+  }
+}

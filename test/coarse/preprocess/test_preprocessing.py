@@ -142,5 +142,15 @@ class TestCoarsePreprocessing(unittest.TestCase):
         self.assertEqual(o["values"][0]["type"], "PostingDate")
 
 
+    def test_rank_scoring_coefficient(self):
+        config = load_json_file("10_config.json")
+        query = load_json_file("10_query.json")
+        preprocessor = Preprocessor(config)
+
+        result = preprocessor.preprocess(query)
+        c = result["SPARQL"]["where"]["clauses"]
+        self.assertEqual(c[0]["type"], "City")
+
+
 if __name__ == '__main__':
     unittest.main()

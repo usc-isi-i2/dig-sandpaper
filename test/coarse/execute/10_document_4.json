@@ -1,0 +1,26 @@
+{
+  "doc_id": "JKLMNOPQABCDEFGHI",
+    "knowledge_graph": {
+    "rank": [
+      {
+        "key": 0.1,
+        "value": 0.1
+      }
+    ]
+  },
+  "indexed": {
+    "city": {
+      "high_confidence_keys": [
+        "san diego"
+      ],
+      "other_method": {
+        "other_segment": [
+          {
+            "value": "san diego",
+            "key": "san diego"
+          }
+        ]
+      }
+    }
+  }
+}
