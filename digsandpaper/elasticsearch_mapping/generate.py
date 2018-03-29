@@ -74,7 +74,7 @@ def generate(default_mapping, semantic_types,
             knowledge_graph[semantic_type]["properties"]["key"]["type"] = data_type
             knowledge_graph[semantic_type]["properties"]["value"]["type"] = data_type
             semantic_type_props["high_confidence_keys"]["ignore_malformed"] = True
-        if data_type == "date" or "date" in semantic_type:
+        if data_type == "date":
             knowledge_graph[semantic_type]["properties"]["value"]["type"] = "date"
             knowledge_graph[semantic_type]["properties"]["value"][
                 "format"] = "strict_date_optional_time||epoch_millis"
@@ -95,7 +95,7 @@ def generate(default_mapping, semantic_types,
                     segment_props["value"]["analyzer"] = "url_component_analyzer"
                 if semantic_type == "website":
                     segment_props["value"]["analyzer"] = "url_component_analyzer"
-                if data_type == "date" or "date" in semantic_type:
+                if data_type == "date":
                     segment_props["value"]["type"] = "date"
                     segment_props["value"]["format"] = "strict_date_optional_time||epoch_millis"
                 if data_type in elasticsearch_numeric_types:
