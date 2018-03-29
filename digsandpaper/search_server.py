@@ -3,6 +3,7 @@ from flask import Flask
 from flask import request
 from flask_api import status
 from flask_cors import CORS, cross_origin
+import gzip
 import os
 import json
 import requests
@@ -60,13 +61,15 @@ def get_default_es_endpoint(project=None):
     if "endpoints" in execute_component:
         default_es_endpoint = execute_component["endpoints"]
     if "host" in execute_component and "port" in execute_component:
-        default_es_endpoint = ["http://{}:{}".format(execute_component["host"], execute_component["port"])]
+        default_es_endpoint = ["http://{}:{}".format(execute_component["host"],
+                               execute_component["port"])]
     return default_es_endpoint
 
 
 @app.route("/")
 def hello():
     return "DIG Sandpaper\n"
+
 
 def post_url(url, data):
     url = unquote(url)
@@ -78,6 +81,7 @@ def post_url(url, data):
         response = requests.post(url, data=data)
     return response
 
+
 def put_url(url, data):
     url = unquote(url)
     parsed_url = urlparse(url)
@@ -87,6 +91,7 @@ def put_url(url, data):
     else:
         response = requests.put(url, data=data)
     return response
+
 
 def get_url(url):
     url = unquote(url)
@@ -98,15 +103,17 @@ def get_url(url):
         response = requests.get(url)
     return response
 
+
 def get_project_config(url, project):
     if url and project:
         response = get_url('{}/projects/{}'.format(url, project))
     elif url and not project:
         response = get_url(url)
     elif not url and project:
-        response = get_url('{}/projects/{}'.format(default_project_url, project))
+        response = get_url('{}/projects/{}'.format('http://localhost:12497', project))
     else:
-        return "Please provide either a url or mydig url and project as query params to retrieve fields to generate an elasticserach mapping\n", status.HTTP_400_BAD_REQUEST
+        return "Please provide either a url or mydig url and project to get a project config\n",
+        status.HTTP_400_BAD_REQUEST
 
     project_config = response.json()
     response.raise_for_status()
@@ -203,28 +210,35 @@ def _index_fields(request):
         return ""
     reader = codecs.getreader('utf-8')
     jls_as_file = reader(StringIO.StringIO(jls))
-    jls = [json.dumps(jl) for jl in [index_knowledge_graph_fields(jl) for jl in jl_file_iterator(jls_as_file)] if jl is not None]
+    jls = [json.dumps(jl) for jl in [index_knowledge_graph_fields(jl)
+           for jl in jl_file_iterator(jls_as_file)] if jl is not None]
     return jls
+
 
 @app.route("/indexing/fields", methods=['POST'])
 def index_fields():
     if not _is_acceptable_content_type(request):
-        return "Only supported content types are application/x-gzip, application/json and application/x-jsonlines", status.HTTP_400_BAD_REQUEST
+        return "Only supported content types are {} {} and {}".format('application/x-gzip',
+                                                                      'application/json',
+                                                                      'application/x-jsonlines'),
+        status.HTTP_400_BAD_REQUEST
 
     jls = _index_fields(request)
     indexed_jls = "\n".join(jls)
     if (request.headers['Content-Type'] == 'application/x-gzip'):
         indexed_jls_as_file = StringIO.StringIO()
-        compressed = gzip.GzipFile(
-            filename=FILENAME, mode='wb', fileobj=indexed_jls_as_file)
+        compressed = gzip.GzipFile(mode='wb',
+                                   fileobj=indexed_jls_as_file)
         compressed.write(indexed_jls)
         compressed.close()
         return indexed_jls_as_file.getvalue()
     else:
         return indexed_jls
 
+
 def chunker(seq, size):
     return (seq[pos:pos + size] for pos in xrange(0, len(seq), size))
+
 
 @app.route("/indexing", methods=['POST'])
 def index():
@@ -235,19 +249,21 @@ def index():
     index = request.args.get('index', None)
     t = request.args.get('type', "ads")
     if not _is_acceptable_content_type(request):
-        return "Only supported content types are application/x-gzip, application/json and application/x-jsonlines", status.HTTP_400_BAD_REQUEST
+        return "Only supported content types are {} {} and {}".format('application/x-gzip',
+                                                                      'application/json',
+                                                                      'application/x-jsonlines'),
+        status.HTTP_400_BAD_REQUEST
 
     jls = _index_fields(request)
-    log_requests =  get_engine(project).config.get("indexing",{}).get("log_requests", None)
+    log_requests = get_engine(project).config.get("indexing", {}).get("log_requests", None)
     if log_requests:
         with open(os.path.join(log_requests, "indexing.{}.jl".format(index)), "a") as myfile:
             for jl in jls:
                 myfile.write(jl + '\n')
     url = "{}/{}/{}/_bulk".format(endpoint, index, t)
     counter = 0
-    after_filtering = len(jls)
     failed = 0
-    succeeded = 0
+    successful = 0
     # this is inefficent
     for chunk in chunker(jls, 100):
         bulk_request = ""
@@ -266,13 +282,16 @@ def index():
             index_response = doc_response.get("index", {})
             failed = index_response.get("_shards", {}).get("failed", 0)
             successful = index_response.get("_shards", {}).get("successful", 0)
-        log_responses =  get_engine(project).config.get("indexing",{}).get("log_responses", None)
+        log_responses = get_engine(project).config.get("indexing", {}).get("log_responses", None)
         if log_responses:
-            with open(os.path.join(log_responses, "indexing.{}.responses.jl".format(index)), "a") as myfile:
+            with open(os.path.join(log_responses,
+                                   "indexing.{}.responses.jl".format(index)),
+                      "a") as myfile:
                 myfile.write(json.dumps(bulk_response))
                 myfile.write("\n")
 
     return "Posted {} documents. {} successful. {} failed.\n".format(counter, successful, failed)
+
 
 @app.route("/search", methods=['POST'])
 def search():
@@ -294,9 +313,11 @@ def coarse_results_to_dict(r):
 def coarse():
     project = request.args.get("project", None)
     query = json.loads(request.data)
-    log_requests = get_engine(project).config.get("coarse",{}).get("log_requests", None)
+    log_requests = get_engine(project).config.get("coarse", {}).get("log_requests", None)
     if log_requests:
-        with open(os.path.join(log_requests, "coarse.{}.jl".format(current_project)), "a") as myfile:
+        with open(os.path.join(log_requests,
+                               "coarse.{}.jl".format(current_project)),
+                  "a") as myfile:
             myfile.write(json.dumps(query) + '\n')
     (qs, rs) = get_engine(project).execute_coarse(query)
     qs_with_rs = [{"query": q, "result": coarse_results_to_dict(r)} for q, r in zip(qs, rs)]
@@ -359,7 +380,9 @@ def invert_subproperty_relationships(prop,
         new_supers.extend(supers)
         new_supers.append(prop)
         for subproperty, subsubproperty_relationships in subproperty_relationships.iteritems():
-            invert_subproperty_relationships(subproperty, subsubproperty_relationships, inverted, new_supers)
+            invert_subproperty_relationships(subproperty,
+                                             subsubproperty_relationships,
+                                             inverted, new_supers)
     else:
         inverted[prop] = supers
 
@@ -410,7 +433,8 @@ def apply_config_from_project(url, project, endpoint, index=None,
 
     for field_name, spec in project_config["fields"].iteritems():
         predicate_type_mapping[field_name] = field_name.lower()
-        type_group_field_mapping[field_name.lower()] = "indexed.{}.high_confidence_keys".format(field_name)
+        type_group_field_mapping[field_name.lower()] = \
+            "indexed.{}.high_confidence_keys".format(field_name)
 
         if "search_importance" in spec and search_importance_enabled:
             search_importance = spec["search_importance"]
@@ -496,9 +520,6 @@ def config():
         else:
             return "No project config exists for project {}\n".format(project),\
                    status.HTTP_400_BAD_REQUEST
-
-
-
 
 
 def load_json_file(file_name):
