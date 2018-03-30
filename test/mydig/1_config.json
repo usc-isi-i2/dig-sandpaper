@@ -163,7 +163,7 @@
       "rule_extractor_enabled": false,
       "search_importance": 1,
       "show_in_result": "description",
-      "type": "string",
+      "type": "text",
       "show_as_link": "text",
       "number_of_rules": 0,
       "name": "description"

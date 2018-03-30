@@ -59,6 +59,8 @@ def generate(default_mapping, semantic_types,
             data_type = semantic_type_to_data_type[semantic_type]
         elif semantic_type_to_data_type.get(semantic_type, "string").lower() == "number":
             data_type = "double"
+        elif semantic_type_to_data_type.get(semantic_type, "string").lower() == "text":
+            data_type = "text"
         else:
             data_type = "string"
         knowledge_graph[semantic_type] = copy.deepcopy(kg_to_copy)
@@ -74,7 +76,7 @@ def generate(default_mapping, semantic_types,
             knowledge_graph[semantic_type]["properties"]["key"]["type"] = data_type
             knowledge_graph[semantic_type]["properties"]["value"]["type"] = data_type
             semantic_type_props["high_confidence_keys"]["ignore_malformed"] = True
-        if data_type == "date":
+        elif data_type == "date":
             knowledge_graph[semantic_type]["properties"]["value"]["type"] = "date"
             knowledge_graph[semantic_type]["properties"]["value"][
                 "format"] = "strict_date_optional_time||epoch_millis"
@@ -93,13 +95,15 @@ def generate(default_mapping, semantic_types,
                                  }
                 if data_type == "email" or semantic_type == "email":
                     segment_props["value"]["analyzer"] = "url_component_analyzer"
-                if semantic_type == "website":
+                elif semantic_type == "website":
                     segment_props["value"]["analyzer"] = "url_component_analyzer"
-                if data_type == "date":
+                elif data_type == "date":
                     segment_props["value"]["type"] = "date"
                     segment_props["value"]["format"] = "strict_date_optional_time||epoch_millis"
-                if data_type in elasticsearch_numeric_types:
+                elif data_type in elasticsearch_numeric_types:
                     segment_props["value"]["ignore_malformed"] = True
+                elif data_type == "text":
+                    segment_props["value"]["analyzer"] = "english"
                 method_props[segment] = {"properties": segment_props}
 
     default_mapping["mappings"]["ads"]["properties"]["indexed"] = root["indexed"]
