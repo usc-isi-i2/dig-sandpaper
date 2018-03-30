@@ -8,17 +8,19 @@ def load_json_file(file_name):
     rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
     return rules
 
+
 def jl_file_iterator(file):
     with codecs.open(file, 'r', 'utf-8') as f:
         for line in f:
             document = json.loads(line)
             yield document
 
-def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark"], 
+
+def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark"],
                                  interesting_segments=["title", "content_strict"],
-                                 max_key_count=500, 
+                                 max_key_count=500,
                                  max_provenance_count=500):
-    
+
     if "knowledge_graph" not in jl:
         return jl
 
@@ -30,7 +32,7 @@ def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark
     jl.pop("_id", None)
 
     total_provenance_count = 0
-    total_key_count = 0 
+    total_key_count = 0
 
     for (pred, objs) in kg.iteritems():
         for obj in objs:
@@ -38,7 +40,7 @@ def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark
             key = obj["key"]
             value = obj["value"]
             result = {}
-            if key: 
+            if key:
                 result["key"] = key
             if value:
                 result["value"] = value
@@ -52,7 +54,7 @@ def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark
             total_key_count = total_key_count + 1
             if "provenance_count" not in indexed[pred]:
                 indexed[pred]["provenance_count"] = 0
-            
+
             if obj.get("confidence", 0.0) > 0.7:
                 indexed[pred]["high_confidence_keys"].add(key)
 
@@ -73,9 +75,9 @@ def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark
                     indexed[pred][method][segment] = []
                 # if result not in indexed[pred][method][segment]:
                 this_added = False
-                if not method in tally:
+                if method not in tally:
                     tally[method] = {}
-                if not segment in tally[method]:
+                if segment not in tally[method]:
                     tally[method][segment] = {segment: True}
                 else:
                     this_added = True
@@ -90,7 +92,6 @@ def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark
         return None
 
 
-
 if __name__ == "__main__":
 
     parser = OptionParser()
@@ -98,11 +99,11 @@ if __name__ == "__main__":
 
     input_path = args[0]
     output_file = args[1]
-    if len(args) >2:
+    if len(args) > 2:
         properties_file = args[2]
     else:
         properties_file = None
-    
+
     if properties_file:
         properties = load_json_file(properties_file)
     else:
@@ -117,6 +118,6 @@ if __name__ == "__main__":
         jl = index_knowledge_graph_fields(jl, interesting_methods, interesting_segments,
                                           max_key_count, max_provenance_count)
         if jl:
-             o.write(json.dumps(jl) + '\n')
+            o.write(json.dumps(jl) + '\n')
 
     o.close()
