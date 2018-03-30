@@ -411,17 +411,21 @@ def apply_config_from_project(url, project, endpoint, index=None,
     type_field_mapping = {}
     type_group_field_mapping = {}
     field_weight_mapping = {}
+    elasticsearch_compiler_options = {}
     methods = ["extract_from_landmark", "other_method"]
     segments = ["title", "content_strict", "other_segment"]
     for gc in generate_components:
         if gc["name"] == "TypeIndexMapping":
             gc["type_index_mappings"]["Ad"] = index
-        if gc["name"] == "TypeFieldGroupByMapping":
+        elif gc["name"] == "TypeFieldGroupByMapping":
             type_group_field_mapping = gc["type_field_mappings"]
-        if gc["name"] == "TypeFieldMapping":
+        elif gc["name"] == "TypeFieldMapping":
             type_field_mapping = gc["type_field_mappings"]
-        if gc["name"] == "FieldWeightMapping":
+        elif gc["name"] == "FieldWeightMapping":
             field_weight_mapping = gc["field_weight_mappings"]
+        elif gc["name"] == "ElasticsearchQueryCompiler":
+            elasticsearch_compiler_options = gc["elasticsearch_compiler_options"]
+
     for pc in preprocess_components:
         if pc["name"] == "PredicateDictConstraintTypeMapper":
             predicate_type_mapping = pc["predicate_range_mappings"]
@@ -453,6 +457,12 @@ def apply_config_from_project(url, project, endpoint, index=None,
                 if spec.get("type", "string") == "email" or "email" in field_name.lower():
                     fields.append("indexed.{}.{}.{}.key".format(field_name, method, segment))
         type_field_mapping[field_name.lower()] = fields
+
+        if "scoring_coefficient" in spec:
+            if "predicate_scoring_coefficients" not in elasticsearch_compiler_options:
+                elasticsearch_compiler_options["predicate_scoring_coefficients"] = {}
+            psc = elasticsearch_compiler_options["predicate_scoring_coefficients"]
+            psc[field_name] = spec["scoring_coefficient"]
 
     subproperty_relationships = pinpoint_config.get("subproperty_relationships", {})
     inverted_relationships = {}

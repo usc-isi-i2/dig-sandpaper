@@ -267,7 +267,8 @@
       "type": "double",
       "show_as_link": "entity",
       "number_of_rules": 49,
-      "name": "rank"
+      "name": "rank",
+      "scoring_coefficient": 0.5
     },
     "state": {
       "screen_label": "State",

@@ -1,53 +1,90 @@
 {
   "doc_id": "ABCDEFGHIJKLMNOPQ",
-  "content_extraction": {
-  	"content_strict": {
-  	  "text": "some important value"
-    }
+  "knowledge_graph": {
+     "city": [
+      {
+        "provenance": [
+          {
+            "extracted_value": "san jose",
+            "method": "create_city_state_country_triple",
+            "confidence": {
+              "extraction": 1.0
+            },
+            "source": {
+              "segment": "none",
+              "document_id": "EFB034A46E9C1013D18BE3082310F8AEA0EA495CA0804D559BD6791D8C9DE449"
+            }
+          }
+        ],
+        "confidence": 1,
+        "value": "san jose",
+        "key": "san jose"
+      }
+    ],
+     "page": [
+      {
+        "provenance": [
+          {
+            "extracted_value": "everything",
+            "method": "page stuff",
+            "confidence": {
+              "extraction": 1.0
+            },
+            "source": {
+              "segment": "none",
+              "document_id": "EFB034A46E9C1013D18BE3082310F8AEA0EA495CA0804D559BD6791D8C9DE449"
+            }
+          }
+        ],
+        "confidence": 1,
+        "value": "everything",
+        "key": "everything"
+      }
+    ],
+    "posting_date": [
+      {
+        "provenance": [
+          {
+            "extracted_value": "2017-01-01T00:00:00",
+            "method": "date stuff",
+            "confidence": {
+              "extraction": 1.0
+            },
+            "source": {
+              "segment": "none",
+              "document_id": "EFB034A46E9C1013D18BE3082310F8AEA0EA495CA0804D559BD6791D8C9DE449"
+            }
+          }
+        ],
+        "confidence": 1,
+        "value": "2017-01-01T00:00:00",
+        "key": "2017-01-01T00:00:00"
+      }
+    ],
+    "rank": [
+      {
+        "provenance": [
+          {
+            "extracted_value": "in",
+            "method": "some_great_ranker",
+            "confidence": {
+              "extraction": 1
+            },
+            "source": {
+              "segment": "content_strict",
+              "document_id": "EFB034A46E9C1013D18BE3082310F8AEA0EA495CA0804D559BD6791D8C9DE449"
+            }
+          }
+        ],
+        "confidence": 1,
+        "value": 0.9,
+        "key": 0.9
+      }
+    ]
   },
-  "indexed": {
-    "page": {
-      "other_method": {
-        "other_segment": [
-          {
-            "value": "everything",
-            "key": "everything"
-          }
-        ]
-      }
-    },
-    "location": {
-      "high_confidence_keys": [
-        "san jose",
-        "mountain view",
-        "menlo park",
-        "sunnyvale"
-      ],
-      "other_method": {
-        "other_segment": [
-          {
-            "value": "san jose",
-            "key": "san jose"
-          },
-          {
-            "value": "mountain view",
-            "key": "mountain view"
-          },
-          {
-            "value": "menlo park",
-            "key": "menlo park"
-          },
-          {
-            "value": "sunnyvale",
-            "key": "sunnyvale"
-          }
-        ]
-      }
-    },
-    "posting_date": {
-      "high_confidence_keys": [
-        "2017-01-01T00:00:00"
-      ]
+  "content_extraction": {
+    "content_strict": {
+      "text": "some important value"
     }
   }
 }
