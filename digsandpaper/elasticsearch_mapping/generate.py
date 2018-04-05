@@ -61,6 +61,8 @@ def generate(default_mapping, semantic_types,
             data_type = "double"
         elif semantic_type_to_data_type.get(semantic_type, "string").lower() == "text":
             data_type = "text"
+        elif semantic_type_to_data_type.get(semantic_type, "string").lower() == "date":
+            data_type = "date"
         else:
             data_type = "string"
         knowledge_graph[semantic_type] = copy.deepcopy(kg_to_copy)
