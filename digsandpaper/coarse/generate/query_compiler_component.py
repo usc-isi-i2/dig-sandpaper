@@ -310,26 +310,26 @@ class ElasticsearchQueryCompiler(object):
         s = self.generate_source_fields(s, source_fields)
 
         if query["type"].lower() == "point fact" and\
-            'predicate_scoring_coefficients' in\
-            self.elasticsearch_compiler_options:
+           'predicate_scoring_coefficients' in\
+           self.elasticsearch_compiler_options:
                 psc = self.elasticsearch_compiler_options['predicate_scoring_coefficients']
                 functions = []
                 for key, value in psc.iteritems():
                     field = "doc['knowledge_graph.{}.key'].value".format(key)
-                    sf = SF('script_score', script="{}*{}".format(value, field))
+                    sf = SF('script_score', script="_score*{}*{}".format(value, field))
                     functions.append(sf)
-                fs = FunctionScore(query = s.query, functions=functions)
+                fs = FunctionScore(query=s.query, functions=functions)
                 s.query = fs
 
         limit = 20
         offset = 0
-        
+
         if "group-by" in query["SPARQL"]:
             if "limit" in query["SPARQL"]["group-by"]:
                 limit = int(query["SPARQL"]["group-by"]["limit"])
             if "offset" in query["SPARQL"]["group-by"]:
                 offset = int(query["SPARQL"]["group-by"]["offset"])
-        
+
         if query.get("type", "Point Fact") == "Aggregation":
             s = s.extra(size=0)
         else:
