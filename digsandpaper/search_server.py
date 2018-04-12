@@ -458,7 +458,9 @@ def apply_config_from_project(url, project, endpoint, index=None,
                     fields.append("indexed.{}.{}.{}.key".format(field_name, method, segment))
         type_field_mapping[field_name.lower()] = fields
 
-        if "scoring_coefficient" in spec:
+        if "scoring_coefficient" in spec and \
+           spec.get("type", "string").lower() == "number" and \
+           spec.get("enable_scoring_coefficient", False):
             if "predicate_scoring_coefficients" not in elasticsearch_compiler_options:
                 elasticsearch_compiler_options["predicate_scoring_coefficients"] = {}
             psc = elasticsearch_compiler_options["predicate_scoring_coefficients"]

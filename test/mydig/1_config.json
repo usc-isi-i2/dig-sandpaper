@@ -268,7 +268,8 @@
       "show_as_link": "entity",
       "number_of_rules": 49,
       "name": "rank",
-      "scoring_coefficient": 0.5
+      "scoring_coefficient": 0.5,
+      "enable_scoring_coefficient": true
     },
     "state": {
       "screen_label": "State",
