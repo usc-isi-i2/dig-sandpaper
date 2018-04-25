@@ -2,7 +2,7 @@ from digsandpaper import search_server
 import unittest
 import json
 from digsandpaper.engine import Engine
-import test_utils
+from test import test_utils
 
 
 class SearchServerTestCase(unittest.TestCase):
@@ -13,7 +13,7 @@ class SearchServerTestCase(unittest.TestCase):
 
     def test_hello(self):
         response = self.app.get('/')
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
 
     def helper_setup(self, i, docs_by_type):
         config = test_utils.load_engine_configuration(i)
@@ -27,9 +27,11 @@ class SearchServerTestCase(unittest.TestCase):
         query = test_utils.load_sub_configuration("coarse", "preprocess",
                                                   i, "_query.json")
         es_config = self.helper_setup(i, docs_by_type)
-        response = self.app.post('/search', data=json.dumps(query))
-        self.assertEquals(200, response.status_code)
-        results = response.json()
+        headers = {'Content-Type': 'application/json'}
+        response = self.app.post('/search', data=json.dumps(query),
+                                 headers=headers)
+        self.assertEqual(200, response.status_code)
+        results = json.loads(response.data)
         test_utils.reset_elasticsearch(es_config)
         return results
 
@@ -37,10 +39,10 @@ class SearchServerTestCase(unittest.TestCase):
         document = test_utils.load_sub_configuration("coarse", "execute",
                                                      1, "_document.json")
         results_1 = self.helper_test(1, {"ads": [document]})
-        self.assertEquals(2, len(results_1))
-        self.assertEquals(1, len(results_1[0]["answers"]))
-        self.assertEquals(1, len(results_1[1]["answers"]))
-        self.assertEquals("caucasian", results_1[0]["answers"][0][1])
+        self.assertEqual(2, len(results_1))
+        self.assertEqual(1, len(results_1[0]["answers"]))
+        self.assertEqual(1, len(results_1[1]["answers"]))
+        self.assertEqual("caucasian", results_1[0]["answers"][0][1])
 
     def test_search_5(self):
         ad_document = test_utils.load_sub_configuration("coarse", "execute",
@@ -49,10 +51,10 @@ class SearchServerTestCase(unittest.TestCase):
                                                              5, "_document_cluster.json")
         results_5 = self.helper_test(5, {"ads": [ad_document],
                                          "clusters": [cluster_document]})
-        self.assertEquals(1, len(results_5))
-        self.assertEquals(1, len(results_5[0]["answers"]))
-        self.assertEquals("jane", results_5[0]["answers"][0][0])
-        self.assertEquals("jane", results_5[0]["agg"])
+        self.assertEqual(1, len(results_5))
+        self.assertEqual(1, len(results_5[0]["answers"]))
+        self.assertEqual("jane", results_5[0]["answers"][0][0])
+        self.assertEqual("jane", results_5[0]["agg"])
 
 
 if __name__ == '__main__':

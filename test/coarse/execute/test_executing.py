@@ -10,9 +10,11 @@ _location__ = os.path.realpath(
 
 
 def load_json_file(file_name):
-    rules = json.load(codecs.open(os.path.join(_location__, file_name),
-                                  'r', 'utf-8'))
-    return rules
+    with codecs.open(os.path.join(_location__,
+                                  file_name),
+                     'r', 'utf-8') as json_file:
+        rules = json.load(json_file)
+        return rules
 
 
 class TestCoarseExecuting(unittest.TestCase):
@@ -29,7 +31,7 @@ class TestCoarseExecuting(unittest.TestCase):
 
         for query in queries:
             result = executor.execute(query)
-            self.assertEquals(len(result.hits), 1)
+            self.assertEqual(len(result.hits), 1)
 
         test.test_utils.reset_elasticsearch(config["components"][0])
 
@@ -45,7 +47,7 @@ class TestCoarseExecuting(unittest.TestCase):
 
         for query in queries:
             result = executor.execute(query)
-            self.assertEquals(len(result.hits), 1)
+            self.assertEqual(len(result.hits), 1)
 
         test.test_utils.reset_elasticsearch(config["components"][0])
 
@@ -61,11 +63,11 @@ class TestCoarseExecuting(unittest.TestCase):
 
         for query in queries:
             result = executor.execute(query)
-            self.assertEquals(len(result.hits), 1)
+            self.assertEqual(len(result.hits), 1)
             self.assertIn("fields", result.hits[0])
             self.assertIn("posting-date", result.hits[0]["fields"])
-            self.assertEquals("2015-03-01T14:02:00",
-                              result.hits[0]["fields"]["posting-date"]["strict"]["name"])
+            self.assertEqual("2015-03-01T14:02:00",
+                             result.hits[0]["fields"]["posting-date"]["strict"]["name"])
 
         test.test_utils.reset_elasticsearch(config["components"][0])
 
@@ -81,7 +83,7 @@ class TestCoarseExecuting(unittest.TestCase):
 
         for query in queries:
             result = executor.execute(query)
-            self.assertEquals(len(result.hits), 1)
+            self.assertEqual(len(result.hits), 1)
 
         test.test_utils.reset_elasticsearch(config["components"][0])
 
@@ -94,14 +96,14 @@ class TestCoarseExecuting(unittest.TestCase):
                         "clusters": [cluster_document]}
 
         test.test_utils.initialize_elasticsearch_doc_types(docs_by_type,
-                                                 config["components"][0])
+                                                           config["components"][0])
 
         executor = Executor(config)
 
         for query in queries:
             result = executor.execute(query)
-            self.assertEquals(len(result), 2)
-            self.assertEquals(len(result[1].hits), 1)
+            self.assertEqual(len(result), 2)
+            self.assertEqual(len(result[1].hits), 1)
 
         test.test_utils.reset_elasticsearch(config["components"][0])
 
@@ -121,13 +123,14 @@ class TestCoarseExecuting(unittest.TestCase):
             result = executor.execute(query)
             result_dict = result.to_dict()
             # aggregation queries should not return any documents
-            self.assertEquals(len(result.hits), 0)
+            self.assertEqual(len(result.hits), 0)
             self.assertIn("aggregations", result_dict)
             self.assertIn("?ethnicity", result_dict["aggregations"])
-            self.assertEquals(1, len(result_dict["aggregations"]["?ethnicity"]["buckets"]))
-            self.assertEquals(1, result_dict["aggregations"]["?ethnicity"]["buckets"][0]["doc_count"])
+            self.assertEqual(1, len(result_dict["aggregations"]["?ethnicity"]["buckets"]))
+            self.assertEqual(1,
+                             result_dict["aggregations"]["?ethnicity"]["buckets"][0]["doc_count"])
 
-        test.test_utils.reset_elasticsearch(config["components"][0])   
+        test.test_utils.reset_elasticsearch(config["components"][0])
 
     def test_basic_coarse_executing_union_and_not_exists(self):
         config = load_json_file("7_config.json")
@@ -144,8 +147,9 @@ class TestCoarseExecuting(unittest.TestCase):
         for query in queries:
             result = executor.execute(query)
             result_dict = result.to_dict()
-            self.assertEquals(len(result.hits), 1)
-            self.assertEquals("QPONMLKJIHGFEDCBA", result_dict["hits"]["hits"][0]["_source"]["doc_id"])
+            self.assertEqual(len(result.hits), 1)
+            self.assertEqual("QPONMLKJIHGFEDCBA",
+                             result_dict["hits"]["hits"][0]["_source"]["doc_id"])
 
         test.test_utils.reset_elasticsearch(config["components"][0])
 
@@ -160,7 +164,8 @@ class TestCoarseExecuting(unittest.TestCase):
         document6 = load_json_file("8_document_6.json")
         mapping = load_json_file("8_mapping.json")
 
-        test.test_utils.initialize_elasticsearch([document, document2, document3, document4, document5, document6],
+        test.test_utils.initialize_elasticsearch([document, document2, document3,
+                                                  document4, document5, document6],
                                                  config["components"][0], mapping)
 
         executor = Executor(config)
@@ -169,12 +174,12 @@ class TestCoarseExecuting(unittest.TestCase):
             for query in queries:
                 results = executor.execute(query)
                 result1 = results[0]
-                result1_dict = result1.to_dict()
-                self.assertEquals(len(result1.hits), 4)
+                self.assertEqual(len(result1.hits), 4)
                 result2 = results[1]
                 result2_dict = result2.to_dict()
-                self.assertEquals(len(result2.hits), 5)
-                self.assertEquals("JKLMNOPQABCDEFGHI", result2_dict["hits"]["hits"][4]["_source"]["doc_id"])
+                self.assertEqual(len(result2.hits), 5)
+                self.assertEqual("JKLMNOPQABCDEFGHI",
+                                 result2_dict["hits"]["hits"][4]["_source"]["doc_id"])
         finally:
             test.test_utils.reset_elasticsearch(config["components"][0])
 
@@ -189,7 +194,8 @@ class TestCoarseExecuting(unittest.TestCase):
         document6 = load_json_file("9_document_6.json")
         mapping = load_json_file("9_mapping.json")
 
-        test.test_utils.initialize_elasticsearch([document, document2, document3, document4, document5, document6],
+        test.test_utils.initialize_elasticsearch([document, document2, document3,
+                                                  document4, document5, document6],
                                                  config["components"][0], mapping)
 
         executor = Executor(config)
@@ -198,14 +204,17 @@ class TestCoarseExecuting(unittest.TestCase):
             for query in queries:
                 result = executor.execute(query)
                 result_dict = result.to_dict()
-                self.assertEquals(len(result.hits), 4)
-                self.assertEquals("PQABCDEFGHIJKLMNO", result_dict["hits"]["hits"][0]["_source"]["doc_id"])
-                self.assertEquals("DEFGHIJKLMNOPQABCD", result_dict["hits"]["hits"][1]["_source"]["doc_id"])
-                self.assertEquals("GHIJKLMNOPQABCDEF", result_dict["hits"]["hits"][2]["_source"]["doc_id"])
-                self.assertEquals("ABCDEFGHIJKLMNOPQ", result_dict["hits"]["hits"][3]["_source"]["doc_id"])
+                self.assertEqual(len(result.hits), 4)
+                self.assertEqual("PQABCDEFGHIJKLMNO",
+                                 result_dict["hits"]["hits"][0]["_source"]["doc_id"])
+                self.assertEqual("DEFGHIJKLMNOPQABCD",
+                                 result_dict["hits"]["hits"][1]["_source"]["doc_id"])
+                self.assertEqual("GHIJKLMNOPQABCDEF",
+                                 result_dict["hits"]["hits"][2]["_source"]["doc_id"])
+                self.assertEqual("ABCDEFGHIJKLMNOPQ",
+                                 result_dict["hits"]["hits"][3]["_source"]["doc_id"])
         finally:
             test.test_utils.reset_elasticsearch(config["components"][0])
-
 
     def test_basic_coarse_rank_scoring_coefficient(self):
         config = load_json_file("10_config.json")
@@ -224,11 +233,15 @@ class TestCoarseExecuting(unittest.TestCase):
             for query in queries:
                 result = executor.execute(query)
                 result_dict = result.to_dict()
-                self.assertEquals(len(result.hits), 4)
-                self.assertEquals("ABCDEFGHIJKLMNOPQ", result_dict["hits"]["hits"][0]["_source"]["doc_id"])
-                self.assertEquals("DEFGHIJKLMNOPQABCD", result_dict["hits"]["hits"][1]["_source"]["doc_id"])
-                self.assertEquals("GHIJKLMNOPQABCDEF", result_dict["hits"]["hits"][2]["_source"]["doc_id"])
-                self.assertEquals("JKLMNOPQABCDEFGHI", result_dict["hits"]["hits"][3]["_source"]["doc_id"])
+                self.assertEqual(len(result.hits), 4)
+                self.assertEqual("ABCDEFGHIJKLMNOPQ",
+                                 result_dict["hits"]["hits"][0]["_source"]["doc_id"])
+                self.assertEqual("DEFGHIJKLMNOPQABCD",
+                                 result_dict["hits"]["hits"][1]["_source"]["doc_id"])
+                self.assertEqual("GHIJKLMNOPQABCDEF",
+                                 result_dict["hits"]["hits"][2]["_source"]["doc_id"])
+                self.assertEqual("JKLMNOPQABCDEFGHI",
+                                 result_dict["hits"]["hits"][3]["_source"]["doc_id"])
         finally:
             test.test_utils.reset_elasticsearch(config["components"][0])
 

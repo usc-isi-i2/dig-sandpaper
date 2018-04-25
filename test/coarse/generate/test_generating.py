@@ -10,9 +10,11 @@ _location__ = os.path.realpath(
 
 
 def load_json_file(file_name):
-    rules = json.load(codecs.open(os.path.join(_location__, file_name),
-                                  'r', 'utf-8'))
-    return rules
+    with codecs.open(os.path.join(_location__,
+                                  file_name),
+                     'r', 'utf-8') as json_file:
+        rules = json.load(json_file)
+        return rules
 
 
 class TestCoarseGenerating(unittest.TestCase):
@@ -26,7 +28,6 @@ class TestCoarseGenerating(unittest.TestCase):
             q) for q in parameterized_queries]
         self.assertEqual(len(generated_queries), 1)
         return generated_queries
-
 
     def test_basic_coarse_generating(self):
         config = load_json_file("1_config.json")
@@ -44,7 +45,7 @@ class TestCoarseGenerating(unittest.TestCase):
                          4)
         self.assertEqual(where1["clauses"][1]["fields"][1]["name"],
                          "extractors.content_relaxed.data_extractors.city.result.value")
-        self.assertEquals(where1["clauses"][1]["fields"][1]["weight"], 0.5)
+        self.assertEqual(where1["clauses"][1]["fields"][1]["weight"], 0.5)
         self.assertNotIn("weight", where0["clauses"][0]["fields"][1])
         self.assertEqual(where0["clauses"][3]["query_type"], "match_phrase")
         self.assertEqual(where0["filters"][0]["query_type"], "match_phrase")
@@ -63,7 +64,8 @@ class TestCoarseGenerating(unittest.TestCase):
         self.assertEqual(generated_queries[0]["ELASTICSEARCH"]["search"]["size"], 500)
         self.assertEqual(generated_queries[0]["ELASTICSEARCH"]["search"]["from"], 0)
         self.assertIn("highlight", generated_queries[0]["ELASTICSEARCH"]["search"])
-        self.assertIn("extractors.content_strict.data_extractors.phone.result.value", generated_queries[0]["ELASTICSEARCH"]["search"]["highlight"]["fields"])
+        self.assertIn("extractors.content_strict.data_extractors.phone.result.value",
+                      generated_queries[0]["ELASTICSEARCH"]["search"]["highlight"]["fields"])
 
     def test_basic_coarse_generating_compound_filter(self):
         config = load_json_file("2_config.json")
@@ -140,7 +142,6 @@ class TestCoarseGenerating(unittest.TestCase):
             q) for q in parameterized_queries]
         self.assertEqual(len(generated_queries), 1)
 
-
     def test_basic_coarse_aggregation(self):
         config = load_json_file("6_config.json")
         parameterized_queries = load_json_file("6_query.json")
@@ -203,23 +204,21 @@ class TestCoarseGenerating(unittest.TestCase):
         self.assertEqual(len(generated_queries), 1)
 
     def test_basic_coarse_order_by(self):
-        generated_queries = self._test_helper("9_config.json",
-                                              "9_query.json")
-
+        self._test_helper("9_config.json",
+                          "9_query.json")
 
     def test_basic_coarse_order_by_step_two(self):
-        generated_queries = self._test_helper("9_config_step_two.json",
-                                              "9_query_step_two.json")
-
+        self._test_helper("9_config_step_two.json",
+                          "9_query_step_two.json")
 
     def test_basic_coarse_rank_scoring_coefficient(self):
-        generated_queries = self._test_helper("10_config.json",
-                                              "10_query.json")
-
+        self._test_helper("10_config.json",
+                          "10_query.json")
 
     def test_basic_coarse_rank_scoring_coefficient_step_two(self):
-        generated_queries = self._test_helper("10_config_step_two.json",
-                                              "10_query_step_two.json")
+        self._test_helper("10_config_step_two.json",
+                          "10_query_step_two.json")
+
 
 if __name__ == '__main__':
     unittest.main()

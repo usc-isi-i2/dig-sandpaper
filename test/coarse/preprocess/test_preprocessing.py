@@ -11,9 +11,11 @@ _location__ = os.path.realpath(
 
 
 def load_json_file(file_name):
-    rules = json.load(codecs.open(os.path.join(_location__, file_name),
-                                  'r', 'utf-8'))
-    return rules
+    with codecs.open(os.path.join(_location__,
+                                  file_name),
+                     'r', 'utf-8') as json_file:
+        rules = json.load(json_file)
+        return rules
 
 
 class TestCoarsePreprocessing(unittest.TestCase):
