@@ -176,7 +176,7 @@ def add_mapping():
         endpoint = request.args.get('endpoint')
     else:
         endpoint = get_default_es_endpoint(project)
-    if not isinstance(endpoint, basestring):
+    if not isinstance(endpoint, str):
         endpoint = endpoint[0]
     response = put_url('{}/{}'.format(endpoint, index),
                        data=json.dumps(m))
@@ -245,7 +245,7 @@ def chunker(seq, size):
 def index():
     project = request.args.get('project', None)
     endpoint = request.args.get('endpoint', get_default_es_endpoint(project))
-    if not isinstance(endpoint, basestring):
+    if not isinstance(endpoint, str):
         endpoint = endpoint[0]
     index = request.args.get('index', None)
     t = request.args.get('type', "ads")
