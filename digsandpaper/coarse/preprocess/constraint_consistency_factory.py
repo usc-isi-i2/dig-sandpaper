@@ -1,6 +1,5 @@
 import json
 import codecs
-import compiler
 from types import ModuleType
 
 
@@ -40,13 +39,11 @@ class ConstraintTypeTransformations(object):
         else:
             self.constraint_type_transformations_to_compile = load_json_file(file)
         self.constraint_type_transformations = {}
-        self.constraint_type_transformations["owl:Thing"] = compiler\
-            .compile("value",
-                     filename,
-                     'eval')
-        for key, value in self.constraint_type_transformations_to_compile.iteritems():
-            compiled_transformation = compiler.compile(
-                value, filename, 'eval')
+        self.constraint_type_transformations["owl:Thing"] = compile("value",
+                                                                    filename,
+                                                                    'eval')
+        for key, value in self.constraint_type_transformations_to_compile.items():
+            compiled_transformation = compile(value, filename, 'eval')
             self.constraint_type_transformations[key] = compiled_transformation
 
     def preprocess_filter(self, f):
