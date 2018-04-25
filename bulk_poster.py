@@ -1,14 +1,11 @@
 #!/usr/bin/python
-try:
-    import simplejson as json
-except:
-    import json
 import requests
 import codecs
 from optparse import OptionParser
 
+
 def chunker(seq, size):
-    return (seq[pos:pos + size] for pos in xrange(0, len(seq), size))
+    return (seq[pos:pos + size] for pos in range(0, len(seq), size))
 
 
 parser = OptionParser()
