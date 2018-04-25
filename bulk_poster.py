@@ -22,11 +22,11 @@ t = args[4]
 with codecs.open(inputFile, 'r', 'utf-8') as f:
     docs = f.read().splitlines()
 url = "http://{}:{}/{}/{}/_bulk".format(host, port, index, t)
-print "starting to post"
+print("starting to post")
 counter = 0
 for chunk in chunker(docs, 1000):
     bulk_request = '{"index":{}}\n' + '\n{"index":{}}\n'.join(chunk) + '\n'
     counter += len(chunk)
     r = requests.post(url, bulk_request)
-    print len(r.json()["items"])
-print counter
+    print(len(r.json()["items"]))
+print(counter)
