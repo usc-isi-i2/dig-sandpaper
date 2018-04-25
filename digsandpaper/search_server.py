@@ -7,7 +7,8 @@ import gzip
 import os
 import json
 import requests
-import StringIO
+from io import StringIO
+from io import BytesIO
 import codecs
 from math import log
 from .engine import Engine
@@ -200,7 +201,7 @@ def _is_acceptable_content_type(request):
 
 def _index_fields(request):
     if (request.headers['Content-Type'] == 'application/x-gzip'):
-        gz_data_as_file = StringIO.StringIO(request.data)
+        gz_data_as_file = BytesIO(request.data)
         uncompressed = gzip.GzipFile(fileobj=gz_data_as_file, mode='rb')
         jls = uncompressed.read()
     elif (request.headers['Content-Type'] == 'application/json' or
@@ -209,7 +210,7 @@ def _index_fields(request):
     else:
         return ""
     reader = codecs.getreader('utf-8')
-    jls_as_file = reader(StringIO.StringIO(jls))
+    jls_as_file = reader(BytesIO(jls))
     jls = [json.dumps(jl) for jl in [index_knowledge_graph_fields(jl)
            for jl in jl_file_iterator(jls_as_file)] if jl is not None]
     return jls
@@ -226,7 +227,7 @@ def index_fields():
     jls = _index_fields(request)
     indexed_jls = "\n".join(jls)
     if (request.headers['Content-Type'] == 'application/x-gzip'):
-        indexed_jls_as_file = StringIO.StringIO()
+        indexed_jls_as_file = StringIO()
         compressed = gzip.GzipFile(mode='wb',
                                    fileobj=indexed_jls_as_file)
         compressed.write(indexed_jls)
