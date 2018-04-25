@@ -3,9 +3,11 @@ from pyspark import SparkContext, SparkConf, StorageLevel
 import json
 import codecs
 
+
 def load_json_file(file_name):
     rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
     return rules
+
 
 def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments,
                                  max_key_count, max_provenance_count):
@@ -20,7 +22,7 @@ def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments,
     jl.pop("_id", None)
 
     total_provenance_count = 0
-    total_key_count = 0 
+    total_key_count = 0
 
     for (pred, objs) in kg.items():
         try:
@@ -65,9 +67,9 @@ def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments,
                         indexed[pred][method][segment] = []
                     # if result not in indexed[pred][method][segment]:
                     this_added = False
-                    if not method in tally:
+                    if method not in tally:
                         tally[method] = {}
-                    if not segment in tally[method]:
+                    if segment not in tally[method]:
                         tally[method][segment] = {segment: True}
                     else:
                         this_added = True
@@ -75,7 +77,7 @@ def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments,
                         indexed[pred][method][segment].append(result)
         except Exception as e:
             # print json.dumps(jl['knowledge_graph'], indent=2)
-            print 'Failed:', jl['doc_id']
+            print('Failed:', jl['doc_id'])
             # raise e
             return {}
 
@@ -84,6 +86,7 @@ def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments,
         return jl
     else:
         return {}
+
 
 if __name__ == '__main__':
     compression = "org.apache.hadoop.io.compress.BZip2Codec"
@@ -109,8 +112,6 @@ if __name__ == '__main__':
                                                                       interesting_methods,
                                                                       interesting_segments,
                                                                       max_key_count,
-                                                                      max_provenance_count))).filter(lambda (k,v): v != "{}")
-                   
+                                                                      max_provenance_count))).filter(lambda (k, v): v != "{}")
 
     docs.saveAsSequenceFile(output_path, compressionCodecClass=compression)
-    #docs.values().saveAsTextFile(output_path)
