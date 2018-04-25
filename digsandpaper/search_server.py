@@ -356,7 +356,7 @@ def set_engine(e, project=None):
 
 def multiply_values(w, multiplier):
     for k, v in w.items():
-        if isinstance(v, (int, float, long, complex)):
+        if isinstance(v, (int, float, complex)):
             w[k] = v * multiplier
         elif isinstance(v, dict):
             multiply_values(v, multiplier)
