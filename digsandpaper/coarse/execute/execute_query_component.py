@@ -49,7 +49,7 @@ class ExecuteElasticsearchQuery(object):
                 v[op] = v[op].replace("__placeholder__", new_value.split()[0])
 
     def is_match_placeholder(self, match, clause_id):
-        for (k, v) in match.iteritems():
+        for (k, v) in match.items():
             if isinstance(v, dict):
                 if "_name" in v and v["_name"].startswith(clause_id):
                     if "query" in v:
@@ -57,7 +57,7 @@ class ExecuteElasticsearchQuery(object):
         return False
 
     def replace_value(self, doc, clause_id, new_value):
-        for (k, v) in doc.iteritems():
+        for (k, v) in doc.items():
             if isinstance(v, list):
                 for e in v:
                     if isinstance(e, dict):
@@ -68,7 +68,7 @@ class ExecuteElasticsearchQuery(object):
                         if v["query"] == "__placeholder__":
                             v["query"] = new_value
                             v["_name"] = v["_name"].replace("__placeholder__", new_value)
-                            if isinstance(new_value, basestring):
+                            if isinstance(new_value, str):
                                 terms = len(new_value.split(" "))
                                 if terms > 5:
                                     msm = terms / 2 + 1
@@ -85,7 +85,7 @@ class ExecuteElasticsearchQuery(object):
 
     def replace_values(self, doc, clause_id, new_values):
         new_bool = None
-        for (k, v) in doc.iteritems():
+        for (k, v) in doc.items():
             if isinstance(v, list):
                 for e in v:
                     if isinstance(e, dict):
@@ -209,7 +209,7 @@ class ExecuteElasticsearchQuery(object):
 
                         if isinstance(to_insert, dict):
                             previous_query["variable_to_expanded_values"] = to_insert
-                            for var, clause_ids in previous_query["variable_to_clause_id"].iteritems():
+                            for var, clause_ids in previous_query["variable_to_clause_id"].items():
                                 for clause_id in clause_ids:
                                     self.replace_values(query, clause_id, to_insert[var])
                         else:

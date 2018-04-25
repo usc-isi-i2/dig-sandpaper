@@ -34,7 +34,7 @@ def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark
     total_provenance_count = 0
     total_key_count = 0
 
-    for (pred, objs) in kg.iteritems():
+    for (pred, objs) in kg.items():
         for obj in objs:
 
             key = obj["key"]

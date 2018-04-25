@@ -38,7 +38,7 @@ class TypeFieldGroupByMapping(object):
                         t = clause["type"]
                         if t in self.type_field_mapping:
                             fields_array_or_str = self.type_field_mapping[t]
-                            if isinstance(fields_array_or_str, basestring):
+                            if isinstance(fields_array_or_str, str):
                                 clause["agg_fields"].append({"name": fields_array_or_str})
                             else:
                                 for field in fields_array_or_str:
@@ -49,7 +49,7 @@ class TypeFieldGroupByMapping(object):
         if t in self.type_field_mapping:
             c["fields"] = []
             tfm = self.type_field_mapping[t]
-            if isinstance(tfm, basestring):
+            if isinstance(tfm, str):
                 c["fields"].append({"name": tfm})
             else:
                 for field in tfm:

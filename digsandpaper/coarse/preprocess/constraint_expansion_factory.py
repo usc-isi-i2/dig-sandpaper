@@ -159,7 +159,7 @@ class HeightConstraintExpander(LambdaConstraintExpander):
                     height_in_cm = height
                     height_in_inches = height // 2.54
                     return [height_in_inches, "{}'{}\"".format(height_in_inches//12, height_in_inches%12)]
-            if isinstance(clause["constraint"], basestring):
+            if isinstance(clause["constraint"], str):
                 height = clause["constraint"]
                 try:
                     if "cm" in height:

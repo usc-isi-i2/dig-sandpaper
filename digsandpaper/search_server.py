@@ -351,7 +351,7 @@ def set_engine(e, project=None):
 
 
 def multiply_values(w, multiplier):
-    for k, v in w.iteritems():
+    for k, v in w.items():
         if isinstance(v, (int, float, long, complex)):
             w[k] = v * multiplier
         elif isinstance(v, dict):
@@ -363,7 +363,7 @@ def update_endpoint(config, endpoint):
         execute_component = config["coarse"]["execute"]["components"][0]
         execute_component.pop("host", None)
         execute_component.pop("port", None)
-        if isinstance(endpoint, basestring):
+        if isinstance(endpoint, str):
             endpoints = list()
             endpoints.append(unquote(endpoint))
         else:
@@ -379,7 +379,7 @@ def invert_subproperty_relationships(prop,
         new_supers = list()
         new_supers.extend(supers)
         new_supers.append(prop)
-        for subproperty, subsubproperty_relationships in subproperty_relationships.iteritems():
+        for subproperty, subsubproperty_relationships in subproperty_relationships.items():
             invert_subproperty_relationships(subproperty,
                                              subsubproperty_relationships,
                                              inverted, new_supers)
@@ -432,10 +432,10 @@ def apply_config_from_project(url, project, endpoint, index=None,
 
     pinpoint_config = project_config.get("pinpoint", {})
     if "custom_field_mappings" in pinpoint_config:
-        for t, fields in pinpoint_config["custom_field_mappings"].iteritems():
+        for t, fields in pinpoint_config["custom_field_mappings"].items():
             type_field_mapping[t] = fields
 
-    for field_name, spec in project_config["fields"].iteritems():
+    for field_name, spec in project_config["fields"].items():
         predicate_type_mapping[field_name] = field_name.lower()
         type_group_field_mapping[field_name.lower()] = \
             "indexed.{}.high_confidence_keys".format(field_name)
@@ -469,10 +469,10 @@ def apply_config_from_project(url, project, endpoint, index=None,
     subproperty_relationships = pinpoint_config.get("subproperty_relationships", {})
     inverted_relationships = {}
     if subproperty_relationships:
-        for prop, sp_r in subproperty_relationships.iteritems():
+        for prop, sp_r in subproperty_relationships.items():
             invert_subproperty_relationships(prop, sp_r,
                                              inverted_relationships)
-    for field_name, spec in project_config["fields"].iteritems():
+    for field_name, spec in project_config["fields"].items():
         fields = type_field_mapping[field_name.lower()]
         if not subproperty_relationships:
             if spec.get("type", "string") == "string" and\
@@ -491,8 +491,8 @@ def apply_config_from_project(url, project, endpoint, index=None,
 
 def dereference_config(config):
     if isinstance(config, dict):
-        for k, v in config.iteritems():
-            if isinstance(v, basestring):
+        for k, v in config.items():
+            if isinstance(v, str):
                 if v.endswith('.json'):
                     sub_config = load_json_file(v)
                     config[k] = sub_config

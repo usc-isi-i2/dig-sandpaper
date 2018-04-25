@@ -22,7 +22,7 @@ def index_knowledge_graph_fields(jl, interesting_methods, interesting_segments,
     total_provenance_count = 0
     total_key_count = 0 
 
-    for (pred, objs) in kg.iteritems():
+    for (pred, objs) in kg.items():
         try:
             for obj in objs:
 

@@ -46,7 +46,7 @@ class ElasticsearchQueryCompiler(object):
     def translate_filter(self, f, field):
         range_operators = {"<": "lt", "<=": "lte", ">": "gt", ">=": "gte"}
         op = f["operator"]
-        if isinstance(op, basestring) and op in range_operators:
+        if isinstance(op, str) and op in range_operators:
             range_params = {}
             range_field_params = {}
             range_field_params[range_operators[op]] = f["constraint"]
@@ -55,7 +55,7 @@ class ElasticsearchQueryCompiler(object):
                                                             field.get("name"),
                                                             f.get("constraint"))
             return Range(**range_params)
-        if not isinstance(op, basestring) and isinstance(op, list):
+        if not isinstance(op, str) and isinstance(op, list):
             range_params = {}
             range_field_params = {}
             for (o, c) in zip(op, f["constraint"]):
@@ -215,7 +215,7 @@ class ElasticsearchQueryCompiler(object):
                     else:
                         compound_clauses.append(clause)
 
-                for (variable, clauses) in clauses_by_variable.iteritems():
+                for (variable, clauses) in clauses_by_variable.items():
                     if len(clauses) == 1:
                         source_fields = self.generate_filter(clauses[0],
                                                              sub_filters,
@@ -286,7 +286,7 @@ class ElasticsearchQueryCompiler(object):
     def generate_source_fields(self, s, source_fields):
         if "default_source_fields" in self.elasticsearch_compiler_options:
             default_source_fields = self.elasticsearch_compiler_options["default_source_fields"]
-            if isinstance(default_source_fields, basestring):
+            if isinstance(default_source_fields, str):
                 default_source_fields = [default_source_fields]
             source_fields |= set(default_source_fields)
 
@@ -314,7 +314,7 @@ class ElasticsearchQueryCompiler(object):
            self.elasticsearch_compiler_options:
                 psc = self.elasticsearch_compiler_options['predicate_scoring_coefficients']
                 functions = []
-                for key, value in psc.iteritems():
+                for key, value in psc.items():
                     field = "doc['knowledge_graph.{}.key'].value".format(key)
                     sf = SF('script_score', script="_score*{}*{}".format(value, field))
                     functions.append(sf)
@@ -471,8 +471,8 @@ class ElasticsearchQueryCompiler(object):
 
     def filter_contains_clause(self, obj, clause_id):
         contains_clause = False
-        for (k, v) in obj.iteritems():
-            if isinstance(v, basestring):
+        for (k, v) in obj.items():
+            if isinstance(v, str):
                 if v.startswith(clause_id):
                     return True
             elif isinstance(v, list):
@@ -683,7 +683,7 @@ class ElasticsearchQueryCompiler(object):
                         # filter for performance reasons
                         musts.append(es_clause)
 
-        for key, value in shoulds_by_predicate.iteritems():
+        for key, value in shoulds_by_predicate.items():
             if len(value) > 1:
                 shoulds.append(DisMax(queries=value))
             else:
