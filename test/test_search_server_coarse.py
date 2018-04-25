@@ -45,7 +45,7 @@ class SearchServerTestCaseCoarse(unittest.TestCase):
                                                has_mapping)
         response = self.app.post('/search/coarse', data=json.dumps(query))
         self.assertEquals(200, response.status_code)
-        results = json.loads(response.data)
+        results = response.json()
         test_utils.reset_elasticsearch(es_config)
         return results
 

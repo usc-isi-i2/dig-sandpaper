@@ -19,7 +19,7 @@ class SearchServerTestCase(unittest.TestCase):
         test_utils.reset_elasticsearch()
 
     def initialize_elasticsearch_doc_types(self, project, documents_by_type):
-        for (t, docs) in documents_by_type.iteritems():
+        for (t, docs) in documents_by_type.items():
             self.initialize_elasticsearch_docs(project, docs, t)
 
     def initialize_elasticsearch_docs(self, project, documents, t="ads"):
@@ -63,7 +63,7 @@ class SearchServerTestCase(unittest.TestCase):
         response = self.app.post('/search/coarse', data=json.dumps(query),
                                  query_string=params)
         self.assertEquals(200, response.status_code)
-        results = json.loads(response.data)
+        results = response.json()
         return results
 
     def test_search_1(self):
