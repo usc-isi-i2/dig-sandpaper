@@ -212,7 +212,8 @@ def _index_fields(request):
     reader = codecs.getreader('utf-8')
     jls_as_file = reader(BytesIO(jls))
     jls = [json.dumps(jl) for jl in [index_knowledge_graph_fields(jl)
-           for jl in jl_file_iterator(jls_as_file)] if jl is not None]
+                                     for jl in jl_file_iterator(jls_as_file)]
+           if jl is not None]
     return jls
 
 
