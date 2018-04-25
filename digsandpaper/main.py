@@ -68,7 +68,7 @@ def main(args):
     else:
         query = load_json_file(query_file)
         result = engine.execute(query)
-        print result
+        print(result)
 
 
 if __name__ == "__main__":

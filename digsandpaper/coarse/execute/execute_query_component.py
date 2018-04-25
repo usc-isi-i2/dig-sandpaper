@@ -40,7 +40,7 @@ class ExecuteElasticsearchQuery(object):
         return
 
     def teardown(self):
-        print "tearing down connection"
+        print("tearing down connection")
         connections.remove_connection(self.alias)
 
     def replace_range_operator(self, v, op, new_value):
