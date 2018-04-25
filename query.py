@@ -59,7 +59,7 @@ def main(args):
         for query in query_file_json:
             i = i + 1
             start = time.time()
-            r = requests.post(endpoint, json.dumps(query))
+            r = requests.post(endpoint, json=query)
             if r.status_code == 200:
                 if query_count == i:
                     separator = ""
@@ -77,7 +77,7 @@ def main(args):
         print("]")
     else:
         query = query_file_json
-        r = requests.post(endpoint, json.dumps(query))
+        r = requests.post(endpoint, json=query)
         print(r.text)
 
 
