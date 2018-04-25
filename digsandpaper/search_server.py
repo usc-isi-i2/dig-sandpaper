@@ -18,6 +18,7 @@ from .elasticsearch_indexing.index_knowledge_graph import index_knowledge_graph_
 from urllib.parse import unquote
 from urllib.parse import urlparse
 from copy import deepcopy
+from .sandpaper_utils import load_json_file
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -30,9 +31,10 @@ _location__ = os.path.realpath(
 
 
 def load_project_json_file(file_name):
-    file = json.load(codecs.open(os.path.join(_location__, file_name),
-                                 'r', 'utf-8'))
-    return file
+    with codecs.open(os.path.join(_location__, file_name),
+                     'r', 'utf-8') as json_file:
+        file = json.load(json_file)
+        return file
 
 
 def get_engine(project=None):
@@ -63,7 +65,7 @@ def get_default_es_endpoint(project=None):
         default_es_endpoint = execute_component["endpoints"]
     if "host" in execute_component and "port" in execute_component:
         default_es_endpoint = ["http://{}:{}".format(execute_component["host"],
-                               execute_component["port"])]
+                                                     execute_component["port"])]
     return default_es_endpoint
 
 
@@ -536,6 +538,3 @@ def config():
                    status.HTTP_400_BAD_REQUEST
 
 
-def load_json_file(file_name):
-    rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
-    return rules

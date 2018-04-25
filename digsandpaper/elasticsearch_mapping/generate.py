@@ -5,6 +5,8 @@ import requests
 import copy
 from urllib.parse import urlparse
 from optparse import OptionParser
+from digsandpaper.sandpaper_utils import load_json_file
+
 
 _location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -14,14 +16,10 @@ elasticsearch_numeric_types = ["long", "integer", "short", "byte",
 
 
 def load_project_json_file(file_name):
-    file = json.load(codecs.open(os.path.join(_location__, file_name),
-                                 'r', 'utf-8'))
-    return file
-
-
-def load_json_file(file_name):
-    rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
-    return rules
+    with codecs.open(os.path.join(_location__, file_name),
+                     'r', 'utf-8') as json_file:
+        file = json.load(json_file)
+        return file
 
 
 def jl_file_iterator(file):
@@ -50,8 +48,9 @@ def generate(default_mapping, semantic_types,
                                      "confidence": {"type": "double"}}
     kg_to_copy = {"properties": default_knowledge_graph_props}
     knowledge_graph = {}
-    default_mapping["mappings"]["ads"]["properties"]["knowledge_graph"] = {"properties": knowledge_graph, 
-                                                                           "dynamic": "true"}
+    default_mapping["mappings"]["ads"]["properties"]["knowledge_graph"] = \
+        {"properties": knowledge_graph,
+         "dynamic": "true"}
 
     for semantic_type in semantic_types:
         # not copying yet
@@ -134,8 +133,10 @@ def generate_from_project_config(project_config, default_mapping=None, shards=5,
     semantic_types = frozenset(project_config["fields"].keys())
     semantic_type_to_data_type = {}
     for semantic_type in semantic_types:
-        semantic_type_to_data_type[semantic_type] = project_config["fields"][semantic_type].get("type", "string")
-    mapping = generate(default_mapping, semantic_types, methods, segments, semantic_type_to_data_type)
+        semantic_type_to_data_type[semantic_type] = \
+            project_config["fields"][semantic_type].get("type", "string")
+    mapping = generate(default_mapping, semantic_types, methods,
+                       segments, semantic_type_to_data_type)
     mapping['settings']['index']['number_of_shards'] = shards
     return mapping
 

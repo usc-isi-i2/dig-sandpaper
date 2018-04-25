@@ -1,16 +1,10 @@
 from __future__ import unicode_literals
-import json
-import codecs
+from digsandpaper.sandpaper_utils import load_json_file
 import copy
 import uuid
 
 __name__ = "ConstraintExpansion"
 name = __name__
-
-
-def load_json_file(file_name):
-    rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
-    return rules
 
 
 class LambdaConstraintExpander(object):
