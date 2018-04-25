@@ -134,7 +134,7 @@ def call_generate_mapping_from_etk_config(etk_config, shards=5):
 @app.route("/mapping/generate/etk", methods=['POST'])
 def generate_mapping_from_etk():
     shards = request.args.get('shards', 5)
-    etk_config = json.loads(request.data)
+    etk_config = request.json
     m = call_generate_mapping_from_etk_config(etk_config, shards=shards)
     return json.dumps(m)
 
@@ -145,7 +145,7 @@ def generate_mapping():
     project = request.args.get('project', None)
     shards = request.args.get('shards', 5)
     if request.data:
-        project_config = json.loads(request.data)
+        project_config = request.json
     else:
         project_config = get_project_config(url, project)
     m = call_generate_mapping(url, project, project_config, shards=shards)
@@ -159,7 +159,7 @@ def add_mapping():
     project = request.args.get('project', None)
     etk = request.args.get('etk', False)
     if etk:
-        etk_config = json.loads(request.data)
+        etk_config = request.json
         m = call_generate_mapping_from_etk_config(etk_config, shards=shards)
         index = request.args.get('index', None)
         if not index:
@@ -167,7 +167,7 @@ def add_mapping():
                    status.HTTP_400_BAD_REQUEST
     else:
         if request.data:
-            project_config = json.loads(request.data)
+            project_config = request.json
         else:
             project_config = get_project_config(url, project)
         m = call_generate_mapping(url, project, project_config, shards=shards)
@@ -297,7 +297,7 @@ def index():
 @app.route("/search", methods=['POST'])
 def search():
     project = request.args.get("project", None)
-    query = json.loads(request.data)
+    query = request.json
     (qs, rs) = get_engine(project).execute_coarse(query)
     answers = get_engine(project).execute_fine(qs, rs)
     return json.dumps(answers)
@@ -313,7 +313,7 @@ def coarse_results_to_dict(r):
 @app.route("/search/coarse", methods=['POST'])
 def coarse():
     project = request.args.get("project", None)
-    query = json.loads(request.data)
+    query = request.json
     log_requests = get_engine(project).config.get("coarse", {}).get("log_requests", None)
     if log_requests:
         with open(os.path.join(log_requests,
@@ -328,7 +328,7 @@ def coarse():
 @app.route("/search/coarse/generate", methods=['POST'])
 def coarse_generate():
     project = request.args.get("project", None)
-    query = json.loads(request.data)
+    query = request.json
     qs = get_engine(project).generate_coarse(query)
     return json.dumps(qs)
 
@@ -516,7 +516,7 @@ def config():
         search_importance_enabled = request.args.get('searchimportanceenabled',
                                                      False)
         if request.data and len(request.data) > 0:
-            project_config = json.loads(request.data)
+            project_config = request.json
         else:
             project_config = None
         apply_config_from_project(url, project, endpoint, index,
