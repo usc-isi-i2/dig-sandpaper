@@ -1,10 +1,10 @@
-import field_weight_component
-import type_field_mapping_component
-import type_query_mapping_component
-import zone_field_mapping_component
-import query_compiler_component
-import type_doc_type_mapping_component
-import type_index_mapping_component
+from . import field_weight_component
+from . import type_field_mapping_component
+from . import type_query_mapping_component
+from . import zone_field_mapping_component
+from . import query_compiler_component
+from . import type_doc_type_mapping_component
+from . import type_index_mapping_component
 
 component_order = {type_field_mapping_component.name: 1,
                    zone_field_mapping_component.name: 2,

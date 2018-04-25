@@ -1,11 +1,11 @@
-import constraint_consistency_factory
-import constraint_expansion_factory
-import constraint_type_mapper_factory
-import clause_id_factory
-import sparql_reordering_factory
-import constraint_relaxation_factory
-from constraint_type_mapper_factory import PredicateDictConstraintTypeMapper
-from clause_id_factory import UUIDClauseIdMapper
+from . import constraint_consistency_factory
+from . import constraint_expansion_factory
+from . import constraint_type_mapper_factory
+from . import clause_id_factory
+from . import sparql_reordering_factory
+from . import constraint_relaxation_factory
+from .constraint_type_mapper_factory import PredicateDictConstraintTypeMapper
+from .clause_id_factory import UUIDClauseIdMapper
 
 component_order = {constraint_type_mapper_factory.name: 1,
                    sparql_reordering_factory.name: 2,

@@ -1,6 +1,6 @@
 
-from coarse.coarse_engine import CoarseEngine
-from fine.fine_engine import FineEngine
+from .coarse.coarse_engine import CoarseEngine
+from .fine.fine_engine import FineEngine
 
 
 class Engine(object):

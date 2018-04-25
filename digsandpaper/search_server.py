@@ -10,12 +10,12 @@ import requests
 import StringIO
 import codecs
 from math import log
-from engine import Engine
-from elasticsearch_mapping.generate import generate_from_project_config
-from elasticsearch_mapping.generate import generate_from_etk_config
-from elasticsearch_indexing.index_knowledge_graph import index_knowledge_graph_fields
-from urllib import unquote
-from urlparse import urlparse
+from .engine import Engine
+from .elasticsearch_mapping.generate import generate_from_project_config
+from .elasticsearch_mapping.generate import generate_from_etk_config
+from .elasticsearch_indexing.index_knowledge_graph import index_knowledge_graph_fields
+from urllib.parse import unquote
+from urllib.parse import urlparse
 from copy import deepcopy
 
 app = Flask(__name__)

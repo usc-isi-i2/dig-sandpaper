@@ -1,4 +1,4 @@
-import parameterize_component_factory
+from . import parameterize_component_factory
 
 
 class Parameterizer(object):

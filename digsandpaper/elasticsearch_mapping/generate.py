@@ -3,7 +3,7 @@ import json
 import os
 import requests
 import copy
-from urlparse import urlparse
+from urllib.parse import urlparse
 from optparse import OptionParser
 
 _location__ = os.path.realpath(

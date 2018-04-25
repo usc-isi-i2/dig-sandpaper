@@ -1,7 +1,7 @@
-from execute.executor import Executor
-from generate.generator import Generator
-from parameterize.parameterizer import Parameterizer
-from preprocess.preprocessor import Preprocessor
+from .execute.executor import Executor
+from .generate.generator import Generator
+from .parameterize.parameterizer import Parameterizer
+from .preprocess.preprocessor import Preprocessor
 
 
 class CoarseEngine(object):

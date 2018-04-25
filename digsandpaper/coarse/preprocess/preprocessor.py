@@ -1,4 +1,4 @@
-import preprocess_component_factory
+from . import preprocess_component_factory
 
 
 class Preprocessor(object):
