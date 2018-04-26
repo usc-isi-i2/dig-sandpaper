@@ -11,9 +11,9 @@ class SearchServerTestCase(unittest.TestCase):
         search_server.app.config['TESTING'] = True
         self.app = search_server.app.test_client()
 
-    def test_hello(self):
-        response = self.app.get('/')
-        self.assertEqual(200, response.status_code)
+    def tearDown(self):
+        test_utils.reset_elasticsearch()
+        search_server.get_engine().teardown()
 
     def helper_setup(self, i, docs_by_type):
         config = test_utils.load_engine_configuration(i)

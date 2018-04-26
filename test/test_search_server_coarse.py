@@ -11,6 +11,10 @@ class SearchServerTestCaseCoarse(unittest.TestCase):
         search_server.app.config['TESTING'] = True
         self.app = search_server.app.test_client()
 
+    def tearDown(self):
+        test_utils.reset_elasticsearch()
+        search_server.get_engine().teardown()
+
     def helper_setup(self, i, additional_documents_suffixes=[],
                      has_mapping=False):
         config = test_utils.load_engine_configuration(i)

@@ -34,6 +34,7 @@ class TestCoarseExecuting(unittest.TestCase):
             self.assertEqual(len(result.hits), 1)
 
         test.test_utils.reset_elasticsearch(config["components"][0])
+        executor.teardown()
 
     def test_basic_coarse_executing_compound_filters(self):
         config = load_json_file("2_config.json")
@@ -50,6 +51,7 @@ class TestCoarseExecuting(unittest.TestCase):
             self.assertEqual(len(result.hits), 1)
 
         test.test_utils.reset_elasticsearch(config["components"][0])
+        executor.teardown()
 
     def test_basic_coarse_executing_compound_filters_no_type_mapping(self):
         config = load_json_file("3_config.json")
@@ -70,6 +72,7 @@ class TestCoarseExecuting(unittest.TestCase):
                              result.hits[0]["fields"]["posting-date"]["strict"]["name"])
 
         test.test_utils.reset_elasticsearch(config["components"][0])
+        executor.teardown()
 
     def test_basic_coarse_executing_date_filters(self):
         config = load_json_file("4_config.json")
@@ -86,6 +89,7 @@ class TestCoarseExecuting(unittest.TestCase):
             self.assertEqual(len(result.hits), 1)
 
         test.test_utils.reset_elasticsearch(config["components"][0])
+        executor.teardown()
 
     def test_basic_coarse_executing_sparql_unnesting(self):
         config = load_json_file("5_config.json")
@@ -106,6 +110,7 @@ class TestCoarseExecuting(unittest.TestCase):
             self.assertEqual(len(result[1].hits), 1)
 
         test.test_utils.reset_elasticsearch(config["components"][0])
+        executor.teardown()
 
     def test_basic_coarse_executing_aggregation(self):
         config = load_json_file("6_config.json")
@@ -131,6 +136,7 @@ class TestCoarseExecuting(unittest.TestCase):
                              result_dict["aggregations"]["?ethnicity"]["buckets"][0]["doc_count"])
 
         test.test_utils.reset_elasticsearch(config["components"][0])
+        executor.teardown()
 
     def test_basic_coarse_executing_union_and_not_exists(self):
         config = load_json_file("7_config.json")
@@ -152,6 +158,7 @@ class TestCoarseExecuting(unittest.TestCase):
                              result_dict["hits"]["hits"][0]["_source"]["doc_id"])
 
         test.test_utils.reset_elasticsearch(config["components"][0])
+        executor.teardown()
 
     def test_basic_coarse_executing_network_expansion(self):
         config = load_json_file("8_config.json")
@@ -182,6 +189,7 @@ class TestCoarseExecuting(unittest.TestCase):
                                  result2_dict["hits"]["hits"][4]["_source"]["doc_id"])
         finally:
             test.test_utils.reset_elasticsearch(config["components"][0])
+            executor.teardown()
 
     def test_basic_coarse_order_by(self):
         config = load_json_file("9_config.json")
@@ -215,6 +223,7 @@ class TestCoarseExecuting(unittest.TestCase):
                                  result_dict["hits"]["hits"][3]["_source"]["doc_id"])
         finally:
             test.test_utils.reset_elasticsearch(config["components"][0])
+            executor.teardown()
 
     def test_basic_coarse_rank_scoring_coefficient(self):
         config = load_json_file("10_config.json")
@@ -244,6 +253,7 @@ class TestCoarseExecuting(unittest.TestCase):
                                  result_dict["hits"]["hits"][3]["_source"]["doc_id"])
         finally:
             test.test_utils.reset_elasticsearch(config["components"][0])
+            executor.teardown()
 
 
 if __name__ == '__main__':

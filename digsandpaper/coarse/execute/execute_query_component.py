@@ -33,8 +33,10 @@ class ExecuteElasticsearchQuery(object):
         return
 
     def teardown(self):
-        print("tearing down connection")
-        connections.remove_connection(self.alias)
+        try:
+            connections.remove_connection(self.alias)
+        except Exception as ke:
+            print(f"Connection alias {self.alias} has already been removed")
 
     def replace_range_operator(self, v, op, new_value):
         if op in v:

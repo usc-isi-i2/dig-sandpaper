@@ -12,11 +12,13 @@ class SearchServerTestCase(unittest.TestCase):
         search_server.app.config['TESTING'] = True
         self.app = search_server.app.test_client()
         engine_config = test_utils.load_engine_configuration(1)
-        engine = Engine(engine_config)
-        search_server.set_engine(engine)
+        self.engine = Engine(engine_config)
+        search_server.set_engine(self.engine)
 
     def tearDown(self):
         test_utils.reset_elasticsearch()
+        search_server.get_engine().teardown()
+        self.engine.teardown()
 
     def initialize_elasticsearch_doc_types(self, project, documents_by_type):
         for (t, docs) in documents_by_type.items():
