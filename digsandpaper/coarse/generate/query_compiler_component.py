@@ -30,9 +30,9 @@ class ElasticsearchQueryCompiler(object):
         terms = len(constraint.split(" "))
         terms_msm = self.elasticsearch_compiler_options.get("terms_minimum_should_match", 1)
         if terms > 5:
-            msm = terms / 2 + 1
+            msm = terms // 2 + 1
         elif terms > 1:
-            msm = max(min(terms, terms_msm), terms / 2)
+            msm = max(min(terms, terms_msm), terms // 2)
         else:
             msm = 1
         return msm
