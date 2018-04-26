@@ -36,7 +36,7 @@ class ExecuteElasticsearchQuery(object):
         try:
             connections.remove_connection(self.alias)
         except Exception as ke:
-            print(f"Connection alias {self.alias} has already been removed")
+            print("Connection alias {} has already been removed".format(self.alias))
 
     def replace_range_operator(self, v, op, new_value):
         if op in v:
