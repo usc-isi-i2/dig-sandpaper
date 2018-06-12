@@ -85,9 +85,11 @@ def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark
                     if not this_added:
                         indexed[pred][method][segment].append(result)
             else:
-                indexed[pred]['other_method'] = {
-                    'other_segment': [result]
-                }
+                if 'other_method' not in indexed[pred]:
+                    indexed[pred]['other_method'] = {}
+                if 'other_segment' not in indexed[pred]['other_method']:
+                    indexed[pred]['other_method']['other_segment'] = []
+                indexed[pred]['other_method']['other_segment'].append(result)
 
         indexed[pred]["high_confidence_keys"] = list(indexed[pred]["high_confidence_keys"])
     if total_key_count < max_key_count and total_provenance_count < max_provenance_count:
