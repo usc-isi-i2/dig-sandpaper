@@ -6,8 +6,81 @@ import json
 class SearchServerTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.doc1 = json.load(open('mydig/kg_jsonld.json'))
-        self.doc2 = json.load(open('mydig/kg2_jsonld.json'))
+        self.doc1 = {
+            "@id": "http://www.isi.edu/dig/events/ee6c93c3-0b16-4494-926e-f61d7d11b101",
+            "@type": [
+                "http://dig.isi.edu/ontologies/dig/Event",
+                "http://dig.isi.edu/ontologies/dig/CONFLICT_ATTACK"
+            ],
+            "@context": {
+                "prefLabel": "http://www.w3.org/2004/02/skos/core#prefLabel",
+                "conflict_attack_place": "http://dig.isi.edu/ontologies/dig/conflict_attack_place"
+            },
+            "prefLabel": [
+                {
+                    "@value": "shot"
+                }
+            ],
+            "conflict_attack_place": [
+                {
+                    "@id": "http://www.isi.edu/dig/entities/dc81cfec-0606-43d2-829f-bb1b02046172",
+                    "@type": [
+                        "http://dig.isi.edu/ontologies/dig/Entity",
+                        "http://dig.isi.edu/ontologies/dig/GeopoliticalEntity"
+                    ],
+                    "@context": {
+                        "prefLabel": "http://www.w3.org/2004/02/skos/core#prefLabel"
+                    },
+                    "prefLabel": [
+                        {
+                            "@value": "Ukrainian"
+                        },
+                        {
+                            "@value": "Ukraines"
+                        },
+                        {
+                            "@value": "Ukraine"
+                        },
+                        {
+                            "@value": "Better Ukraine."
+                        },
+                        {
+                            "@value": "Ukraine's"
+                        },
+                        {
+                            "@value": "Ukrainians"
+                        }
+                    ]
+                },
+                {
+                    "@id": "http://www.isi.edu/dig/entities/dc81cfec-0606-43d2-829f-bb1b02046173"
+                }
+            ]
+        }
+        self.doc2 = {
+            "@id": "http://www.isi.edu/dig/events/ee6c93c3-0b16-4494-926e-f61d7d11b101",
+            "@type": [
+                "http://dig.isi.edu/ontologies/dig/Event",
+                "http://dig.isi.edu/ontologies/dig/CONFLICT_ATTACK"
+            ],
+            "@context": {
+                "prefLabel": "http://www.w3.org/2004/02/skos/core#prefLabel",
+                "conflict_attack_place": "http://dig.isi.edu/ontologies/dig/conflict_attack_place"
+            },
+            "prefLabel": [
+                {
+                    "@value": "shot"
+                }
+            ],
+            "conflict_attack_place": [
+                {
+                    "@id": "http://www.isi.edu/dig/entities/dc81cfec-0606-43d2-829f-bb1b02046172"
+                },
+                {
+                    "@id": "http://www.isi.edu/dig/entities/dc81cfec-0606-43d2-829f-bb1b02046173"
+                }
+            ]
+        }
 
     def test_cdr_1(self):
         converted_docs = sandpaper_utils.convert_jsonld_cdr(self.doc1)
