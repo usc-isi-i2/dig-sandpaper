@@ -7,15 +7,18 @@ import codecs
 _location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
+
 def load_json_file(file_name):
-    rules = json.load(codecs.open(os.path.join(_location__,
-                                               file_name),
-                                  'r', 'utf-8'))
-    return rules
+    with codecs.open(os.path.join(_location__,
+                                  file_name),
+                     'r', 'utf-8') as json_file:
+        rules = json.load(json_file)
+        return rules
 
 
 def initialize_elasticsearch_with_config(es_config={'host': 'localhost',
-                                        'port': 9200}, mapping={}):
+                                                    'port': 9200},
+                                         mapping={}):
     if "endpoints" in es_config:
         endpoints = es_config["endpoints"]
     else:
@@ -26,27 +29,29 @@ def initialize_elasticsearch_with_config(es_config={'host': 'localhost',
     time.sleep(5)
     return endpoints
 
-def initialize_elasticsearch_doc_types(documents_by_type, 
+
+def initialize_elasticsearch_doc_types(documents_by_type,
                                        es_config):
     endpoints = initialize_elasticsearch_with_config(es_config)
-    for (t, docs) in documents_by_type.iteritems():
-      initialize_elasticsearch_docs(endpoints, docs, t)
+    for (t, docs) in documents_by_type.items():
+        initialize_elasticsearch_docs(endpoints, docs, t)
+
 
 def initialize_elasticsearch_docs(endpoints, documents, t="ads"):
     for i, document in enumerate(documents):
         url = '{}/dig-sandpaper-test/{}/{}'.format(endpoints[0], t, i)
         response = requests.put(url,
-                     data=json.dumps(document))
+                                data=json.dumps(document))
         response.raise_for_status()
     time.sleep(5)
 
+
 def initialize_elasticsearch(documents,
-                             es_config, 
+                             es_config,
                              mapping={}):
 
     endpoints = initialize_elasticsearch_with_config(es_config, mapping)
     initialize_elasticsearch_docs(endpoints, documents)
-
 
 
 def reset_elasticsearch(es_config={'host': 'localhost', 'port': 9200}):

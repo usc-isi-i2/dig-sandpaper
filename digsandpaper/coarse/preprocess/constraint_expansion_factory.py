@@ -1,16 +1,10 @@
 from __future__ import unicode_literals
-import json
-import codecs
+from digsandpaper.sandpaper_utils import load_json_file
 import copy
 import uuid
 
 __name__ = "ConstraintExpansion"
 name = __name__
-
-
-def load_json_file(file_name):
-    rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
-    return rules
 
 
 class LambdaConstraintExpander(object):
@@ -159,7 +153,7 @@ class HeightConstraintExpander(LambdaConstraintExpander):
                     height_in_cm = height
                     height_in_inches = height // 2.54
                     return [height_in_inches, "{}'{}\"".format(height_in_inches//12, height_in_inches%12)]
-            if isinstance(clause["constraint"], basestring):
+            if isinstance(clause["constraint"], str):
                 height = clause["constraint"]
                 try:
                     if "cm" in height:

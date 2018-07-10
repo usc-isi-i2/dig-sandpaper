@@ -1,2 +1,2 @@
 #!/bin/bash
-python start.py -s "$@"
+python3 start.py -s "$@"

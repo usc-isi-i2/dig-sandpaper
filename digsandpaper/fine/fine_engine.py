@@ -1,5 +1,3 @@
-import json
-
 class FineEngine(object):
 
     def __init__(self, config):
@@ -11,14 +9,14 @@ class FineEngine(object):
 
     def is_number(s):
         try:
-            float(s) 
+            float(s)
         except ValueError:
             return False
 
         return True
 
     def find_values(self, doc, field_elements):
-        #print field_elements
+        # print field_elements
         while len(field_elements) > 1:
             field_element = field_elements.pop(0)
             if '[' in field_element:
@@ -42,12 +40,12 @@ class FineEngine(object):
                     doc[field_element] = {}
                 doc = doc[field_element]
         field_element = field_elements[0]
-        #print "getting {}".format(field_element)
+        # print "getting {}".format(field_element)
         if isinstance(doc, list):
-            if len(doc)> 0:
+            if len(doc) > 0:
                 values = list()
                 for d in doc:
-                    #print json.dumps(d)
+                    # print json.dumps(d)
                     v = d.get(field_element, None)
                     if v:
                         values.append(v)
@@ -78,80 +76,79 @@ class FineEngine(object):
             result = results.to_dict()
 
             for hit in result["hits"]["hits"]:
-                #print json.dumps(hit["_source"].get("knowledge_graph", "{}").get("ethnicity", {}), indent=4)
 
-                matches = [match.split(":") for match in  hit.get("matched_queries", list())]
+                matches = [match.split(":") for match in hit.get("matched_queries", list())]
                 answer = []
                 for v in variables:
-                    #print "variable {}".format(v)
+                    # print "variable {}".format(v)
 
                     potential_matched_clauses = []
                     if where["variable"] == v["variable"]:
-                        potential_matched_clauses.append({"fields":[{"name":"doc_id","weight":1.0}]})
+                        potential_matched_clauses.append({"fields": [{"name": "doc_id",
+                                                                      "weight": 1.0}]})
                     for c in clauses:
                         if c.get("variable") == v["variable"]:
                             potential_matched_clauses.append(c)
-                    best_field = ""
+                    # best_field = ""
                     best_weight = 0.0
                     best_value = None
                     for c in potential_matched_clauses:
-                        #print json.dumps(c)
+                        # print json.dumps(c)
                         clause_id = c.get("_id", "")
-                        matches_for_clause = [match for match in matches if match[0].startswith(clause_id) and clause_id]
-                        #print "clause_id {}".format(clause_id)
-                        #print "matches for clause {}".format(json.dumps(matches_for_clause))
+                        matches_for_clause = [match for match in matches
+                                              if match[0].startswith(clause_id) and clause_id]
+                        # print "clause_id {}".format(clause_id)
+                        # print "matches for clause {}".format(json.dumps(matches_for_clause))
                         for field in c.get("fields", []):
-                            
                             name = field["name"]
                             if name in ["content_extraction.content_relaxed.text",
-    "content_extraction.content_strict.text",
-    "content_extraction.title.text"]:
+                                        "content_extraction.content_strict.text",
+                                        "content_extraction.title.text"]:
                                 continue
                             weight = field.get("weight", 1.0)
-                            #print "trying {} {}".format(name, weight)
+                            # print "trying {} {}".format(name, weight)
                             value = None
 
                             if len(matches_for_clause) > 0:
-                                #print "matches_for_clause"
+                                # print "matches_for_clause"
                                 for match in matches_for_clause:
                                     if match[1] == name:
-                                         value = match[2]
+                                        value = match[2]
                             else:
                                 field_elements = name.split(".")
-                                #print "split field elements {}".format(field_elements)
+                                # print "split field elements {}".format(field_elements)
                                 value = self.find_values(hit["_source"], field_elements)
-                                #print "found {}".format(value)
+                                # print "found {}".format(value)
 
                             if value:
-                                if isinstance(value, basestring) or not isinstance(value, list):
+                                if isinstance(value, str) or not isinstance(value, list):
                                     val = list()
                                     val.append(value)
                                     value = val
                                 for vv in value:
-                                    #print vv[:10]
+                                    # print vv[:10]
                                     if weight > best_weight:
-                                        #print "best {} {}".format(name, weight)
-                                        best_field = name
+                                        # print "best {} {}".format(name, weight)
+                                        # best_field = name
                                         best_weight = weight
                                         best_value = vv
-                                    elif weight == best_weight and (isinstance(best_value, basestring) 
-                                                                  and isinstance(vv, basestring) 
-                                                                  and len(best_value) < len(vv)):
-                                        #print "updating tie {} {}".format(best_value, vv)
-                                        best_field = name
+                                    elif weight == best_weight and (isinstance(best_value, str) and
+                                                                    isinstance(vv, str) and
+                                                                    len(best_value) < len(vv)):
+                                        # print "updating tie {} {}".format(best_value, vv)
+                                        # best_field = name
                                         best_weight = weight
                                         best_value = vv
-                                    #print best_value
+                                    # print best_value
 
                     if best_value:
-                       answer.append(best_value)
+                        answer.append(best_value)
                     else:
                         answer.append("")
-                answer.append(hit["_score"])  
+                answer.append(hit["_score"])
                 answers.append(answer)
 
             # assume we're aggregating on the first field
-            
             t = query["type"].lower()
 
             if t == "point fact":
@@ -163,7 +160,7 @@ class FineEngine(object):
                     value_count[value] = value_count.get(value, 0) + 1
                 mode_value = None
                 mode_count = None
-                for (k,v) in value_count.iteritems():
+                for (k, v) in value_count.items():
                     if not mode_count:
                         mode_value = k
                         mode_count = v
@@ -173,19 +170,19 @@ class FineEngine(object):
                 answer_context["agg"] = mode_value
             elif t == "avg":
                 count = 0
-                total = 0 
+                total = 0
                 for answer in answers:
                     value = answer[0]
-                    if value and is_number(value):
+                    if value and FineEngine.is_number(value):
                         count = count + 1
                         total = total + float(value)
                 if count > 0:
                     answer_context["agg"] = total / count
             elif t == "min":
-                minimum = None 
+                minimum = None
                 for answer in answers:
                     value = answer[0]
-                    if value and is_number(value):
+                    if value and FineEngine.is_number(value):
                         if not minimum:
                             minimum = float(value)
                         elif float(value) < minimum:
@@ -193,10 +190,10 @@ class FineEngine(object):
                 if minimum:
                     answer_context["agg"] = minimum
             elif t == "max":
-                maximum = None 
+                maximum = None
                 for answer in answers:
                     value = answer[0]
-                    if value and is_number(value):
+                    if value and FineEngine.is_number(value):
                         if not maximum:
                             maximum = float(value)
                         elif float(value) > maximum:

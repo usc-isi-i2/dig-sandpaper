@@ -34,7 +34,7 @@ def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark
     total_provenance_count = 0
     total_key_count = 0
 
-    for (pred, objs) in kg.iteritems():
+    for (pred, objs) in kg.items():
         for obj in objs:
 
             key = obj["key"]
@@ -58,31 +58,38 @@ def index_knowledge_graph_fields(jl, interesting_methods=["extract_from_landmark
             if obj.get("confidence", 0.0) > 0.7:
                 indexed[pred]["high_confidence_keys"].add(key)
 
-            tally = {}
-            for prov in obj["provenance"]:
-                indexed[pred]["provenance_count"] = indexed[pred]["provenance_count"] + 1
-                total_provenance_count = total_provenance_count + 1
-                method = prov.get("method", "other_method")
-                if method not in interesting_methods:
-                    method = "other_method"
-                source = prov.get("source", {})
-                segment = source.get("segment", "other_segment")
-                if segment not in interesting_segments:
-                    segment = "other_segment"
-                if method not in indexed[pred]:
-                    indexed[pred][method] = {}
-                if segment not in indexed[pred][method]:
-                    indexed[pred][method][segment] = []
-                # if result not in indexed[pred][method][segment]:
-                this_added = False
-                if method not in tally:
-                    tally[method] = {}
-                if segment not in tally[method]:
-                    tally[method][segment] = {segment: True}
-                else:
-                    this_added = True
-                if not this_added:
-                    indexed[pred][method][segment].append(result)
+            if 'provenance' in obj:
+                tally = {}
+                for prov in obj["provenance"]:
+                    indexed[pred]["provenance_count"] = indexed[pred]["provenance_count"] + 1
+                    total_provenance_count = total_provenance_count + 1
+                    method = prov.get("method", "other_method")
+                    if method not in interesting_methods:
+                        method = "other_method"
+                    source = prov.get("source", {})
+                    segment = source.get("segment", "other_segment")
+                    if segment not in interesting_segments:
+                        segment = "other_segment"
+                    if method not in indexed[pred]:
+                        indexed[pred][method] = {}
+                    if segment not in indexed[pred][method]:
+                        indexed[pred][method][segment] = []
+                    # if result not in indexed[pred][method][segment]:
+                    this_added = False
+                    if method not in tally:
+                        tally[method] = {}
+                    if segment not in tally[method]:
+                        tally[method][segment] = {segment: True}
+                    else:
+                        this_added = True
+                    if not this_added:
+                        indexed[pred][method][segment].append(result)
+            else:
+                if 'other_method' not in indexed[pred]:
+                    indexed[pred]['other_method'] = {}
+                if 'other_segment' not in indexed[pred]['other_method']:
+                    indexed[pred]['other_method']['other_segment'] = []
+                indexed[pred]['other_method']['other_segment'].append(result)
 
         indexed[pred]["high_confidence_keys"] = list(indexed[pred]["high_confidence_keys"])
     if total_key_count < max_key_count and total_provenance_count < max_provenance_count:

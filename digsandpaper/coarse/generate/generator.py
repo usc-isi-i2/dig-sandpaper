@@ -1,4 +1,4 @@
-import generate_component_factory
+from . import generate_component_factory
 
 
 class Generator(object):

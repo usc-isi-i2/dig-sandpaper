@@ -1,1 +1,1 @@
-python bulk_poster.py "$@"
+python3 bulk_poster.py "$@"
