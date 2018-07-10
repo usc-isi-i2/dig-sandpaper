@@ -91,7 +91,6 @@ ENV/
 
 *.out
 *.err
-*.json
 data/*
 
 *.compiled
