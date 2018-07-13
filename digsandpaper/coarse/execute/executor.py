@@ -1,4 +1,4 @@
-import execute_component_factory
+from . import execute_component_factory
 
 
 class Executor(object):

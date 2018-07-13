@@ -1,1 +1,1 @@
-python digsandpaper/elasticsearch_mapping/generate.py "$@"
+python3 digsandpaper/elasticsearch_mapping/generate.py "$@"

@@ -1,13 +1,7 @@
-import json
-import codecs
+from digsandpaper.sandpaper_utils import load_json_file
 
 __name__ = "TypeFieldMapping"
 name = __name__
-
-
-def load_json_file(file_name):
-    rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
-    return rules
 
 
 class TypeFieldGroupByMapping(object):
@@ -38,7 +32,7 @@ class TypeFieldGroupByMapping(object):
                         t = clause["type"]
                         if t in self.type_field_mapping:
                             fields_array_or_str = self.type_field_mapping[t]
-                            if isinstance(fields_array_or_str, basestring):
+                            if isinstance(fields_array_or_str, str):
                                 clause["agg_fields"].append({"name": fields_array_or_str})
                             else:
                                 for field in fields_array_or_str:
@@ -49,7 +43,7 @@ class TypeFieldGroupByMapping(object):
         if t in self.type_field_mapping:
             c["fields"] = []
             tfm = self.type_field_mapping[t]
-            if isinstance(tfm, basestring):
+            if isinstance(tfm, str):
                 c["fields"].append({"name": tfm})
             else:
                 for field in tfm:

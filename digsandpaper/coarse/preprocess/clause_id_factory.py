@@ -1,9 +1,8 @@
-import json
-import codecs
 import uuid
 
 __name__ = "ClauseIdMapper"
 name = __name__
+
 
 class UUIDClauseIdMapper(object):
 

@@ -7,16 +7,18 @@ import gzip
 import os
 import json
 import requests
-import StringIO
+from io import StringIO
+from io import BytesIO
 import codecs
 from math import log
-from engine import Engine
-from elasticsearch_mapping.generate import generate_from_project_config
-from elasticsearch_mapping.generate import generate_from_etk_config
-from elasticsearch_indexing.index_knowledge_graph import index_knowledge_graph_fields
-from urllib import unquote
-from urlparse import urlparse
+from .engine import Engine
+from .elasticsearch_mapping.generate import generate_from_project_config
+from .elasticsearch_mapping.generate import generate_from_etk_config
+from .elasticsearch_indexing.index_knowledge_graph import index_knowledge_graph_fields
+from urllib.parse import unquote
+from urllib.parse import urlparse
 from copy import deepcopy
+from .sandpaper_utils import load_json_file
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -29,9 +31,10 @@ _location__ = os.path.realpath(
 
 
 def load_project_json_file(file_name):
-    file = json.load(codecs.open(os.path.join(_location__, file_name),
-                                 'r', 'utf-8'))
-    return file
+    with codecs.open(os.path.join(_location__, file_name),
+                     'r', 'utf-8') as json_file:
+        file = json.load(json_file)
+        return file
 
 
 def get_engine(project=None):
@@ -62,7 +65,7 @@ def get_default_es_endpoint(project=None):
         default_es_endpoint = execute_component["endpoints"]
     if "host" in execute_component and "port" in execute_component:
         default_es_endpoint = ["http://{}:{}".format(execute_component["host"],
-                               execute_component["port"])]
+                                                     execute_component["port"])]
     return default_es_endpoint
 
 
@@ -133,7 +136,7 @@ def call_generate_mapping_from_etk_config(etk_config, shards=5):
 @app.route("/mapping/generate/etk", methods=['POST'])
 def generate_mapping_from_etk():
     shards = request.args.get('shards', 5)
-    etk_config = json.loads(request.data)
+    etk_config = request.json
     m = call_generate_mapping_from_etk_config(etk_config, shards=shards)
     return json.dumps(m)
 
@@ -144,7 +147,7 @@ def generate_mapping():
     project = request.args.get('project', None)
     shards = request.args.get('shards', 5)
     if request.data:
-        project_config = json.loads(request.data)
+        project_config = request.json
     else:
         project_config = get_project_config(url, project)
     m = call_generate_mapping(url, project, project_config, shards=shards)
@@ -158,7 +161,7 @@ def add_mapping():
     project = request.args.get('project', None)
     etk = request.args.get('etk', False)
     if etk:
-        etk_config = json.loads(request.data)
+        etk_config = request.json
         m = call_generate_mapping_from_etk_config(etk_config, shards=shards)
         index = request.args.get('index', None)
         if not index:
@@ -166,7 +169,7 @@ def add_mapping():
                    status.HTTP_400_BAD_REQUEST
     else:
         if request.data:
-            project_config = json.loads(request.data)
+            project_config = request.json
         else:
             project_config = get_project_config(url, project)
         m = call_generate_mapping(url, project, project_config, shards=shards)
@@ -175,7 +178,7 @@ def add_mapping():
         endpoint = request.args.get('endpoint')
     else:
         endpoint = get_default_es_endpoint(project)
-    if not isinstance(endpoint, basestring):
+    if not isinstance(endpoint, str):
         endpoint = endpoint[0]
     response = put_url('{}/{}'.format(endpoint, index),
                        data=json.dumps(m))
@@ -200,7 +203,7 @@ def _is_acceptable_content_type(request):
 
 def _index_fields(request):
     if (request.headers['Content-Type'] == 'application/x-gzip'):
-        gz_data_as_file = StringIO.StringIO(request.data)
+        gz_data_as_file = BytesIO(request.data)
         uncompressed = gzip.GzipFile(fileobj=gz_data_as_file, mode='rb')
         jls = uncompressed.read()
     elif (request.headers['Content-Type'] == 'application/json' or
@@ -209,9 +212,10 @@ def _index_fields(request):
     else:
         return ""
     reader = codecs.getreader('utf-8')
-    jls_as_file = reader(StringIO.StringIO(jls))
+    jls_as_file = reader(BytesIO(jls))
     jls = [json.dumps(jl) for jl in [index_knowledge_graph_fields(jl)
-           for jl in jl_file_iterator(jls_as_file)] if jl is not None]
+                                     for jl in jl_file_iterator(jls_as_file)]
+           if jl is not None]
     return jls
 
 
@@ -226,7 +230,7 @@ def index_fields():
     jls = _index_fields(request)
     indexed_jls = "\n".join(jls)
     if (request.headers['Content-Type'] == 'application/x-gzip'):
-        indexed_jls_as_file = StringIO.StringIO()
+        indexed_jls_as_file = StringIO()
         compressed = gzip.GzipFile(mode='wb',
                                    fileobj=indexed_jls_as_file)
         compressed.write(indexed_jls)
@@ -237,14 +241,14 @@ def index_fields():
 
 
 def chunker(seq, size):
-    return (seq[pos:pos + size] for pos in xrange(0, len(seq), size))
+    return (seq[pos:pos + size] for pos in range(0, len(seq), size))
 
 
 @app.route("/indexing", methods=['POST'])
 def index():
     project = request.args.get('project', None)
     endpoint = request.args.get('endpoint', get_default_es_endpoint(project))
-    if not isinstance(endpoint, basestring):
+    if not isinstance(endpoint, str):
         endpoint = endpoint[0]
     index = request.args.get('index', None)
     t = request.args.get('type', "ads")
@@ -296,7 +300,7 @@ def index():
 @app.route("/search", methods=['POST'])
 def search():
     project = request.args.get("project", None)
-    query = json.loads(request.data)
+    query = request.json
     (qs, rs) = get_engine(project).execute_coarse(query)
     answers = get_engine(project).execute_fine(qs, rs)
     return json.dumps(answers)
@@ -312,7 +316,7 @@ def coarse_results_to_dict(r):
 @app.route("/search/coarse", methods=['POST'])
 def coarse():
     project = request.args.get("project", None)
-    query = json.loads(request.data)
+    query = request.json
     log_requests = get_engine(project).config.get("coarse", {}).get("log_requests", None)
     if log_requests:
         with open(os.path.join(log_requests,
@@ -327,7 +331,7 @@ def coarse():
 @app.route("/search/coarse/generate", methods=['POST'])
 def coarse_generate():
     project = request.args.get("project", None)
-    query = json.loads(request.data)
+    query = request.json
     qs = get_engine(project).generate_coarse(query)
     return json.dumps(qs)
 
@@ -351,8 +355,8 @@ def set_engine(e, project=None):
 
 
 def multiply_values(w, multiplier):
-    for k, v in w.iteritems():
-        if isinstance(v, (int, float, long, complex)):
+    for k, v in w.items():
+        if isinstance(v, (int, float, complex)):
             w[k] = v * multiplier
         elif isinstance(v, dict):
             multiply_values(v, multiplier)
@@ -363,7 +367,7 @@ def update_endpoint(config, endpoint):
         execute_component = config["coarse"]["execute"]["components"][0]
         execute_component.pop("host", None)
         execute_component.pop("port", None)
-        if isinstance(endpoint, basestring):
+        if isinstance(endpoint, str):
             endpoints = list()
             endpoints.append(unquote(endpoint))
         else:
@@ -379,7 +383,7 @@ def invert_subproperty_relationships(prop,
         new_supers = list()
         new_supers.extend(supers)
         new_supers.append(prop)
-        for subproperty, subsubproperty_relationships in subproperty_relationships.iteritems():
+        for subproperty, subsubproperty_relationships in subproperty_relationships.items():
             invert_subproperty_relationships(subproperty,
                                              subsubproperty_relationships,
                                              inverted, new_supers)
@@ -432,10 +436,10 @@ def apply_config_from_project(url, project, endpoint, index=None,
 
     pinpoint_config = project_config.get("pinpoint", {})
     if "custom_field_mappings" in pinpoint_config:
-        for t, fields in pinpoint_config["custom_field_mappings"].iteritems():
+        for t, fields in pinpoint_config["custom_field_mappings"].items():
             type_field_mapping[t] = fields
 
-    for field_name, spec in project_config["fields"].iteritems():
+    for field_name, spec in project_config["fields"].items():
         predicate_type_mapping[field_name] = field_name.lower()
         type_group_field_mapping[field_name.lower()] = \
             "indexed.{}.high_confidence_keys".format(field_name)
@@ -469,10 +473,10 @@ def apply_config_from_project(url, project, endpoint, index=None,
     subproperty_relationships = pinpoint_config.get("subproperty_relationships", {})
     inverted_relationships = {}
     if subproperty_relationships:
-        for prop, sp_r in subproperty_relationships.iteritems():
+        for prop, sp_r in subproperty_relationships.items():
             invert_subproperty_relationships(prop, sp_r,
                                              inverted_relationships)
-    for field_name, spec in project_config["fields"].iteritems():
+    for field_name, spec in project_config["fields"].items():
         fields = type_field_mapping[field_name.lower()]
         if not subproperty_relationships:
             if spec.get("type", "string") == "string" and\
@@ -491,8 +495,8 @@ def apply_config_from_project(url, project, endpoint, index=None,
 
 def dereference_config(config):
     if isinstance(config, dict):
-        for k, v in config.iteritems():
-            if isinstance(v, basestring):
+        for k, v in config.items():
+            if isinstance(v, str):
                 if v.endswith('.json'):
                     sub_config = load_json_file(v)
                     config[k] = sub_config
@@ -515,7 +519,7 @@ def config():
         search_importance_enabled = request.args.get('searchimportanceenabled',
                                                      False)
         if request.data and len(request.data) > 0:
-            project_config = json.loads(request.data)
+            project_config = request.json
         else:
             project_config = None
         apply_config_from_project(url, project, endpoint, index,
@@ -534,6 +538,3 @@ def config():
                    status.HTTP_400_BAD_REQUEST
 
 
-def load_json_file(file_name):
-    rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
-    return rules

@@ -1,18 +1,11 @@
 from __future__ import unicode_literals
-import json
 import copy
-import codecs
 import uuid
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 
 __name__ = "ExecuteQueryComponent"
 name = __name__
-
-
-def load_json_file(file_name):
-    rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
-    return rules
 
 
 class ExecuteElasticsearchQuery(object):
@@ -40,8 +33,10 @@ class ExecuteElasticsearchQuery(object):
         return
 
     def teardown(self):
-        print "tearing down connection"
-        connections.remove_connection(self.alias)
+        try:
+            connections.remove_connection(self.alias)
+        except Exception as ke:
+            print("Connection alias {} has already been removed".format(self.alias))
 
     def replace_range_operator(self, v, op, new_value):
         if op in v:
@@ -49,7 +44,7 @@ class ExecuteElasticsearchQuery(object):
                 v[op] = v[op].replace("__placeholder__", new_value.split()[0])
 
     def is_match_placeholder(self, match, clause_id):
-        for (k, v) in match.iteritems():
+        for (k, v) in match.items():
             if isinstance(v, dict):
                 if "_name" in v and v["_name"].startswith(clause_id):
                     if "query" in v:
@@ -57,7 +52,7 @@ class ExecuteElasticsearchQuery(object):
         return False
 
     def replace_value(self, doc, clause_id, new_value):
-        for (k, v) in doc.iteritems():
+        for (k, v) in doc.items():
             if isinstance(v, list):
                 for e in v:
                     if isinstance(e, dict):
@@ -68,12 +63,12 @@ class ExecuteElasticsearchQuery(object):
                         if v["query"] == "__placeholder__":
                             v["query"] = new_value
                             v["_name"] = v["_name"].replace("__placeholder__", new_value)
-                            if isinstance(new_value, basestring):
+                            if isinstance(new_value, str):
                                 terms = len(new_value.split(" "))
                                 if terms > 5:
                                     msm = terms / 2 + 1
                                 elif terms > 1:
-                                    msm = 2#max(1, terms / 2)
+                                    msm = 2  # max(1, terms / 2)
                                 else:
                                     msm = 1
                                 v["minimum_should_match"] = msm
@@ -85,7 +80,7 @@ class ExecuteElasticsearchQuery(object):
 
     def replace_values(self, doc, clause_id, new_values):
         new_bool = None
-        for (k, v) in doc.iteritems():
+        for (k, v) in doc.items():
             if isinstance(v, list):
                 for e in v:
                     if isinstance(e, dict):
@@ -203,13 +198,15 @@ class ExecuteElasticsearchQuery(object):
                 if "clause_fields" not in query:
                     if previous_results and previous_query:
                         previous_results_dict = previous_results.to_dict()
-                        to_insert = self.get_previous_results_from_aggs(previous_query, previous_results_dict)
+                        to_insert = self.get_previous_results_from_aggs(previous_query,
+                                                                        previous_results_dict)
                         if not to_insert or len(to_insert) == 0:
-                             to_insert = self.get_previous_results(previous_query, previous_results_dict)
+                            to_insert = self.get_previous_results(previous_query,
+                                                                  previous_results_dict)
 
                         if isinstance(to_insert, dict):
                             previous_query["variable_to_expanded_values"] = to_insert
-                            for var, clause_ids in previous_query["variable_to_clause_id"].iteritems():
+                            for var, clause_ids in previous_query["variable_to_clause_id"].items():
                                 for clause_id in clause_ids:
                                     self.replace_values(query, clause_id, to_insert[var])
                         else:
@@ -224,7 +221,7 @@ class ExecuteElasticsearchQuery(object):
                     all_results.append(previous_results)
                     previous_query = query
 
-        return response
+        return
 
 
 def get_component(component_config):

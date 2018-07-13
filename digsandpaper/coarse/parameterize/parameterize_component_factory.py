@@ -1,7 +1,7 @@
-import zone_hierarchy_component
-import field_combination_component
-import extractor_hierarchy_component
-import clause_combination_component
+from . import zone_hierarchy_component
+from . import field_combination_component
+from . import extractor_hierarchy_component
+from . import clause_combination_component
 
 
 def get_component(component_config):

@@ -1,4 +1,4 @@
-import execute_query_component
+from . import execute_query_component
 
 
 def get_component(component_config):

@@ -3,9 +3,9 @@ import json
 import codecs
 
 from optparse import OptionParser
-from engine import Engine
-import search_server
-from search_server import update_endpoint
+from .engine import Engine
+from . import search_server
+from .search_server import update_endpoint
 
 
 def load_json_file(file_name):
@@ -68,7 +68,7 @@ def main(args):
     else:
         query = load_json_file(query_file)
         result = engine.execute(query)
-        print result
+        print(result)
 
 
 if __name__ == "__main__":

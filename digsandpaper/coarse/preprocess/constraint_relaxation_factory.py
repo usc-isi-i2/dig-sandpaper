@@ -1,7 +1,6 @@
 __name__ = "ConstraintRelaxation"
 name = __name__
 
-import json
 
 class CombinePredicatesConstraintRelaxer(object):
 
@@ -12,7 +11,7 @@ class CombinePredicatesConstraintRelaxer(object):
         if "clauses" in f:
             if isinstance(f["clauses"], list):
                 return ' '.join([self.preprocess_filter(c)
-                                for c in f["clauses"]]).strip()
+                                 for c in f["clauses"]]).strip()
             elif isinstance(f["clauses"], dict):
                 return ' '.join(self.preprocess_filter(f["clauses"])).strip()
         else:

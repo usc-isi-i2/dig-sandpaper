@@ -1,16 +1,9 @@
-import json
-import codecs
-import compiler
+from digsandpaper.sandpaper_utils import load_json_file
 from types import ModuleType
 
 
 __name__ = "ConstraintConsistency"
 name = __name__
-
-
-def load_json_file(file_name):
-    rules = json.load(codecs.open(file_name, 'r', 'utf-8'))
-    return rules
 
 
 class IdentityConstraintConsistency(object):
@@ -40,13 +33,11 @@ class ConstraintTypeTransformations(object):
         else:
             self.constraint_type_transformations_to_compile = load_json_file(file)
         self.constraint_type_transformations = {}
-        self.constraint_type_transformations["owl:Thing"] = compiler\
-            .compile("value",
-                     filename,
-                     'eval')
-        for key, value in self.constraint_type_transformations_to_compile.iteritems():
-            compiled_transformation = compiler.compile(
-                value, filename, 'eval')
+        self.constraint_type_transformations["owl:Thing"] = compile("value",
+                                                                    filename,
+                                                                    'eval')
+        for key, value in self.constraint_type_transformations_to_compile.items():
+            compiled_transformation = compile(value, filename, 'eval')
             self.constraint_type_transformations[key] = compiled_transformation
 
     def preprocess_filter(self, f):
