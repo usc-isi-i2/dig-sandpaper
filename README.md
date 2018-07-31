@@ -3,19 +3,19 @@
 
 # Docker deployment instructions
 
-`docker run -it -P digsandpaper:digsandpaper`
+`docker run -it -P uscisii2:digsandpaper`
 
 * If you want to provide a custom config file, you can volume mount the config directory
 
-`docker run -it -v config:/etc/sandpaper/config -P digsandpaper:digsandpaper`
+`docker run -it -v config:/etc/sandpaper/config -P uscisii2:digsandpaper`
 
 * By default digsandpaper will use the file at /etc/sandpaper/config/sandpaper.json.  If you need to point to a different config in the mounted volume, create a config directory and put your config in there, and then use the following command
 
-`docker run -it -v config:/etc/sandpaper/config -P digsandpaper:digsandpaper bin/start.sh --config config/your-custom-config.json --host 0.0.0.0`
+`docker run -it -v config:/etc/sandpaper/config -P uscisii2:digsandpaper bin/start.sh --config config/your-custom-config.json --host 0.0.0.0`
 
 * Docker will expose a port that you should be able to query
 
-`docker run -d -p 9876:9876 digsandpaper:digsandpaper`
+`docker run -d -p 9876:9876 uscisii2:digsandpaper`
 `curl -XGET localhost:9876`
 
 # Development instructions

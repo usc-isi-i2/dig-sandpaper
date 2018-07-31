@@ -1,7 +1,7 @@
 version: '3'
 services:
   sandpaper:
-    image: "digsandpaper/digsandpaper"
+    image: "uscisii2/digsandpaper"
     ports: 
       - "9876:9876"
     volumes: 
