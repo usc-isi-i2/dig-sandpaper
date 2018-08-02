@@ -35,12 +35,13 @@ deploy:
 #  on:
 #    tags: true
 #    all_branches: true
+#- provider: script
+#  script: ./docker_deploy.sh
+#  on:
+#    tags: true
+#    all_branches: true
 - provider: script
   script: ./docker_deploy.sh
   on:
-    tags: true
+#    branch: master
     all_branches: true
-- provider: script
-  script: ./docker_deploy.sh
-  on:
-    branch: master
