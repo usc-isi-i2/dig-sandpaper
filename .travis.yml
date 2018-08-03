@@ -22,6 +22,11 @@ notifications:
     secure: aHNsTacns/t+SVGrX9PeMup4L20Zs/xfHvbQXAt25vNvEv411bH5oydEOTMCoJxQqFENdh2ttrUPbhmcvn4VTvw3EVCb7QXHn2j1RWAWtF000QmdISYiRfd++m1RVhXkI+KqVn5+/xp3O9uKi9jfApXjg8uyewPNnHK1L21XuWi0/ZthoRD7YxX2y/PBD9GmoWNbbtEzIipZt41bcRS+QtynRP8Az9UtbccTU1jCEPHwaM5+3POrhfLuZM1K/0lyYqx4JUmb8MZI4RRgTXtGon49zPjNnnIG1ShgmfmYBBzWaD40VPfq6SVbBpzVcAnEaeQXtwI4E9utuSxkNm3axQ8kXtLwaH1360+RUUmthL4mLVzPSRu22FL7sl4YmpgvuNfzY9VRaHNoBfAZ596y7YVVPTUMCH41vzzeFEqR0O90lCeVjWKHCX3VeXacNtydEwYoxKVbEJBeUjuBjzn/N3iwPJ4BkjxdO4LgAovrDnTb32gc7hUP9cR1P6HlUwd61NRYSnnv5qpvlmIZTh+cUGPX55DjJZVor9Em5kaOlwO3qweIFm7WEYhzD4ncPaY6hENbgSM3p0XBx8B6IKndqczphc3NhLHjvObYya6SMZw2lZelvi3kc6mlxjiLatj2YXPRUGDqg9hjPaBdbMFI7dE6WNJivmnIvJiaCCBvgX0=
 
 deploy:
+- provider: script
+  script: ./docker_deploy.sh
+  on:
+    tags: true
+    all_branches: true
 - provider: pypi
   user: digsandpaper
   server: https://upload.pypi.org/legacy/
@@ -31,8 +36,4 @@ deploy:
   on:
     tags: true
     all_branches: true
-- provider: script
-  script: ./docker_deploy.sh
-  on:
-    tags: true
-    all_branches: true
+
