@@ -21,20 +21,22 @@ notifications:
   slack:
     secure: aHNsTacns/t+SVGrX9PeMup4L20Zs/xfHvbQXAt25vNvEv411bH5oydEOTMCoJxQqFENdh2ttrUPbhmcvn4VTvw3EVCb7QXHn2j1RWAWtF000QmdISYiRfd++m1RVhXkI+KqVn5+/xp3O9uKi9jfApXjg8uyewPNnHK1L21XuWi0/ZthoRD7YxX2y/PBD9GmoWNbbtEzIipZt41bcRS+QtynRP8Az9UtbccTU1jCEPHwaM5+3POrhfLuZM1K/0lyYqx4JUmb8MZI4RRgTXtGon49zPjNnnIG1ShgmfmYBBzWaD40VPfq6SVbBpzVcAnEaeQXtwI4E9utuSxkNm3axQ8kXtLwaH1360+RUUmthL4mLVzPSRu22FL7sl4YmpgvuNfzY9VRaHNoBfAZ596y7YVVPTUMCH41vzzeFEqR0O90lCeVjWKHCX3VeXacNtydEwYoxKVbEJBeUjuBjzn/N3iwPJ4BkjxdO4LgAovrDnTb32gc7hUP9cR1P6HlUwd61NRYSnnv5qpvlmIZTh+cUGPX55DjJZVor9Em5kaOlwO3qweIFm7WEYhzD4ncPaY6hENbgSM3p0XBx8B6IKndqczphc3NhLHjvObYya6SMZw2lZelvi3kc6mlxjiLatj2YXPRUGDqg9hjPaBdbMFI7dE6WNJivmnIvJiaCCBvgX0=
 deploy:
-- provider: script
-  script: "./docker_deploy.sh"
-  on:
-    tags: true
-    all_branches: true
-- provider: pypi
-  user: usc_isi_i2_admin
-  server: https://upload.pypi.org/legacy/
-  distributions: sdist
-  password:
-    secure: JPaHGn54lDueJXfF0HjWGjlJpGrVB99KU909hhnDu2XYGJwPa65f+SHL7/bphoabM6mYrX9ufoKDqiIYJ7AQntuGbY01cJXLdomGW0v0slF3a3aQld6HkmHzGjCat0YSfraF2ukRB0WSt2OTe32yEODQ9EMMWLWgNbeu6O7h75t+trEh6rlAlLGooi3M5XcjLMrbXkVS52/1vnvH7zvHsgRDTBrYLsRKrFlYEEbNITVLwiJiifgzgHAHcamSCuFKJnYfI4xqgwgxBhudUaMQB65BBaPHtJ4j7TI3b4YpGbp2LEeGoswIRzIFP1nhE7blGIkcwqReAeFdlW25R8xFUKZtfNnjXLsytciuSYtNOU9toW5EsftmSqWPwtzPUfzvVH3PyU0/KV/m+WrDwfiru0YXQo3BcEjs+ITP4Q1+zqeyJylFe+oughuhPfLVp2gfeoUtzhNhsa1Nu4bkDmILEXk6iGx0tgmEScdHVpi4ctkx04bAJkDEysN8N99k31QyvY2XJFASwzaFSTRBGU5TeVJjZjKYuoVaarDLZpjMbB0u3V69Boq2cglURS50fvdjHQmtdRXXWaiPXQ8r/f0txdVcTSiTtcivvLSXumQFUj3C335Hajk4lLh8GYweilvXbXcAprL4GOQYpG0OGiVHijVO4zKyH7T5Rw1CINaBWsA=
-  on:
-    tags: true
-    all_branches: true
+  matrix:
+  - provider: script
+    script: "./docker_deploy.sh"
+    on:
+      tags: true
+      all_branches: true
+  - provider: pypi
+    user: usc_isi_i2_admin
+    server: https://upload.pypi.org/legacy/
+    distributions: sdist
+    password:
+      secure: Q6TuwPvaHzVWG7Z5pIrs3P2yzKsk+/N/XM/iTpY6nzmDZVl+WbsIWqS8Nc0WxmtYqjvpMBpn7WWIB2igdAh9A7qXgQ+Ysk3WT/ek9zhcY1jfnRXXbC3e+LFKkJOv1EJoNBYWT6dZWdUCfZbk71gmZc71OHqmVL2iYjix0wzN/GZ9kKWTzZFQRTqoe+dEpc2dGASiy9BShYI7hkkoMXfk+JmlyfJpE9woJuKp94UTLqNyi6SFXbXqRrciTsR1D1P8CwvO1y4xcbSkPp1Rbhs/vIHA4NQSbd40KjZs0zPdBxtoD649hhN2eq9/aeUZ66rOWBhAA+P1FeUtIUOxUI/f6CFZQHltvaG5+iYd0CdVAYzewrzqo5Wf5rgyqXFBoD5Aci2DZ5cbePNY3os2suOd+/Ue0WHeeLuzJnBZQs4cN1w80qaVd1dze7NDzxd7MPri7tj3xRwfKjTxd3Jln4q9gnhiMDrfUlEpJX1x75Z2Z9yhQjHA242okVwnwyr8+6FCy2gowSzSnN5Qq2jGmzF+1cJfVAPrvxr9LQ5xvS4zhP2B62lCHI2ftXZDYTGXV8frNz8UrRVkCPBDA5o3ci8XQ0rc+rVDdYXaupsqsgkk9ZVrg73HITuQVnrCqZhiDPCQ2in/6ke9W7G0VB7UMXuTerrWWktQ1dBMzAh40ltPJZw=
+    on:
+      tags: true
+      all_branches: true
+
 env:
   global:
   - secure: JPaHGn54lDueJXfF0HjWGjlJpGrVB99KU909hhnDu2XYGJwPa65f+SHL7/bphoabM6mYrX9ufoKDqiIYJ7AQntuGbY01cJXLdomGW0v0slF3a3aQld6HkmHzGjCat0YSfraF2ukRB0WSt2OTe32yEODQ9EMMWLWgNbeu6O7h75t+trEh6rlAlLGooi3M5XcjLMrbXkVS52/1vnvH7zvHsgRDTBrYLsRKrFlYEEbNITVLwiJiifgzgHAHcamSCuFKJnYfI4xqgwgxBhudUaMQB65BBaPHtJ4j7TI3b4YpGbp2LEeGoswIRzIFP1nhE7blGIkcwqReAeFdlW25R8xFUKZtfNnjXLsytciuSYtNOU9toW5EsftmSqWPwtzPUfzvVH3PyU0/KV/m+WrDwfiru0YXQo3BcEjs+ITP4Q1+zqeyJylFe+oughuhPfLVp2gfeoUtzhNhsa1Nu4bkDmILEXk6iGx0tgmEScdHVpi4ctkx04bAJkDEysN8N99k31QyvY2XJFASwzaFSTRBGU5TeVJjZjKYuoVaarDLZpjMbB0u3V69Boq2cglURS50fvdjHQmtdRXXWaiPXQ8r/f0txdVcTSiTtcivvLSXumQFUj3C335Hajk4lLh8GYweilvXbXcAprL4GOQYpG0OGiVHijVO4zKyH7T5Rw1CINaBWsA=
