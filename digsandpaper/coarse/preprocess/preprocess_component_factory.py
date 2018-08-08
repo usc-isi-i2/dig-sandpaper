@@ -6,13 +6,15 @@ from . import sparql_reordering_factory
 from . import constraint_relaxation_factory
 from .constraint_type_mapper_factory import PredicateDictConstraintTypeMapper
 from .clause_id_factory import UUIDClauseIdMapper
+from . import constraint_remap_factory
 
 component_order = {constraint_type_mapper_factory.name: 1,
                    sparql_reordering_factory.name: 2,
                    clause_id_factory.name: 3,
                    constraint_consistency_factory.name: 4,
                    constraint_expansion_factory.name: 5,
-                   constraint_relaxation_factory.name: 6}
+                   constraint_relaxation_factory.name: 6,
+                   constraint_remap_factory.name: 7}
 
 
 def get_component(component_config):
@@ -29,6 +31,8 @@ def get_component(component_config):
         return sparql_reordering_factory.get_component(component_config)
     elif component_type == constraint_relaxation_factory.name:
         return constraint_relaxation_factory.get_component(component_config)
+    elif component_type == constraint_remap_factory.name:
+        return constraint_remap_factory.get_component(component_config)
     else:
         raise ValueError(
             "Unsupported component type: {}".format(component_type))

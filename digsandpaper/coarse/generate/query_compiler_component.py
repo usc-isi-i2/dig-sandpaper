@@ -3,15 +3,14 @@ from digsandpaper.sandpaper_utils import load_json_file
 import copy
 import re
 from elasticsearch_dsl import Search, A
-from elasticsearch_dsl.query import Match, MatchPhrase, DisMax,\
-    Bool, Exists, ConstantScore, Range, FunctionScore, SF
+from elasticsearch_dsl.query import Match, MatchPhrase, DisMax, \
+    Bool, Exists, ConstantScore, Range, FunctionScore, SF, Ids
 
 __name__ = "QueryCompiler"
 name = __name__
 
 
 class ElasticsearchQueryCompiler(object):
-
     name = "ElasticsearchQueryCompiler"
     component_type = __name__
 
@@ -119,7 +118,7 @@ class ElasticsearchQueryCompiler(object):
                     return Match(**match_params)
 
     def translate_clause(self, clause, field):
-        if("constraint" in clause):
+        if "constraint" in clause:
             match_params = {}
             query_type = clause.get("query_type", "match")
             match_field_params = {}
@@ -134,8 +133,8 @@ class ElasticsearchQueryCompiler(object):
                 match_params_mp = {}
                 match_field_params_mp = copy.copy(match_field_params)
                 if self.elasticsearch_compiler_options.get("boost_text", True):
-                    match_field_params_mp["boost"] = match_field_params_mp["boost"] *\
-                        len(clause.get("constraint").split(" "))
+                    match_field_params_mp["boost"] = match_field_params_mp["boost"] * \
+                                                     len(clause.get("constraint").split(" "))
                 match_field_params_mp["_name"] = match_field_params_mp["_name"] + ":match_phrase"
                 match_params_mp[field["name"]] = match_field_params_mp
                 match_field_params_mp["slop"] = 10
@@ -304,17 +303,17 @@ class ElasticsearchQueryCompiler(object):
 
         s = self.generate_source_fields(s, source_fields)
 
-        if query["type"].lower() == "point fact" and\
-           'predicate_scoring_coefficients' in\
-           self.elasticsearch_compiler_options:
-                psc = self.elasticsearch_compiler_options['predicate_scoring_coefficients']
-                functions = []
-                for key, value in psc.items():
-                    field = "doc['knowledge_graph.{}.key'].value".format(key)
-                    sf = SF('script_score', script="_score*{}*{}".format(value, field))
-                    functions.append(sf)
-                fs = FunctionScore(query=s.query, functions=functions)
-                s.query = fs
+        if query["type"].lower() == "point fact" and \
+                'predicate_scoring_coefficients' in \
+                self.elasticsearch_compiler_options:
+            psc = self.elasticsearch_compiler_options['predicate_scoring_coefficients']
+            functions = []
+            for key, value in psc.items():
+                field = "doc['knowledge_graph.{}.key'].value".format(key)
+                sf = SF('script_score', script="_score*{}*{}".format(value, field))
+                functions.append(sf)
+            fs = FunctionScore(query=s.query, functions=functions)
+            s.query = fs
 
         limit = 20
         offset = 0
@@ -365,7 +364,7 @@ class ElasticsearchQueryCompiler(object):
                     s.aggs.bucket(sv["variable"], a)
         elif query["type"].lower() == "point fact":
             if "order-by" in query["SPARQL"] and \
-               "values" in query["SPARQL"]["order-by"]:
+                    "values" in query["SPARQL"]["order-by"]:
                 order_by_clauses = []
                 for order_by_value in query["SPARQL"]["order-by"]["values"]:
                     asc_or_desc = order_by_value.get("order", "asc")
@@ -403,9 +402,15 @@ class ElasticsearchQueryCompiler(object):
 
         return es_clause
 
+    def translate_values_helper(self, clause):
+        if 'query_type' in clause and clause['query_type'] == 'ids':
+            es_clause = Ids(values=clause['values'])
+            return es_clause
+        return None
+
     def boosting_musts_and_shoulds_enabled(self, musts):
-        return self.elasticsearch_compiler_options.get("boost_shoulds", False) or\
-            ("boost_musts" in self.elasticsearch_compiler_options and
+        return self.elasticsearch_compiler_options.get("boost_shoulds", False) or \
+               ("boost_musts" in self.elasticsearch_compiler_options and
                 len(musts) > 0)
 
     def should_contains_filter(self, should):
@@ -415,7 +420,7 @@ class ElasticsearchQueryCompiler(object):
         return False
 
     def boost_musts_and_shoulds(self, q, musts, shoulds, filters, must_nots):
-        if "boost_musts" in self.elasticsearch_compiler_options\
+        if "boost_musts" in self.elasticsearch_compiler_options \
                 and len(musts) == 1:
             shoulds.extend(musts)
             q = Bool(should=shoulds,
@@ -437,11 +442,11 @@ class ElasticsearchQueryCompiler(object):
             if len(shoulds) > 0 and len(shoulds) != filter_count:
                 extra_minimum_should_match = filter_count
 
-                if len(shoulds) >= 2 and "boost_shoulds"\
+                if len(shoulds) >= 2 and "boost_shoulds" \
                         in self.elasticsearch_compiler_options:
-                    extra_minimum_should_match = extra_minimum_should_match +\
-                        self.elasticsearch_compiler_options\
-                            .get("extra_minimum_should_match", 1)
+                    extra_minimum_should_match = extra_minimum_should_match + \
+                                                 self.elasticsearch_compiler_options \
+                                                     .get("extra_minimum_should_match", 1)
                 for x in range(0,
                                max(1,
                                    len(shoulds) - extra_minimum_should_match)):
@@ -510,7 +515,7 @@ class ElasticsearchQueryCompiler(object):
                     for uc in c["clauses"]:
                         if uc["predicate"] not in sub_query["predicate_to_constraints"]:
                             sub_query["predicate_to_constraints"][uc["predicate"]] = list()
-                        sub_query["predicate_to_constraints"][uc["predicate"]].\
+                        sub_query["predicate_to_constraints"][uc["predicate"]]. \
                             append(uc["constraint"])
         sub_query["search"]
 
@@ -594,6 +599,7 @@ class ElasticsearchQueryCompiler(object):
         where_clauses = where["clauses"]
         source_fields = set()
 
+        ids = []
         musts = []
         shoulds = []
         filters = []
@@ -617,8 +623,11 @@ class ElasticsearchQueryCompiler(object):
             if "fields" in clause:
                 fields = clause["fields"]
                 source_fields |= set([field["name"] for field in fields])
-            if("constraint" in clause):
+            if "constraint" in clause:
                 es_clause = self.translate_clause_helper(clause, fields, True)
+            elif "values" in clause:
+                es_clause = self.translate_values_helper(clause)
+
             elif "clauses" in clause:
                 sub_query = self.generate_subquery(query,
                                                    where,
@@ -630,13 +639,15 @@ class ElasticsearchQueryCompiler(object):
             else:
                 # this is a we need an answer for this clause
                 if "filter_for_fields_of_unbound_variables" \
-                   not in self.elasticsearch_compiler_options or \
-                   self.elasticsearch_compiler_options["filter_for_fields_of_unbound_variables"]:
+                        not in self.elasticsearch_compiler_options or \
+                        self.elasticsearch_compiler_options["filter_for_fields_of_unbound_variables"]:
                     es_clause = self.translate_clause_helper(clause, fields, False)
                 else:
                     es_clause = None
             if es_clause:
-                if clause.get("isOptional", False):
+                if clause.get("query_type") == 'ids':
+                    ids.append(es_clause)
+                elif clause.get("isOptional", False):
                     predicate = clause.get("predicate")
                     if predicate not in shoulds_by_predicate:
                         shoulds_by_predicate[predicate] = list()
@@ -717,19 +728,23 @@ class ElasticsearchQueryCompiler(object):
             shoulds.extend(converted_filters)
             filters = valid_filters
 
-        if len(musts) > 0 or not shoulds:
-            msm = 0
-        else:
-            msm = 1
+        if len(ids) > 0:
+            q = ids[0]
 
-        q = Bool(must=musts,
-                 should=shoulds,
-                 filter=filters,
-                 must_not=must_nots,
-                 minimum_should_match=msm)
-        if self.boosting_musts_and_shoulds_enabled(musts):
-            q = self.boost_musts_and_shoulds(q, musts, shoulds,
-                                             filters, must_nots)
+        else:
+            if len(musts) > 0 or not shoulds:
+                msm = 0
+            else:
+                msm = 1
+
+            q = Bool(must=musts,
+                     should=shoulds,
+                     filter=filters,
+                     must_not=must_nots,
+                     minimum_should_match=msm)
+            if self.boosting_musts_and_shoulds_enabled(musts):
+                q = self.boost_musts_and_shoulds(q, musts, shoulds,
+                                                 filters, must_nots)
 
         s = Search()
         s.query = q
