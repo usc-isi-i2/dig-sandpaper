@@ -38,9 +38,16 @@ class CoarseEngine(object):
         # postprocess
         postprocessed_results = []
         for q, r in zip(generated_queries, results):
-            postprocessed_results.append(self.postprocessor.postprocess(q, r.to_dict()))
+            postprocessed_results.append(self.postprocessor.postprocess(q, self.coarse_results_to_dict(r)))
 
         return generated_queries, postprocessed_results
 
     def teardown(self):
         self.executor.teardown()
+
+    @staticmethod
+    def coarse_results_to_dict(r):
+        if isinstance(r, list):
+            return [rr.to_dict() for rr in r]
+        else:
+            return r.to_dict()

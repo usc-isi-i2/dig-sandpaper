@@ -73,7 +73,7 @@ class FineEngine(object):
                 answer_variables.append(v["variable"])
             answer_variables.append("_score")
 
-            result = results.to_dict()
+            result = results
 
             for hit in result["hits"]["hits"]:
 
