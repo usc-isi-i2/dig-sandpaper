@@ -46,6 +46,11 @@ config/*
 bin/start.sh --config config/basic/config.json
 ```
 
+* Run Elasticsearch server locally and run unit tests
+```
+python -W ignore -m unittest discover
+```
+
 * Notes
 Currently the config files use relative paths that will be resolved relative to the directory you're running the start.sh script from.  You'll want to preserve the directory structure in the meantime.  
 
