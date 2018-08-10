@@ -324,7 +324,8 @@ def coarse():
                   "a") as myfile:
             myfile.write(json.dumps(query) + '\n')
     (qs, rs) = get_engine(project).execute_coarse(query)
-    qs_with_rs = [{"query": q, "result": coarse_results_to_dict(r)} for q, r in zip(qs, rs)]
+    # qs_with_rs = [{"query": q, "result": coarse_results_to_dict(r)} for q, r in zip(qs, rs)]
+    qs_with_rs = [{"query": q, "result": r} for q, r in zip(qs, rs)]
     return json.dumps(qs_with_rs)
 
 

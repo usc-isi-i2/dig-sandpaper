@@ -245,6 +245,15 @@
           "name": "ElasticsearchQueryCompiler"
         }
       ]
+    },
+    "postprocess": {
+      "components": [
+        {
+          "type": "DocumentsRerank",
+          "name": "SimilarityScoreRerank",
+          "sort": "desc"
+        }
+      ]
     }
   },
   "indexing": {
