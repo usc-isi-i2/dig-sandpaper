@@ -1,0 +1,29 @@
+{
+  "SPARQL": {
+    "group-by": {
+      "limit": 10,
+      "offset": 0
+    },
+    "select": {
+      "variables": [
+        {
+          "type": "simple",
+          "variable": "?ad"
+        }
+      ]
+    },
+    "where": {
+      "clauses": [
+        {
+          "constraint": "what is the question of the universe",
+          "isOptional": false,
+          "predicate": "keywords"
+        }
+      ],
+      "filters": [],
+      "type": "Ad",
+      "variable": "?ad"
+    }
+  },
+  "type": "Point Fact"
+}
