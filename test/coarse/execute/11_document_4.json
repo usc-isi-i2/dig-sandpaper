@@ -1,0 +1,26 @@
+{
+  "doc_id": "f59e376140c150f20b4698f8bcca5dc1d1c8a3653d38788842891000579bab49",
+  "knowledge_graph": {
+    "rank": [
+      {
+        "key": 0.9,
+        "value": 0.9
+      }
+    ]
+  },
+  "indexed": {
+    "city": {
+      "high_confidence_keys": [
+        "solvang"
+      ],
+      "other_method": {
+        "other_segment": [
+          {
+            "value": "solvang",
+            "key": "solvang"
+          }
+        ]
+      }
+    }
+  }
+}

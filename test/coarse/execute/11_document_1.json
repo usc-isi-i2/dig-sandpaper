@@ -1,0 +1,26 @@
+{
+  "doc_id": "376bb709f21c0d639be8e354026aa1092c34671bc73fb909377db2cd8b7bf7df",
+  "knowledge_graph": {
+    "rank": [
+      {
+        "key": 0.9,
+        "value": 0.9
+      }
+    ]
+  },
+  "indexed": {
+    "city": {
+      "high_confidence_keys": [
+        "san jose"
+      ],
+      "other_method": {
+        "other_segment": [
+          {
+            "value": "san jose",
+            "key": "san jose"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "doc_id": "6236905504cbfdb4747244bc1559b15166e52ddb4598acbe1f21df6764f77cc9",
+  "knowledge_graph": {
+    "rank": [
+      {
+        "key": 0.9,
+        "value": 0.9
+      }
+    ]
+  },
+  "indexed": {
+    "city": {
+      "high_confidence_keys": [
+        "san francisco"
+      ],
+      "other_method": {
+        "other_segment": [
+          {
+            "value": "san francisco",
+            "key": "san francisco"
+          }
+        ]
+      }
+    }
+  }
+}

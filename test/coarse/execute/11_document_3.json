@@ -1,0 +1,26 @@
+{
+  "doc_id": "16c19707455a2bd5f7d5cec469f512ca3a07559409a5a1b164a9ef13fd8a90cc",
+  "knowledge_graph": {
+    "rank": [
+      {
+        "key": 0.9,
+        "value": 0.9
+      }
+    ]
+  },
+  "indexed": {
+    "city": {
+      "high_confidence_keys": [
+        "sacramento"
+      ],
+      "other_method": {
+        "other_segment": [
+          {
+            "value": "sacramento",
+            "key": "sacramento"
+          }
+        ]
+      }
+    }
+  }
+}

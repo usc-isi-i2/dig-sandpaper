@@ -1,0 +1,26 @@
+{
+  "doc_id": "ed85fa9269d02fa9e360bff82b8dd9af0be51319f1f918bfb22be578104d1031",
+  "knowledge_graph": {
+    "rank": [
+      {
+        "key": 0.9,
+        "value": 0.9
+      }
+    ]
+  },
+  "indexed": {
+    "city": {
+      "high_confidence_keys": [
+        "los angeles"
+      ],
+      "other_method": {
+        "other_segment": [
+          {
+            "value": "los angeles",
+            "key": "los angeles"
+          }
+        ]
+      }
+    }
+  }
+}
