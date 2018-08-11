@@ -1,0 +1,9 @@
+{
+  "components": [
+    {
+      "type": "DocumentsRerank",
+      "name": "SimilarityScoreRerank",
+      "sort": "desc"
+    }
+  ]
+}
