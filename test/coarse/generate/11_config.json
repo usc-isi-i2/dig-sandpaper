@@ -1,0 +1,129 @@
+{
+  "components": [
+    {
+      "type": "TypeFieldMapping",
+      "name": "TypeFieldMapping",
+      "type_field_mappings": {
+        "owl:Thing": [
+          "content_extraction.title.text"
+        ],
+        "Ad": [
+          "doc_id"
+        ],
+        "content": [
+          "content_extraction.title.text"
+        ],
+        "topleveldomain": [
+          "tld.raw",
+          "tld"
+        ],
+        "url": [
+          "url",
+          "url.raw",
+          "tld"
+        ],
+        "image": [
+          "objects.img_sha1"
+        ],
+        "timestamp": [
+          "timestamp"
+        ],
+        "timestampcrawl": [
+          "timestamp_crawl"
+        ]
+      }
+    },
+    {
+      "type": "TypeFieldMapping",
+      "name": "TypeFieldGroupByMapping",
+      "type_field_mappings": {
+        "owl:Thing": [
+          "content_extraction.content_strict.text"
+        ],
+        "topleveldomain": [
+          "tld.raw"
+        ],
+        "url": [
+          "url.raw"
+        ],
+        "image": [
+          "objects.img_sha1"
+        ],
+        "timestamp": [
+          "timestamp"
+        ],
+        "timestampcrawl": [
+          "timestamp_crawl"
+        ]
+      }
+    },
+    {
+      "type": "FieldWeightMapping",
+      "name": "FieldWeightMapping",
+      "field_weight_mappings": {
+        "tld": {
+          "*": 10
+        },
+        "raw_content": 1,
+        "content_extraction": {
+          "content_relaxed": {
+            "*": 1
+          },
+          "content_strict": {
+            "*": 2
+          },
+          "title": {
+            "*": 3
+          }
+        },
+        "indexed": {
+          "website": {
+            "*": {
+              "*": {
+                "value": 5.1,
+                "key": 20.1
+              }
+            }
+          },
+          "*": {
+            "extract_from_landmark": {
+              "*": {
+                "value": 5,
+                "key": 10.1
+              },
+              "other_segment": {
+                "value": 2.1,
+                "key": 5.1
+              }
+            },
+            "*": {
+              "*": {
+                "value": 3,
+                "key": 6.1
+              },
+              "other_segment": {
+                "value": 2.1,
+                "key": 5.1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "TypeQueryMapping",
+      "name": "TypeQueryMapping",
+      "type_query_mappings": {
+        "title": "match_phrase",
+        "_id": "ids"
+      }
+    },
+    {
+      "type_doc_type_mappings": {
+        "Ad": "ads"
+      },
+      "type": "TypeDocTypeMapping",
+      "name": "TypeDocTypeMapping"
+    }
+  ]
+}
