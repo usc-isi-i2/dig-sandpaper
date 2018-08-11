@@ -16,8 +16,8 @@ class SearchServerTestCaseCoarse(unittest.TestCase):
         search_server.get_engine().teardown()
 
     def helper_setup(self, i, additional_documents_suffixes=[],
-                     has_mapping=False):
-        config = test_utils.load_engine_configuration(i)
+                     has_mapping=False, postprocess=False):
+        config = test_utils.load_engine_configuration(i, postprocess)
         engine = Engine(config)
         query = test_utils.load_sub_configuration("coarse", "preprocess",
                                                   i, "_query.json")
@@ -43,10 +43,10 @@ class SearchServerTestCaseCoarse(unittest.TestCase):
         return (query, es_config)
 
     def helper_test_coarse(self, i, additional_documents_suffixes=[],
-                           has_mapping=False):
+                           has_mapping=False, postprocess=False):
         (query, es_config) = self.helper_setup(i,
                                                additional_documents_suffixes,
-                                               has_mapping)
+                                               has_mapping, postprocess)
 
         headers = {'Content-Type': 'application/json'}
         response = self.app.post('/search/coarse', data=json.dumps(query),
@@ -80,8 +80,8 @@ class SearchServerTestCaseCoarse(unittest.TestCase):
         results_6 = self.helper_test_coarse(6, has_mapping=True)
         self.assertEqual(len(results_6), 1)
         self.assertEqual(results_6[0]["result"]["aggregations"]
-                                     ["?ethnicity"]["buckets"]
-                                     [0]["doc_count"], 1)
+                         ["?ethnicity"]["buckets"]
+                         [0]["doc_count"], 1)
 
     def test_coarse_7(self):
         results_7 = self.helper_test_coarse(7, ["2", "3"])
@@ -113,6 +113,17 @@ class SearchServerTestCaseCoarse(unittest.TestCase):
         self.assertEqual("DEFGHIJKLMNOPQABCD", hits[1]["_source"]["doc_id"])
         self.assertEqual("GHIJKLMNOPQABCDEF", hits[2]["_source"]["doc_id"])
         self.assertEqual("JKLMNOPQABCDEFGHI", hits[3]["_source"]["doc_id"])
+
+    def test_coarse_11(self):
+        results_11 = self.helper_test_coarse(11, ["1", "2", "3", "4"], has_mapping=False, postprocess=True)
+        self.assertEqual(len(results_11[0]["result"]["hits"]["hits"]), 5)
+        hits = results_11[0]["result"]["hits"]["hits"]
+        self.assertEqual("376bb709f21c0d639be8e354026aa1092c34671bc73fb909377db2cd8b7bf7df",
+                         hits[0]["_source"]["doc_id"])
+        self.assertEqual(0.88, hits[0]["_score"])
+        self.assertEqual("6236905504cbfdb4747244bc1559b15166e52ddb4598acbe1f21df6764f77cc9",
+                         hits[4]["_source"]["doc_id"])
+        self.assertEqual(0.72, hits[4]["_score"])
 
 
 if __name__ == '__main__':
