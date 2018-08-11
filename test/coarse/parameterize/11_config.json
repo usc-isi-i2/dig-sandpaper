@@ -1,0 +1,12 @@
+{
+  "components": [
+    {
+      "type": "ClauseCombination",
+      "name": "NoClauseCombination"
+    },
+    {
+      "type": "FieldCombination",
+      "name": "AtLeastOneFieldCombination"
+    }
+  ]
+}
