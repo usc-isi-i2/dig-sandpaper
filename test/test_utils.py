@@ -39,7 +39,7 @@ def initialize_elasticsearch_doc_types(documents_by_type,
 
 def initialize_elasticsearch_docs(endpoints, documents, t="ads"):
     for i, document in enumerate(documents):
-        url = '{}/dig-sandpaper-test/{}/{}'.format(endpoints[0], t, i)
+        url = '{}/dig-sandpaper-test/{}/{}'.format(endpoints[0], t, document['doc_id'] if 'doc_id' in document else i)
         response = requests.put(url,
                                 data=json.dumps(document))
         response.raise_for_status()
@@ -49,7 +49,6 @@ def initialize_elasticsearch_docs(endpoints, documents, t="ads"):
 def initialize_elasticsearch(documents,
                              es_config,
                              mapping={}):
-
     endpoints = initialize_elasticsearch_with_config(es_config, mapping)
     initialize_elasticsearch_docs(endpoints, documents)
 
@@ -69,7 +68,7 @@ def load_sub_configuration(coarse_or_fine,
                                               file_suffix))
 
 
-def load_engine_configuration(test_case_number):
+def load_engine_configuration(test_case_number, postprocess=False):
     config = {}
     coarse_config = {}
     coarse_config["preprocess"] = load_sub_configuration("coarse",
@@ -91,6 +90,11 @@ def load_engine_configuration(test_case_number):
     coarse_config["execute"] = load_sub_configuration("coarse",
                                                       "execute",
                                                       test_case_number)
+
+    if postprocess:
+        coarse_config["postprocess"] = load_sub_configuration("coarse",
+                                                              "postprocess",
+                                                              test_case_number)
     config["coarse"] = coarse_config
     config["fine"] = {}
     return config
