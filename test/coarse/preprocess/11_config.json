@@ -1,0 +1,52 @@
+{
+  "components": [
+    {
+      "type": "ConstraintTypeMapper",
+      "name": "PredicateDictConstraintTypeMapper",
+      "predicate_range_mappings": {
+        "tld": "topleveldomain",
+        "url": "url",
+        "image": "image",
+        "timestamp": "timestamp",
+        "timestamp_crawl": "timestampcrawl",
+        "website": "website",
+        "city": "city",
+        "description": "description",
+        "title": "title",
+        "country": "country",
+        "name_person": "name_person",
+        "source": "source",
+        "state": "state",
+        "name_organization": "name_organization",
+        "city_name": "city_name",
+        "posting_date": "posting_date",
+        "states_usa_codes": "states_usa_codes"
+      }
+    },
+    {
+      "type": "ConstraintConsistency",
+      "name": "ConstraintTypeTransformations",
+      "constraint_type_transformations": {
+        "title": "' '.join([v for v in value.split(' ') if v not in ['i', 'am', 'the', 'a', 'an', 'in', 'is', 'for']])",
+        "description": "' '.join(v for v in value.split(' ') if v not in ['i', 'am', 'the', 'a', 'an', 'in', 'is', 'for'])",
+        "content": "' '.join(v for v in value.split(' ') if v not in ['i', 'am', 'the', 'a', 'an', 'in', 'is', 'for'])"
+      }
+    },
+    {
+      "type": "ConstraintExpansion",
+      "name": "HeightConstraintExpander"
+    },
+    {
+      "type": "ConstraintExpansion",
+      "name": "PhoneConstraintExpander"
+    },
+    {
+      "type": "ConstraintReMapping",
+      "name": "ConstraintReMapSimilarity",
+      "constraint_remap_config": {
+        "similarity_url": "http://urlsoonavailable.com",
+        "k": 10
+      }
+    }
+  ]
+}
