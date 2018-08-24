@@ -27,68 +27,16 @@ class ConstraintReMapSimilarity(object):
         :param keywords:
         :return:
         """
-        # similarity_url = '{}?query={}&k={}'.format(self.constraint_remap_config['similarity_url'],
-        #                                            keywords, self.constraint_remap_config['k'])
-        # similar_docs = list()
-        # try:
-        #     response = requests.get(similarity_url)
-        #     if response.status_code == 200:
-        #         similar_docs.extend(response.json())
-        # except Exception as e:
-        #     print('Error: {}, while calling document similarity for query: {}'.format(e, keywords))
+        payload = {'query': keywords, 'k': self.constraint_remap_config['k']}
 
-        similar_docs = [
-            {
-                "doc_id": "376bb709f21c0d639be8e354026aa1092c34671bc73fb909377db2cd8b7bf7df",
-                "score": 0.88,
-                "sentence": "Some sentence"
-            },
-            {
-                "doc_id": "ed85fa9269d02fa9e360bff82b8dd9af0be51319f1f918bfb22be578104d1031",
-                "score": 0.86,
-                "sentence": "Some sentence"
-            },
-            {
-                "doc_id": "16c19707455a2bd5f7d5cec469f512ca3a07559409a5a1b164a9ef13fd8a90cc",
-                "score": 0.85,
-                "sentence": "Some sentence"
-            },
-            {
-                "doc_id": "f59e376140c150f20b4698f8bcca5dc1d1c8a3653d38788842891000579bab49",
-                "score": 0.77,
-                "sentence": "Some sentence"
-            },
-            {
-                "doc_id": "6236905504cbfdb4747244bc1559b15166e52ddb4598acbe1f21df6764f77cc9",
-                "score": 0.72,
-                "sentence": "Some sentence"
-            },
-            {
-                "doc_id": "d3f9a7bdbd913347dc0d70bf28f97a6d1985eff0bc989b857ba2fdbaea9ae8f7",
-                "score": 0.66,
-                "sentence": "Some sentence"
-            },
-            {
-                "doc_id": "e8edc4cba8caeaad9975ed00eca960120688652918c28bce4bbe3655b043b0f7",
-                "score": 0.5,
-                "sentence": "Some sentence"
-            },
-            {
-                "doc_id": "85657fc04e1e93f8083ee9c91783988d03e087e13f3fc744d3adc43564aae69b",
-                "score": 0.44,
-                "sentence": "Some sentence"
-            },
-            {
-                "doc_id": "2aa50c9230dd59a54983b99de75004584a9786579d6004021b8d849d9dbc9d6b",
-                "score": 0.32,
-                "sentence": "Some sentence"
-            },
-            {
-                "doc_id": "4e20cc7681b5c9bbea28b04cfa44a7846699ec40f8982ce678b60981f9f19545",
-                "score": 0.09,
-                "sentence": "Some sentence"
-            }
-        ]
+        similar_docs = list()
+        try:
+            response = requests.get(self.constraint_remap_config['similarity_url'], params=payload)
+            if response.status_code == 200:
+                similar_docs.extend(response.json())
+        except Exception as e:
+            print('Error: {}, while calling document similarity for query: {}'.format(e, keywords))
+
         return similar_docs
 
     def preprocess_clause(self, clause):
