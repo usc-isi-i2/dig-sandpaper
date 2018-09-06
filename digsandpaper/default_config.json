@@ -36,7 +36,7 @@
           "type": "ConstraintReMapping",
           "name": "ConstraintReMapSimilarity",
           "constraint_remap_config": {
-            "similarity_url": "http://localhost:5555/search",
+            "similarity_url": "http://minds03.isi.edu:5954/search",
             "k": 10
           }
         }
