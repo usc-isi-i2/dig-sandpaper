@@ -33,17 +33,64 @@ class SimilarityScoreRerank(object):
                 return sorted(documents, key=itemgetter('_score'), reverse=reverse)
         return documents
 
+    @staticmethod
+    def add_highlights_docs(docs):
+        """
+        "highlight": {
+          "knowledge_graph.title.value": [
+            "Before 1 January 2018, will <em>South</em> <em>Korea</em> file a World Trade Organization dispute against the United States related to solar panels?"
+          ]
+        }
+        """
+        if not isinstance(docs, list):
+            docs = [docs]
+
+        for doc in docs:
+            if 'matched_sentence' in doc['_source']:
+                sentence = doc['_source']['matched_sentence']
+                paragraph = SimilarityScoreRerank.get_description(doc)
+                if paragraph:
+                    high_para = SimilarityScoreRerank.create_highlighted_sentences(sentence, paragraph)
+                    if high_para:
+                        if 'highlight' not in doc:
+                            doc['highlight'] = dict()
+                        doc['highlight']['knowledge_graph.description.value'] = [high_para]
+        return docs
+
+    @staticmethod
+    def get_description(doc):
+        if 'knowledge_graph' in doc['_source']:
+            if 'description' in doc['_source']['knowledge_graph']:
+                if len(doc['_source']['knowledge_graph']['description']) > 0:
+                    return doc['_source']['knowledge_graph']['description'][0]['value']
+        return None
+
+    @staticmethod
+    def create_highlighted_sentences(sentence, paragraph):
+        high_para = ''
+        index = paragraph.find(sentence)
+        if index == -1:
+            return None
+
+        high_para += paragraph[0:index]
+        n = len(sentence)
+        high_para += '<em>{}</em>'.format(sentence)
+        high_para += paragraph[index + n:]
+        return high_para
+
     def postprocess(self, query, result):
         clauses = query["SPARQL"]["where"]["clauses"]
         if not isinstance(result, list):
             documents = result["hits"]["hits"]
-            result["hits"]["hits"] = self.score_rerank(clauses, documents)
+            reranked_docs = self.score_rerank(clauses, documents)
+            result["hits"]["hits"] = self.add_highlights_docs(reranked_docs)
             return result
         else:
             results = []
             for r in result:
                 documents = r["hits"]["hits"]
-                r["hits"]["hits"] = self.score_rerank(clauses, documents)
+                reranked_docs = self.score_rerank(clauses, documents)
+                r["hits"]["hits"] = self.add_highlights_docs(reranked_docs)
                 results.append(r)
             return results
 
