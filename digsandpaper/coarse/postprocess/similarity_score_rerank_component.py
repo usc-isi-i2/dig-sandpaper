@@ -48,6 +48,9 @@ class SimilarityScoreRerank(object):
         for doc in docs:
             if 'matched_sentence' in doc['_source']:
                 sentence = doc['_source']['matched_sentence']
+                # also add matched sentence to knowledge graph
+                doc['_source']['knowledge_graph']['matched_sentence'] = [{'key': sentence, 'value': sentence}]
+
                 paragraph = SimilarityScoreRerank.get_description(doc)
                 if paragraph:
                     high_para = SimilarityScoreRerank.create_highlighted_sentences(sentence, paragraph)
