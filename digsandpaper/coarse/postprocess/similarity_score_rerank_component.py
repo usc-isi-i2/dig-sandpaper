@@ -19,14 +19,15 @@ class SimilarityScoreRerank(object):
                 for similar_doc in similar_docs:
                     sd_dict[similar_doc['doc_id']] = {
                         'score': similar_doc['score'],
-                        'sentence': similar_doc['sentence']
+                        'sentence_id': similar_doc['sentence_id']
                     }
 
                 # re rank the results now
                 for document in documents:
                     if document['_id'] in sd_dict:
                         document['_source']['similarity_score'] = sd_dict[document['_id']]['score']
-                        document['_source']['matched_sentence'] = sd_dict[document['_id']]['sentence']
+                        document['_source']['matched_sentence'] = document['_source']['split_sentences'][
+                            int(sd_dict[document['_id']]['sentence_id'])]
                         document['_score'] = sd_dict[document['_id']]['score']
                 order = self.config.get("sort", 'desc')
                 reverse = order == 'desc'

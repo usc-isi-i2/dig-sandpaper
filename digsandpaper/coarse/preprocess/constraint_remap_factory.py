@@ -37,6 +37,10 @@ class ConstraintReMapSimilarity(object):
         except Exception as e:
             print('Error: {}, while calling document similarity for query: {}'.format(e, keywords))
 
+        for similar_doc in similar_docs:
+            doc_id, real_sentence_id = divmod(int(similar_doc['sentence_id']), 10000)
+            similar_doc['sentence_id'] = str(real_sentence_id)
+            similar_doc['doc_id'] = str(doc_id)
         return similar_docs
 
     def preprocess_clause(self, clause):

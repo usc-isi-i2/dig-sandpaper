@@ -216,7 +216,8 @@
               "knowledge_graph.*",
               "content_extraction.content_strict.text",
               "content_extraction.title.text",
-              "objects.*"
+              "objects.*",
+              "split_sentences"
             ],
             "excluded_source_fields": [
               "content_extraction.content_relaxed.text",
