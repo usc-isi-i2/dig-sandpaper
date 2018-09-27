@@ -26,8 +26,12 @@ class SimilarityScoreRerank(object):
                 for document in documents:
                     if document['_id'] in sd_dict:
                         document['_source']['similarity_score'] = sd_dict[document['_id']]['score']
-                        document['_source']['matched_sentence'] = document['_source']['split_sentences'][
-                            int(sd_dict[document['_id']]['sentence_id'])]
+                        sentence_id = int(sd_dict[document['_id']]['sentence_id'])
+                        if sentence_id == 0:
+                            matched_sentence = document['_source']['knowledge_graph']['title'][0]['value']
+                        else:
+                            matched_sentence = document['_source']['split_sentences'][sentence_id-1]
+                        document['_source']['matched_sentence'] = matched_sentence
                         document['_score'] = sd_dict[document['_id']]['score']
                 order = self.config.get("sort", 'desc')
                 reverse = order == 'desc'
