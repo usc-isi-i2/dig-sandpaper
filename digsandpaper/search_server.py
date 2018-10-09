@@ -442,8 +442,10 @@ def apply_config_from_project(url, project, endpoint, index=None,
 
     for field_name, spec in project_config["fields"].items():
         predicate_type_mapping[field_name] = field_name.lower()
+        # type_group_field_mapping[field_name.lower()] = \
+        #     "indexed.{}.high_confidence_keys".format(field_name)
         type_group_field_mapping[field_name.lower()] = \
-            "indexed.{}.high_confidence_keys".format(field_name)
+            "knowledge_graph.{}.key".format(field_name)
 
         if "search_importance" in spec and search_importance_enabled:
             search_importance = spec["search_importance"]
