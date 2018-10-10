@@ -521,14 +521,17 @@ def config():
         sample = request.args.get('sample', False)
         search_importance_enabled = request.args.get('searchimportanceenabled',
                                                      False)
+        default_config = request.args.get('default_config', None)
+        if default_config is not None:
+            default_config = json.loads(default_config)
         if request.data and len(request.data) > 0:
             project_config = request.json
         else:
             project_config = None
-        apply_config_from_project(url, project, endpoint, index,
-                                  None, sample,
-                                  search_importance_enabled,
-                                  project_config)
+        apply_config_from_project(url, project, endpoint, index=index,
+                                  default_config=default_config, sample=sample,
+                                  search_importance_enabled=search_importance_enabled,
+                                  project_config=project_config)
 
         return "Applied config for project {}\n".format(project)
     elif request.method == "GET":
