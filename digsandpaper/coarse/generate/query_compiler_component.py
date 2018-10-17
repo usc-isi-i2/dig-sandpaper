@@ -646,7 +646,8 @@ class ElasticsearchQueryCompiler(object):
                     es_clause = None
             if es_clause:
                 if clause.get("query_type") == 'ids':
-                    ids.append(es_clause)
+                    # ids.append(es_clause)
+                    musts.append(es_clause)
                 elif clause.get("isOptional", False):
                     predicate = clause.get("predicate")
                     if predicate not in shoulds_by_predicate:
@@ -728,7 +729,8 @@ class ElasticsearchQueryCompiler(object):
             shoulds.extend(converted_filters)
             filters = valid_filters
 
-        if len(ids) > 0:
+        # if len(ids) > 0:
+        if False:
             q = ids[0]
 
         else:
