@@ -646,7 +646,6 @@ class ElasticsearchQueryCompiler(object):
                     es_clause = None
             if es_clause:
                 if clause.get("query_type") == 'ids':
-                    # ids.append(es_clause)
                     musts.append(es_clause)
                 elif clause.get("isOptional", False):
                     predicate = clause.get("predicate")
@@ -729,24 +728,19 @@ class ElasticsearchQueryCompiler(object):
             shoulds.extend(converted_filters)
             filters = valid_filters
 
-        # if len(ids) > 0:
-        if False:
-            q = ids[0]
-
+        if len(musts) > 0 or not shoulds:
+            msm = 0
         else:
-            if len(musts) > 0 or not shoulds:
-                msm = 0
-            else:
-                msm = 1
+            msm = 1
 
-            q = Bool(must=musts,
-                     should=shoulds,
-                     filter=filters,
-                     must_not=must_nots,
-                     minimum_should_match=msm)
-            if self.boosting_musts_and_shoulds_enabled(musts):
-                q = self.boost_musts_and_shoulds(q, musts, shoulds,
-                                                 filters, must_nots)
+        q = Bool(must=musts,
+                 should=shoulds,
+                 filter=filters,
+                 must_not=must_nots,
+                 minimum_should_match=msm)
+        if self.boosting_musts_and_shoulds_enabled(musts):
+            q = self.boost_musts_and_shoulds(q, musts, shoulds,
+                                             filters, must_nots)
 
         s = Search()
         s.query = q
