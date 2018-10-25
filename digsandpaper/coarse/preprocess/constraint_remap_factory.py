@@ -27,8 +27,25 @@ class ConstraintReMapSimilarity(object):
         :param keywords:
         :return:
         """
-        payload = {'query': keywords, 'k': self.constraint_remap_config['k']}
+        rerank_by_doc = self.constraint_remap_config['rerank_by_doc']
+        payload = {'query': keywords, 'k': self.constraint_remap_config['k'], 'rerank_by_doc': rerank_by_doc}
 
+        """
+        if rerank_by_doc is true then the results are returned as:
+        [ {
+            'doc_id': str(doc_id),
+            'id_score_tups': [(str(sent_id), diff_score <float32>) ],
+            'score': doc_relevance <float32>
+          } 
+        ]
+        
+        otherwise the results are:
+        [ {
+            'score': diff_score <float32>, 
+            'sentence_id': str(<int64>)
+          } 
+        ]
+        """
         similar_docs = list()
         try:
             response = requests.get(self.constraint_remap_config['similarity_url'], params=payload)
@@ -37,10 +54,15 @@ class ConstraintReMapSimilarity(object):
         except Exception as e:
             print('Error: {}, while calling document similarity for query: {}'.format(e, keywords))
 
-        for similar_doc in similar_docs:
-            doc_id, real_sentence_id = divmod(int(similar_doc['sentence_id']), 10000)
-            similar_doc['sentence_id'] = str(real_sentence_id)
-            similar_doc['doc_id'] = str(doc_id)
+        if rerank_by_doc:
+            for similar_doc in similar_docs:
+                similar_doc['sentence_id'] = [int(x[0]) for x in similar_doc['id_score_tups']]
+
+        else:
+            for similar_doc in similar_docs:
+                doc_id, real_sentence_id = divmod(int(similar_doc['sentence_id']), 10000)
+                similar_doc['sentence_id'] = str(real_sentence_id)
+                similar_doc['doc_id'] = str(doc_id)
         return similar_docs
 
     def preprocess_clause(self, clause):
@@ -55,6 +77,7 @@ class ConstraintReMapSimilarity(object):
                 similar_docs = self.call_doc_similarity(clause['constraint'])
                 clause['type'] = '_id'
                 clause["similar_docs"] = similar_docs
+                clause["rerank_by_doc"] = self.constraint_remap_config.get('rerank_by_doc', False)
                 clause['values'] = [x['doc_id'] for x in similar_docs]
                 clause.pop('constraint', None)
 
