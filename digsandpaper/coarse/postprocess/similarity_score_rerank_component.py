@@ -26,15 +26,23 @@ class SimilarityScoreRerank(object):
                 for document in documents:
                     if document['_id'] in sd_dict:
                         document['_source']['similarity_score'] = sd_dict[document['_id']]['score']
-                        sentence_id = int(sd_dict[document['_id']]['sentence_id'])
-                        if sentence_id == 0:
-                            matched_sentence = document['_source']['knowledge_graph']['title'][0]['value']
-                        else:
-                            matched_sentence = document['_source']['split_sentences'][sentence_id-1]
-                        document['_source']['matched_sentence'] = matched_sentence
+                        sentence_ids = sd_dict[document['_id']]['sentence_id']
+                        matched_sentences = list()
+                        if not isinstance(sentence_ids, list):
+                            sentence_ids = [sentence_ids]
+                        for sentence_id in sentence_ids:
+                            if sentence_id == 0:
+                                matched_sentences.append(document['_source']['knowledge_graph']['title'][0]['value'])
+                            else:
+                                matched_sentences.append(document['_source']['split_sentences'][sentence_id - 1])
+                        document['_source']['matched_sentence'] = matched_sentences
                         document['_score'] = sd_dict[document['_id']]['score']
-                order = self.config.get("sort", 'desc')
-                reverse = order == 'desc'
+                # order = self.config.get("sort", 'desc')
+                # reverse = order == 'desc'
+
+                # the order will be determined by whether the rerank_by_order is true or not
+                reverse = clause.get('rerank_by_doc', False)
+
                 return sorted(documents, key=itemgetter('_score'), reverse=reverse)
         return documents
 
@@ -52,13 +60,14 @@ class SimilarityScoreRerank(object):
 
         for doc in docs:
             if 'matched_sentence' in doc['_source']:
-                sentence = doc['_source']['matched_sentence']
-                # also add matched sentence to knowledge graph
-                doc['_source']['knowledge_graph']['matched_sentence'] = [{'key': sentence, 'value': sentence}]
+                matched_sentences = doc['_source']['matched_sentence']
+                for sentence in matched_sentences:
+                    # also add matched sentence to knowledge graph
+                    doc['_source']['knowledge_graph']['matched_sentence'] = [{'key': sentence, 'value': sentence}]
 
                 paragraph = SimilarityScoreRerank.get_description(doc)
                 if paragraph:
-                    high_para = SimilarityScoreRerank.create_highlighted_sentences(sentence, paragraph)
+                    high_para = SimilarityScoreRerank.create_highlighted_sentences(matched_sentences, paragraph)
                     if high_para:
                         if 'highlight' not in doc:
                             doc['highlight'] = dict()
@@ -74,16 +83,19 @@ class SimilarityScoreRerank(object):
         return None
 
     @staticmethod
-    def create_highlighted_sentences(sentence, paragraph):
+    def create_highlighted_sentences(sentences, paragraph):
         high_para = ''
-        index = paragraph.find(sentence)
-        if index == -1:
-            return None
+        if not isinstance(sentences, list):
+            sentences = [sentences]
+        for sentence in sentences:
+            index = paragraph.find(sentence)
+            if index == -1:
+                return None
 
-        high_para += paragraph[0:index]
-        n = len(sentence)
-        high_para += '<em>{}</em>'.format(sentence)
-        high_para += paragraph[index + n:]
+            high_para += paragraph[0:index]
+            n = len(sentence)
+            high_para += '<em>{}</em>'.format(sentence)
+            high_para += paragraph[index + n:]
         return high_para
 
     def postprocess(self, query, result):
