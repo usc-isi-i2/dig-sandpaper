@@ -90,7 +90,7 @@ class SimilarityScoreRerank(object):
         for sentence in sentences:
             index = paragraph.find(sentence)
             if index == -1:
-                return None
+                continue
 
             high_para += paragraph[0:index]
             n = len(sentence)
