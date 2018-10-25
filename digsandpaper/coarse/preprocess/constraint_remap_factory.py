@@ -23,11 +23,10 @@ class ConstraintReMapSimilarity(object):
 
     def call_doc_similarity(self, keywords):
         """
-        The commented out code is what this function will do when ready, right now return a list of similar docs
-        :param keywords:
-        :return:
+        :param keywords: a string, a query, A dark knight
+        :return: similar docs as returned by the vector similarity service
         """
-        rerank_by_doc = self.constraint_remap_config['rerank_by_doc']
+        rerank_by_doc = self.constraint_remap_config.get('rerank_by_doc', False)
         payload = {'query': keywords, 'k': self.constraint_remap_config['k'], 'rerank_by_doc': rerank_by_doc}
 
         """
@@ -61,7 +60,7 @@ class ConstraintReMapSimilarity(object):
         else:
             for similar_doc in similar_docs:
                 doc_id, real_sentence_id = divmod(int(similar_doc['sentence_id']), 10000)
-                similar_doc['sentence_id'] = str(real_sentence_id)
+                similar_doc['sentence_id'] = real_sentence_id
                 similar_doc['doc_id'] = str(doc_id)
         return similar_docs
 
