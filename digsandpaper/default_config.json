@@ -38,7 +38,7 @@
           "constraint_remap_config": {
             "similarity_url": "http://52.53.214.202:5954/search",
             "k": 10,
-            "rerank_by_doc": false
+            "rerank_by_doc": true
           }
         }
       ]

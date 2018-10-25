@@ -55,7 +55,7 @@ class ConstraintReMapSimilarity(object):
 
         if rerank_by_doc:
             for similar_doc in similar_docs:
-                similar_doc['sentence_id'] = [int(x[0]) for x in similar_doc['id_score_tups']]
+                similar_doc['sentence_id'] = [int(x) for x in similar_doc['sentence_id']]
 
         else:
             for similar_doc in similar_docs:

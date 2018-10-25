@@ -88,7 +88,7 @@ class SimilarityScoreRerank(object):
         if not isinstance(sentences, list):
             sentences = [sentences]
         for sentence in sentences:
-            index = paragraph.find(sentence)
+            index = paragraph.find(sentence.strip())
             if index == -1:
                 continue
 
