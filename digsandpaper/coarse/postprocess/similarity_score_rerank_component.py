@@ -32,7 +32,12 @@ class SimilarityScoreRerank(object):
                             sentence_ids = [sentence_ids]
                         for sentence_id in sentence_ids:
                             if sentence_id == 0:
-                                matched_sentences.append(document['_source']['knowledge_graph']['title'][0]['value'])
+                                title = document['_source']['knowledge_graph']['title'][0]['value']
+                                matched_sentences.append(title)
+                                # add this to highlights as well
+                                if 'highlight' not in document:
+                                    document['highlight'] = dict()
+                                document['highlight']['knowledge_graph.title.value'] = [title]
                             else:
                                 matched_sentences.append(document['_source']['split_sentences'][sentence_id - 1])
                         document['_source']['matched_sentence'] = matched_sentences
