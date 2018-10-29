@@ -21,12 +21,11 @@ class ConstraintReMapSimilarity(object):
         else:
             self.constraint_remap_config = load_json_file(file)
 
-    def call_doc_similarity(self, keywords):
+    def call_doc_similarity(self, keywords, rerank_by_doc):
         """
         :param keywords: a string, a query, A dark knight
         :return: similar docs as returned by the vector similarity service
         """
-        rerank_by_doc = self.constraint_remap_config.get('rerank_by_doc', False)
         payload = {'query': keywords, 'k': self.constraint_remap_config['k'], 'rerank_by_doc': rerank_by_doc}
 
         """
@@ -73,10 +72,11 @@ class ConstraintReMapSimilarity(object):
         if "constraint" in clause:
             predicate = clause.get('predicate', "")
             if predicate and predicate == "keywords":
-                similar_docs = self.call_doc_similarity(clause['constraint'])
+                rerank_by_doc = clause.get('rerank_by_doc', 'false').lower() == 'true'
+                similar_docs = self.call_doc_similarity(clause['constraint'], rerank_by_doc)
                 clause['type'] = '_id'
                 clause["similar_docs"] = similar_docs
-                clause["rerank_by_doc"] = self.constraint_remap_config.get('rerank_by_doc', False)
+                clause["rerank_by_doc"] = rerank_by_doc
                 clause['values'] = [x['doc_id'] for x in similar_docs]
                 clause.pop('constraint', None)
 
