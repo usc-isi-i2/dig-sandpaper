@@ -87,7 +87,7 @@ class ConstraintReMapSimilarity(object):
             for clause in clauses:
                 if clause.get('predicate', '') == 'keywords':
                     keywords_clause = clause
-                elif clause.get('predicate', '') == 'country':
+                elif clause.get('predicate', '') == 'country' and 'constraint' in clause:
                     constraint_countries.append(clause['constraint'].lower())
 
             if keywords_clause:
