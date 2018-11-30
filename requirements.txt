@@ -8,3 +8,4 @@ Flask-API
 flask-cors
 gunicorn
 eventlet==0.20.0
+etk

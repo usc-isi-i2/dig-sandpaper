@@ -1,5 +1,8 @@
 from digsandpaper.sandpaper_utils import load_json_file
 import requests
+from etk.extractors.glossary_extractor import GlossaryExtractor
+from etk.crf_tokenizer import CrfTokenizer
+import uuid
 
 __name__ = "ConstraintReMapping"
 name = __name__
@@ -20,6 +23,11 @@ class ConstraintReMapSimilarity(object):
             self.constraint_remap_config = file
         else:
             self.constraint_remap_config = load_json_file(file)
+        self.tokenizer = CrfTokenizer()
+        self.glossary_extractor = GlossaryExtractor(self.constraint_remap_config['countries_list'],
+                                                    "glossary_extractor",
+                                                    tokenizer=self.tokenizer,
+                                                    case_sensitive=False, ngrams=self.constraint_remap_config['ngrams'])
 
     def call_doc_similarity(self, keywords, rerank_by_doc):
         """
@@ -63,6 +71,35 @@ class ConstraintReMapSimilarity(object):
                 similar_doc['doc_id'] = str(doc_id)
         return similar_docs
 
+    def extract_using_glossary(self, text):
+
+        tokens = self.tokenizer.tokenize(text)
+
+        extractions = [i.value for i in self.glossary_extractor.extract(tokens)]
+        return extractions
+
+    def add_country_clause(self, where):
+        clauses = where.get('clauses', None)
+
+        if clauses:
+            keywords_clause = None
+            constraint_countries = []
+            for clause in clauses:
+                if clause.get('predicate', '') == 'keywords':
+                    keywords_clause = clause
+                elif clause.get('predicate', '') == 'country':
+                    constraint_countries.append(clause['constraint'].lower())
+
+            if keywords_clause:
+                extracted_countries = keywords_clause['extracted_countries']
+                for country in extracted_countries:
+                    if country.lower() not in constraint_countries:
+                        clauses.append({'constraint': country.lower(), 'isOptional': False, 'predicate': 'country',
+                                        '_id': uuid.uuid4().hex, 'type': 'country'})
+
+            where['clauses'] = clauses
+        return where
+
     def preprocess_clause(self, clause):
         if "constraint" not in clause:
             if "clauses" in clause:
@@ -78,11 +115,14 @@ class ConstraintReMapSimilarity(object):
                 clause["similar_docs"] = similar_docs
                 clause["rerank_by_doc"] = rerank_by_doc
                 clause['values'] = [x['doc_id'] for x in similar_docs]
+                clause['extracted_countries'] = self.extract_using_glossary(clause['constraint'])
                 clause.pop('constraint', None)
 
     def preprocess(self, query):
         where = query["SPARQL"]["where"]
         self.preprocess_clause(where)
+        where = self.add_country_clause(query["SPARQL"]["where"])
+        query["SPARQL"]["where"] = where
         return query
 
 
