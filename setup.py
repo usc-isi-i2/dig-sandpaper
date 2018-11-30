@@ -12,7 +12,7 @@ ES_DSL_VERSION = 'elasticsearch-dsl>={}.0.0,<{}.0.0'.format(ES_MAJOR_VERSION,
 
 setup(
     name='digsandpaper',
-    version='0.3.4',
+    version='0.3.5',
     description='digsandpaper',
     author='Jason Slepicka',
     author_email='jasonslepicka@gmail.com',
@@ -28,5 +28,6 @@ setup(
                       'Flask-API',
                       'flask-cors',
                       'jsonpath-rw>=1.4.0',
-                      'jsonpath-rw-ext>=1.0.0']
+                      'jsonpath-rw-ext>=1.0.0',
+                      'etk']
 )
