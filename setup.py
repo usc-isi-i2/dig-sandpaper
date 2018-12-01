@@ -10,9 +10,16 @@ ES_VERSION = 'elasticsearch>={}.0.0,<{}.0.0'.format(ES_MAJOR_VERSION,
 ES_DSL_VERSION = 'elasticsearch-dsl>={}.0.0,<{}.0.0'.format(ES_MAJOR_VERSION,
                                                             ES_MAJOR_VERSION + 1)
 
+with open('requirements.txt', 'r') as f:
+    install_requires = list()
+    for line in f:
+        re = line.strip()
+        if re:
+            install_requires.append(re)
+
 setup(
     name='digsandpaper',
-    version='0.3.5',
+    version='0.3.6',
     description='digsandpaper',
     author='Jason Slepicka',
     author_email='jasonslepicka@gmail.com',
@@ -21,13 +28,5 @@ setup(
     packages=find_packages(),
     keywords=['ir', 'search'],
     include_package_data=True,
-    install_requires=[ES_VERSION,
-                      ES_DSL_VERSION,
-                      'requests',
-                      'Flask',
-                      'Flask-API',
-                      'flask-cors',
-                      'jsonpath-rw>=1.4.0',
-                      'jsonpath-rw-ext>=1.0.0',
-                      'etk']
+    install_requires=install_requires
 )
