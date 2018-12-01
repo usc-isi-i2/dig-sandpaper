@@ -2,10 +2,10 @@ elasticsearch>=5.0.0,<6.0.0
 elasticsearch-dsl>=5.0.0,<6.0.0
 jsonpath-rw>=1.4.0
 jsonpath-rw-ext>=1.0.0
-requests
-Flask
-Flask-API
-flask-cors
-gunicorn
+requests>=2.19.0
+Flask>=1.0.2
+Flask-API>=1.0
+flask-cors>=3.0.6
+gunicorn>=19.9.0
 eventlet==0.20.0
-etk
+etk>=2.1.5
