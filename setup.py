@@ -19,7 +19,7 @@ with open('requirements.txt', 'r') as f:
 
 setup(
     name='digsandpaper',
-    version='0.3.6',
+    version='0.3.7',
     description='digsandpaper',
     author='Jason Slepicka',
     author_email='jasonslepicka@gmail.com',
