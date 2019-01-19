@@ -1,4 +1,5 @@
 from operator import itemgetter
+import datetime
 
 __name__ = "DocumentsRerank"
 name = __name__
@@ -42,14 +43,24 @@ class SimilarityScoreRerank(object):
                                 matched_sentences.append(document['_source']['split_sentences'][sentence_id - 1])
                         document['_source']['matched_sentence'] = matched_sentences
                         document['_score'] = sd_dict[document['_id']]['score']
-                # order = self.config.get("sort", 'desc')
-                # reverse = order == 'desc'
+                        document['_sorting_score'] = -1 * float(sd_dict[document['_id']]['score'])
+                        event_date = self.get_event_date(document)
+                        document['_sorting_date'] = event_date if event_date else datetime.datetime.now().isoformat()
 
-                # the order will be determined by whether the rerank_by_order is true or not
-                reverse = clause.get('rerank_by_doc', False)
-
-                return sorted(documents, key=itemgetter('_score'), reverse=reverse)
+                return sorted(documents, key=itemgetter('_sorting_date', '_sorting_score'), reverse=True)
         return documents
+
+    @staticmethod
+    def get_event_date(document):
+        event_date = None
+        try:
+            kg = document['_source']['knowledge_graph']
+            if 'event_date' in kg and len(kg['event_date']) > 0:
+                event_date = kg['event_date'][0]['value']
+
+        except:
+            return None
+        return event_date
 
     @staticmethod
     def add_highlights_docs(docs):
