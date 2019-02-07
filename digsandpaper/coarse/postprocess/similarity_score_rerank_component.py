@@ -1,5 +1,6 @@
 from operator import itemgetter
 import datetime
+import json
 
 __name__ = "DocumentsRerank"
 name = __name__
@@ -47,6 +48,11 @@ class SimilarityScoreRerank(object):
                         event_date = self.get_event_date(document)
                         document['_sorting_date'] = event_date if event_date else datetime.datetime.now().isoformat()
 
+                # sort by relevance vs sort by recent
+                if clause.get('resort_by', 'recent').lower() == 'recent':
+                    return sorted(documents, key=itemgetter('_sorting_date', '_sorting_score'), reverse=True)
+                if clause.get('resort_by', 'recent').lower() == 'relevance':
+                    return sorted(documents, key=itemgetter('_sorting_score'), reverse=True)
                 return sorted(documents, key=itemgetter('_sorting_date', '_sorting_score'), reverse=True)
         return documents
 
