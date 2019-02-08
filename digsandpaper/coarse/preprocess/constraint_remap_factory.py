@@ -40,7 +40,7 @@ class ConstraintReMapSimilarity(object):
         if rerank_by_doc is true then the results are returned as:
         [ {
             'doc_id': str(doc_id),
-            'id_score_tups': [(str(sent_id), diff_score <float32>) ],
+            'id_score_tups': [(str(faiss_id), diff_score <float32>) ],
             'score': doc_relevance <float32>
           } 
         ]
@@ -62,7 +62,7 @@ class ConstraintReMapSimilarity(object):
 
         if rerank_by_doc:
             for similar_doc in similar_docs:
-                similar_doc['sentence_id'] = [int(x) for x in similar_doc['sentence_id']]
+                similar_doc['sentence_id'] = [divmod(int(x[0]), 10000)[1] for x in similar_doc['id_score_tups']]
 
         else:
             for similar_doc in similar_docs:
