@@ -56,7 +56,7 @@ class SimilarityScoreRerank(object):
                 else:
                     sorted_clipped_documents = sorted(documents, key=itemgetter('_sorting_date', '_sorting_score'), reverse=True)
                 # return at most 30 documents, save mobile data for users
-                cut_off_number = min(30, len(documents))
+                cut_off_number = min(30, len(sorted_clipped_documents))
                 return sorted_clipped_documents[:cut_off_number]
         return documents
 
