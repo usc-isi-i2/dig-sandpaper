@@ -129,7 +129,7 @@ class ConstraintReMapSimilarity(object):
         if "constraint" not in clause:
             if "clauses" in clause:
                 for c in clause["clauses"]:
-                    self.preprocess_clause(c)
+                    self.preprocess_clause(c, start_date=start_date, end_date=end_date)
 
         if "constraint" in clause:
             predicate = clause.get('predicate', "")

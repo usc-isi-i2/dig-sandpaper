@@ -51,18 +51,19 @@ class SimilarityScoreRerank(object):
                         event_date = self.get_event_date(document)
                         document['_sorting_date'] = event_date if event_date else datetime.datetime.now().isoformat()
 
-                print('before:', len(documents))
                 for document in documents:
                     if document.get('_to_be_deleted', False):
                         documents.remove(document)
-                print('after:', len(documents))
+
                 # sort by relevance vs sort by recent
                 if clause.get('resort_by', 'recent').lower() == 'recent':
-                    sorted_clipped_documents = sorted(documents, key=itemgetter('_sorting_date', '_sorting_score'), reverse=True)
+                    sorted_clipped_documents = sorted(documents, key=itemgetter('_sorting_date', '_sorting_score'),
+                                                      reverse=True)
                 elif clause.get('resort_by', 'recent').lower() == 'relevance':
                     sorted_clipped_documents = sorted(documents, key=itemgetter('_sorting_score'), reverse=True)
                 else:
-                    sorted_clipped_documents = sorted(documents, key=itemgetter('_sorting_date', '_sorting_score'), reverse=True)
+                    sorted_clipped_documents = sorted(documents, key=itemgetter('_sorting_date', '_sorting_score'),
+                                                      reverse=True)
                 # return at most 30 documents, save mobile data for users
                 cut_off_number = min(30, len(sorted_clipped_documents))
                 return sorted_clipped_documents[:cut_off_number]
