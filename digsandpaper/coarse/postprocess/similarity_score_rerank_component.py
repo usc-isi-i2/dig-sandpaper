@@ -41,13 +41,21 @@ class SimilarityScoreRerank(object):
                                     document['highlight'] = dict()
                                 document['highlight']['knowledge_graph.title.value'] = [title]
                             else:
-                                matched_sentences.append(document['_source']['split_sentences'][sentence_id - 1])
+                                try:
+                                    matched_sentences.append(document['_source']['split_sentences'][sentence_id - 1])
+                                except:
+                                    document['_to_be_deleted'] = True
                         document['_source']['matched_sentence'] = matched_sentences
                         document['_score'] = sd_dict[document['_id']]['score']
                         document['_sorting_score'] = -1 * float(sd_dict[document['_id']]['score'])
                         event_date = self.get_event_date(document)
                         document['_sorting_date'] = event_date if event_date else datetime.datetime.now().isoformat()
 
+                print('before:', len(documents))
+                for document in documents:
+                    if document.get('_to_be_deleted', False):
+                        documents.remove(document)
+                print('after:', len(documents))
                 # sort by relevance vs sort by recent
                 if clause.get('resort_by', 'recent').lower() == 'recent':
                     sorted_clipped_documents = sorted(documents, key=itemgetter('_sorting_date', '_sorting_score'), reverse=True)

@@ -29,12 +29,16 @@ class ConstraintReMapSimilarity(object):
                                                     tokenizer=self.tokenizer,
                                                     case_sensitive=False, ngrams=self.constraint_remap_config['ngrams'])
 
-    def call_doc_similarity(self, keywords, rerank_by_doc):
+    def call_doc_similarity(self, keywords, rerank_by_doc, start_date, end_date):
         """
         :param keywords: a string, a query, A dark knight
         :return: similar docs as returned by the vector similarity service
         """
         payload = {'query': keywords, 'k': self.constraint_remap_config['k'], 'rerank_by_doc': rerank_by_doc}
+        if start_date is not None:
+            payload['start_date'] = start_date
+        if end_date is not None:
+            payload['end_date'] = end_date
 
         """
         if rerank_by_doc is true then the results are returned as:
@@ -100,7 +104,28 @@ class ConstraintReMapSimilarity(object):
             where['clauses'] = clauses
         return where
 
-    def preprocess_clause(self, clause):
+    @staticmethod
+    def get_date_range_query(filters):
+        start_date = None
+        end_date = None
+        if not isinstance(filters, list):
+            filters = [filters]
+
+        for filter in filters:
+            if 'clauses' in filter:
+                clauses = filter['clauses']
+                if not isinstance(clauses, list):
+                    clauses = [clauses]
+                for clause in clauses:
+                    if clause.get('variable', '') == '?event_date_filter' and clause.get('operator', '') == '>=':
+                        start_date_iso = clause.get('constraint')
+                        start_date = start_date_iso.split('T')[0]
+                    elif clause.get('variable', '') == '?event_date_filter' and clause.get('operator', '') == '<=':
+                        end_date_iso = clause.get('constraint')
+                        end_date = end_date_iso.split('T')[0]
+        return start_date, end_date
+
+    def preprocess_clause(self, clause, start_date=None, end_date=None):
         if "constraint" not in clause:
             if "clauses" in clause:
                 for c in clause["clauses"]:
@@ -110,7 +135,7 @@ class ConstraintReMapSimilarity(object):
             predicate = clause.get('predicate', "")
             if predicate and predicate == "keywords":
                 rerank_by_doc = clause.get('rerank_by_doc', 'false').lower() == 'true'
-                similar_docs = self.call_doc_similarity(clause['constraint'], rerank_by_doc)
+                similar_docs = self.call_doc_similarity(clause['constraint'], rerank_by_doc, start_date, end_date)
                 clause['type'] = '_id'
                 clause["similar_docs"] = similar_docs
                 clause["rerank_by_doc"] = rerank_by_doc
@@ -120,7 +145,8 @@ class ConstraintReMapSimilarity(object):
 
     def preprocess(self, query):
         where = query["SPARQL"]["where"]
-        self.preprocess_clause(where)
+        start_date, end_date = self.get_date_range_query(where.get('filters', list()))
+        self.preprocess_clause(where, start_date=start_date, end_date=end_date)
         where = self.add_country_clause(query["SPARQL"]["where"])
         query["SPARQL"]["where"] = where
         return query
