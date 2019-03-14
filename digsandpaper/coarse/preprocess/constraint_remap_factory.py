@@ -125,6 +125,18 @@ class ConstraintReMapSimilarity(object):
                         end_date = end_date_iso.split('T')[0]
         return start_date, end_date
 
+    @staticmethod
+    def subtract_lists(similar_articles, blacklisted_articles):
+        """
+        Helper function to perform a set subtract between the list of articles returned by faiss and blacklisted
+        articles for the given IFP by users
+        :param similar_articles:  list of similar articles to the query as returned by FAISS
+        :param blacklisted_articles: blacklisted articles for this query as set by users on SAGE
+        :return: similar_articles - blacklisted_articles
+        """
+
+        return list(set(similar_articles) - set(blacklisted_articles))
+
     def preprocess_clause(self, clause, start_date=None, end_date=None):
         if "constraint" not in clause:
             if "clauses" in clause:
@@ -135,7 +147,17 @@ class ConstraintReMapSimilarity(object):
             predicate = clause.get('predicate', "")
             if predicate and predicate == "keywords":
                 rerank_by_doc = clause.get('rerank_by_doc', 'false').lower() == 'true'
-                similar_docs = self.call_doc_similarity(clause['constraint'], rerank_by_doc, start_date, end_date)
+                all_similar_docs = self.call_doc_similarity(clause['constraint'], rerank_by_doc, start_date, end_date)
+
+                all_similar_doc_ids = [x['doc_id'] for x in all_similar_docs]
+                similar_docs = list()
+                blacklisted_doc_ids = clause.get('black_list', [])
+                if len(blacklisted_doc_ids) > 0:
+                    white_doc_ids = self.subtract_lists(all_similar_doc_ids, blacklisted_doc_ids)
+                    similar_docs.extend([doc for doc in all_similar_docs if doc['doc_id'] in white_doc_ids])
+                else:
+                    similar_docs = all_similar_docs
+
                 clause['type'] = '_id'
                 clause["similar_docs"] = similar_docs
                 clause["rerank_by_doc"] = rerank_by_doc
