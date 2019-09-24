@@ -13,6 +13,23 @@ class SimilarityScoreRerank(object):
     def __init__(self, config):
         self.config = config
 
+    def remove_blacklisted_documents(self, clauses, documents):
+        """
+        This function is implemented because of the sage issue # 123
+        https://github.com/isi-usc-edu/sage-issue-tracker/issues/123
+
+        This will come into picture when the whole query is wrapped in double quotes and we have black listed
+        articles for that IFP. Currently black listed articles are ignored if the predicate is not "keywords
+        This is the best place to do this as we have the black listed articles and the results available
+        """
+        whitelist_articles = list()
+        for clause in clauses:
+            blacklist_doc_ids = clause.get('black_list', [])
+            for document in documents:
+                if document['_id'] not in blacklist_doc_ids:
+                    whitelist_articles.append(document)
+        return whitelist_articles
+
     def score_rerank(self, clauses, documents):
         for clause in clauses:
             sd_dict = {}
@@ -138,14 +155,16 @@ class SimilarityScoreRerank(object):
         if not isinstance(result, list):
             documents = result["hits"]["hits"]
             reranked_docs = self.score_rerank(clauses, documents)
-            result["hits"]["hits"] = self.add_highlights_docs(reranked_docs)
+            reranked_highlighted_docs = self.add_highlights_docs(reranked_docs)
+            result["hits"]["hits"] = self.remove_blacklisted_documents(clauses, reranked_highlighted_docs)
             return result
         else:
             results = []
             for r in result:
                 documents = r["hits"]["hits"]
                 reranked_docs = self.score_rerank(clauses, documents)
-                r["hits"]["hits"] = self.add_highlights_docs(reranked_docs)
+                reranked_highlighted_docs = self.add_highlights_docs(reranked_docs)
+                r["hits"]["hits"] = self.remove_blacklisted_documents(clauses, reranked_highlighted_docs)
                 results.append(r)
             return results
 
