@@ -1,6 +1,6 @@
 from operator import itemgetter
 import datetime
-import json
+import hashlib
 
 __name__ = "DocumentsRerank"
 name = __name__
@@ -29,6 +29,33 @@ class SimilarityScoreRerank(object):
                 if document['_id'] not in blacklist_doc_ids:
                     whitelist_articles.append(document)
         return whitelist_articles
+
+    def deduplicate_articles_on_source_title(self, documents):
+        dedup_dict = dict()
+        for document in documents:
+            source = document['_source']
+            kg = source.get('knowledge_graph', {})
+            if 'event_date' in kg and 'source' in kg and 'title' in kg:
+                uniq_hash = hashlib.sha256(
+                    '{}:{}:{}'.format(kg['source'][0]['key'], kg['title'][0]['key'],
+                                      kg['event_date'][0]['key']).encode('utf-8')).hexdigest()
+                if uniq_hash not in dedup_dict:
+                    dedup_dict[uniq_hash] = list()
+                dedup_dict[uniq_hash].append(document)
+
+            else:
+                if 'no_prob' not in dedup_dict:
+                    dedup_dict['no_prob'] = list()
+                dedup_dict['no_prob'].append(document)
+        result = list()
+        if 'no_prob' in dedup_dict:
+
+            result.extend(dedup_dict['no_prob'])
+
+        for k in dedup_dict:
+            if k != 'no_prob':
+                result.append(dedup_dict[k][0])
+        return result
 
     def score_rerank(self, clauses, documents):
         for clause in clauses:
@@ -81,6 +108,7 @@ class SimilarityScoreRerank(object):
                 else:
                     sorted_clipped_documents = sorted(documents, key=itemgetter('_sorting_date', '_sorting_score'),
                                                       reverse=True)
+
                 # return at most 30 documents, save mobile data for users
                 cut_off_number = min(30, len(sorted_clipped_documents))
                 return sorted_clipped_documents[:cut_off_number]
@@ -154,6 +182,7 @@ class SimilarityScoreRerank(object):
         clauses = query["SPARQL"]["where"]["clauses"]
         if not isinstance(result, list):
             documents = result["hits"]["hits"]
+            documents = self.deduplicate_articles_on_source_title(documents)
             reranked_docs = self.score_rerank(clauses, documents)
             reranked_highlighted_docs = self.add_highlights_docs(reranked_docs)
             result["hits"]["hits"] = self.remove_blacklisted_documents(clauses, reranked_highlighted_docs)
@@ -162,6 +191,7 @@ class SimilarityScoreRerank(object):
             results = []
             for r in result:
                 documents = r["hits"]["hits"]
+                documents = self.deduplicate_articles_on_source_title(documents)
                 reranked_docs = self.score_rerank(clauses, documents)
                 reranked_highlighted_docs = self.add_highlights_docs(reranked_docs)
                 r["hits"]["hits"] = self.remove_blacklisted_documents(clauses, reranked_highlighted_docs)
