@@ -7,5 +7,5 @@ Flask>=1.0.2
 Flask-API>=1.0
 flask-cors>=3.0.6
 gunicorn>=19.9.0
-eventlet==0.20.0
+eventlet==0.31.0
 etk>=2.1.5
